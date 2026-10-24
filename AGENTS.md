@@ -6,7 +6,7 @@ Start with docs/PROJECT_OVERVIEW.md for the consolidated scope. Main is the shar
 
 This is the Honda HackOHI/O 2026 competition app: Next.js 15 / TypeScript / Node 22 / Tailwind / PostgreSQL. Source is now at repository root. Historical React/Vite, FastAPI, Streamlit and optional AI rehearsal code was removed at the user’s request; recover it from Git history if needed.
 
-- Frontend owns src/app pages, src/components, and src/lib. Backend owns src/server, src/app/api, db, scripts. Coordinate src/shared, dependencies and migrations.
+- P1 uses one full-stack Agent owning pages, components, shared types, API, database and tests; follow docs/P1_AGENT_TASK.md and docs/P1_CONTRACT.md. The former Worker A/B split is superseded. Contract and dependency changes remain coordinated with the controller.
 - Use separate codex/ branches and worktrees. Do not force-push or overwrite teammate changes.
 - Run npm run typecheck, npm run test:backend, npm run build; npm run test:e2e uses an isolated local SQL database after build.
 - Do not commit .env.local, credentials, local databases, node_modules or build artifacts.

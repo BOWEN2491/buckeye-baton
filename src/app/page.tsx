@@ -101,8 +101,8 @@ export default function Explore() {
               <div>
                 <h3>Find your next step</h3>
                 <p>
-                  Look for reusable work and unfinished ideas. Project pickup
-                  and mentor connections are coming next round.
+                  Pick up a Finished or Paused project, or ask a question.
+                  Staff can refer a mentor to it.
                 </p>
               </div>
             </li>

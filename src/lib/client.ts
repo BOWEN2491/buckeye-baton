@@ -1,23 +1,35 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+export class ApiRequestError extends Error {
+  constructor(message: string, public status: number, public code: string) {
+    super(message);
+  }
+}
 export async function api<T>(
   path: string,
   userId?: string,
   body?: unknown,
   method?: string,
 ): Promise<T> {
-  const response = await fetch(`/api${path}`, {
-    method: method || (body === undefined ? "GET" : "POST"),
-    headers: {
-      "Content-Type": "application/json",
-      ...(userId ? { "x-demo-user-id": userId } : {}),
-    },
-    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-  });
-  const value = await response.json();
+  let response: Response;
+  try {
+    response = await fetch(`/api${path}`, {
+      method: method || (body === undefined ? "GET" : "POST"),
+      headers: {
+        "Content-Type": "application/json",
+        ...(userId ? { "x-demo-user-id": userId } : {}),
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+  } catch {
+    throw new ApiRequestError("Check your connection and try again.", 0, "NETWORK_ERROR");
+  }
+  const value = await response.json().catch(() => ({}));
   if (!response.ok || value.error)
-    throw new Error(
+    throw new ApiRequestError(
       value.error?.message || "Something went wrong. Please try again.",
+      response.status,
+      value.error?.code || "UNKNOWN",
     );
   return value.data as T;
 }
@@ -49,4 +61,13 @@ export function useResource<T>(path: string, userId?: string) {
 }
 export function readable(value: string) {
   return value.replaceAll("_", " ").replace(/^./, (v) => v.toUpperCase());
+}
+export function formatDate(value: string) {
+  return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+export function formatDateTime(value: string) {
+  return new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+export function errorText(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong.";
 }

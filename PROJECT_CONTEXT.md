@@ -7,13 +7,15 @@
 
 ## 当前实现
 已实现首页搜索/状态筛选、创建与所有者编辑、Ongoing/Finished/Paused 总结、原子校验后保存状态与持久化、四个演示身份。独立 Lesson UI 和采用流程已移除；旧链接转向项目，旧采用接口返回 410。历史记录保留。
-接棒、项目问题、引荐、Mentor 指导及工作台仍是占位，尚未接通真实项目流程。不可用旧 Lesson 测试证明完整新流程。
+P1 已实现真实接棒与双向来源关系、项目问题及期望回复日期、平铺讨论、Staff 人工引荐、指定 Mentor 多轮回复和角色工作台。总控已在独立目录核验提交 61ff34b，G1–G10 本地验收 10/10；证据见 docs/P1_ACCEPTANCE.md。
 
 ## 技术与验证
 Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 为单进程持久 SQL，托管 pg 需 DATABASE_URL。Project.reflection 为可空 JSONB，增量迁移不重置记录。
-最近应用验证：typecheck、生产 build、后端 3/3、浏览器 5/5 通过。修改文档与分支不代表重新跑过应用测试。真实认证、Neon/AWS、公网部署仍未验证。
+最近总控独立验证：typecheck、生产 build/start、后端 5/5、浏览器 7/7 通过，含四身份主线与390px。使用临时 PGlite，未操作用户数据。真实 PostgreSQL 多连接、真实认证、Neon/AWS、公网部署未验证。
 
 ## 设计与下一轮
+实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；单 Agent 全栈任务书：docs/P1_AGENT_TASK.md。任务分支 codex/p1-implementation 已交付，总控已快进集成到 codex/p1-integration，等待通过 PR 合入 main。P1 本地功能验收 10/10。P2–P4 未开始：AI 简介/标签、Mentor workload、规则推荐、自动限频站内邀请按后续级别实现。deadline 属于具体求助期望回复日期。产品文案英文，待回复显示 Awaiting reply。
+
 队友设计已收进 design/。relay 原型补齐接棒、来源对照、问题—引荐—回复及工作台；不再等待草图。
 design/README.md 列出原型与批准需求的差异。共同所有者、Ongoing 接棒、自动延续 Mentor、选择性带入内容、帖子编辑删除等仍待统一。现有保留历史/单所有者/人工引荐规则继续有效，AI 与 Feed 等新增服务暂缓。
 
