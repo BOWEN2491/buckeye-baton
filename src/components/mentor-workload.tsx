@@ -1,13 +1,26 @@
 "use client";
+import { useEffect } from "react";
 import type { MentorWorkloadResult } from "@/shared/p2-types";
 import type { User } from "@/shared/types";
 import { formatDateTime, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 
-// Each mount reads fresh counts; Staff refresh manually. A failed read never shows as 0.
+// Each mount reads fresh counts; Staff refresh manually, and a successful referral tells every
+// mounted view on the page to re-read. A failed read never shows as 0.
+const invalidated = "buckeye-baton:mentor-workload-invalidated";
+export function invalidateMentorWorkload() {
+  window.dispatchEvent(new Event(invalidated));
+}
 export function useMentorWorkload() {
   const { userId } = useIdentity();
-  return useResource<MentorWorkloadResult>("/mentors/workload", userId);
+  const resource = useResource<MentorWorkloadResult>("/mentors/workload", userId);
+  const { reload } = resource;
+  useEffect(() => {
+    const refresh = () => void reload();
+    window.addEventListener(invalidated, refresh);
+    return () => window.removeEventListener(invalidated, refresh);
+  }, [reload]);
+  return resource;
 }
 function Unavailable({ onRetry, loading }: { onRetry: () => void; loading: boolean }) {
   return (
@@ -81,10 +94,13 @@ export function MentorSelect({ mentors, value, disabled, onChange }: { mentors: 
       </label>
       {error ? (
         <Unavailable onRetry={() => void reload()} loading={loading} />
-      ) : data ? (
-        <span className="field-help">Awaiting reply counts as of {formatDateTime(data.asOf)}. You still choose the mentor.</span>
       ) : (
-        <span className="field-help">Loading Awaiting reply counts…</span>
+        <span className="field-help workload-asof">
+          {data ? `Awaiting reply counts as of ${formatDateTime(data.asOf)}. You still choose the mentor.` : "Loading Awaiting reply counts…"}{" "}
+          <button type="button" className="text-button" onClick={() => void reload()} disabled={loading}>
+            {loading ? "Refreshing…" : "Refresh counts"}
+          </button>
+        </span>
       )}
     </>
   );

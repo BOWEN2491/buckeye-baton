@@ -7,6 +7,7 @@ import { handle } from '../src/server/api';
 import { closeDatabase, database, setup } from '../src/server/db';
 import { seed } from '../src/server/seed';
 import { setTransport, setTimeoutMs, boundedInput } from '../src/server/ai';
+import { completeProject } from '../src/server/validation';
 import { GET as workloadGET } from '../src/app/api/mentors/workload/route';
 
 async function request(resource: string, id?: string, method = 'GET', user?: string, body?: unknown, query = '') {
@@ -116,6 +117,14 @@ test('owner-reviewed introductions: permissions, mock generation, confirmation, 
    ['packed sentences', ok({ sentences: ['First sentence. Second sentence. Third. Fourth.'], tags: ['a'] }), 502, 'AI_INVALID_OUTPUT'],
    ['extra field', ok({ ...good, html: '<b>x</b>' }), 502, 'AI_INVALID_OUTPUT'],
    ['no message', () => Response.json({ status: 'completed', output: [] }), 502, 'AI_INVALID_OUTPUT'],
+   // R2: malformed outer REST shapes on HTTP 200 are invalid output, not server errors.
+   ['200 non-JSON body', () => new Response('<html>gateway</html>', { status: 200 }), 502, 'AI_INVALID_OUTPUT'],
+   ['output object', () => Response.json({ status: 'completed', output: {} }), 502, 'AI_INVALID_OUTPUT'],
+   ['content object', () => Response.json({ status: 'completed', output: [{ type: 'message', content: {} }] }), 502, 'AI_INVALID_OUTPUT'],
+   ['non-string text', () => Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: { sentences: ['A.'] } }] }] }), 502, 'AI_INVALID_OUTPUT'],
+   ['missing text', () => Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text' }] }] }), 502, 'AI_INVALID_OUTPUT'],
+   ['null items', () => Response.json({ status: 'completed', output: [null, { type: 'message', content: [null] }] }), 502, 'AI_INVALID_OUTPUT'],
+   ['array body', () => Response.json([responseBody(good)]), 502, 'AI_INVALID_OUTPUT'],
   ];
   const kept = (await request('introduction', id, 'GET', 'student-alex')).data;
   for (const [name, reply, status, code] of cases) {
@@ -140,9 +149,9 @@ test('owner-reviewed introductions: permissions, mock generation, confirmation, 
   assert.equal(busy.status, 409); assert.equal(busy.error.code, 'GENERATION_IN_PROGRESS');
   release(); assert.equal((await firstRun).status, 200); assert.equal(calls.length, 1);
 
-  // Bounded model input.
-  const big = boundedInput({ title: 't', summary: 'x'.repeat(50000), reflection: { outcomes: Array(40).fill('y'.repeat(3000)) } });
-  assert.ok(big.length <= 16000); assert.ok(JSON.parse(big).truncated);
+  // The generation lock was released after every failure above.
+  mock(ok(good));
+  assert.equal((await request('introductionGenerate', id, 'POST', 'student-alex', {})).status, 200);
 
   // Persistence across repeated migrations and restart.
   const db = await database(); await setup(db); await setup(db); await seed(db); await closeDatabase();
@@ -191,4 +200,30 @@ test('Mentor Awaiting reply counts reuse P1 thread state for Staff', async () =>
   await setup(db); await closeDatabase();
   assert.deepEqual(await counts(), { 'mentor-aaron': 1, 'mentor-sarah': 1 });
  } finally { await closeDatabase(); }
+});
+
+// R1: trimming happens inside the structure, so the model input is always valid JSON within budget.
+test('bounded model input stays valid JSON for maximal projects with escaping and Unicode', () => {
+ const loneSurrogate = /[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/;
+ const strings = (value: unknown): string[] => typeof value === 'string' ? [value] : Array.isArray(value) ? value.flatMap(strings) : value && typeof value === 'object' ? Object.values(value).flatMap(strings) : [];
+ const cps = (unit: string, n: number) => Array.from('a' + unit.repeat(n)).slice(0, n).join('');
+ const variants: [string, string][] = [['quotes', '"'], ['backslashes', '\\'], ['newlines', '\n'], ['unicode', '🎓é中'], ['mixed', '"\\\n\t🎓<>']];
+ for (const [name, unit] of variants) {
+  const text = cps(unit, 10000); const short = cps(unit, 160);
+  const source = {
+   title: short, summary: text, courseOrClub: short, term: 'Autumn 2026', tags: Array.from({ length: 20 }, (_, i) => `${i}${cps(unit, 40)}`), status: 'ongoing',
+   reflection: { progress: text, outcomes: Array(30).fill(text), problems: Array(30).fill({ title: short, assumed: text, happened: text, changed: text }), nextTeam: text, whyPaused: text, ifAgain: Array(30).fill(text), reusable: Array(30).fill({ label: short, url: null }) },
+  };
+  assert.equal(completeProject.safeParse(source).success, true, `${name}: source is a legal project`);
+  const bounded = boundedInput(source);
+  assert.ok(bounded.length <= 16000, `${name}: within budget (${bounded.length})`);
+  const parsed = JSON.parse(bounded);
+  assert.equal(parsed.truncated, true, name);
+  assert.ok(parsed.title.length > 0 && parsed.status === 'ongoing', `${name}: keeps minimal context`);
+  assert.ok(!strings(parsed).some(v => loneSurrogate.test(v)), `${name}: no split surrogate pairs`);
+ }
+ const small = { title: 'Small', summary: 'Fits.', tags: [], status: 'ongoing' };
+ assert.deepEqual(JSON.parse(boundedInput(small)), small);
+ const big = boundedInput({ title: 't', summary: 'x'.repeat(50000), reflection: { outcomes: Array(40).fill('y'.repeat(3000)) } });
+ assert.ok(big.length <= 16000); assert.ok(JSON.parse(big).truncated); assert.ok(JSON.parse(big).summary.startsWith('x'));
 });

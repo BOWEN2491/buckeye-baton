@@ -3,6 +3,15 @@
 2026-10-24 · 分支 `codex/p2-implementation`（基线 `origin/codex/p2-integration` @ 9d2ccfa）· 契约 `docs/P2_CONTRACT.md`
 最终提交 SHA 见 READY 短块（本报告随该提交一起推送）。本报告是实现方自测，**不等于总控验收通过**，不给总体进度计分。
 
+## 返修（依据 docs/P2_REVIEW.md，审查提交 677a1d7）
+
+| 项 | 修复 | 回归测试 |
+|---|---|---|
+| R1 裁剪后的输入必须是有效 JSON | `boundedInput`（`src/server/ai.ts`）改为在结构内按码点裁剪字符串并缩短列表，每轮重新 `JSON.stringify`；仍超预算时退回最小上下文（title/status/tags）。不再截断已序列化的文本，保留 `truncated` 标记，不拆分代理对 | 后端用例 “bounded model input stays valid JSON…”：先用 completeProject 确认合法，再以最大项目覆盖引号、反斜线、换行、Unicode 和混合字符，验证 ≤16000、`JSON.parse` 通过、保留 title/status、无孤立代理；用总控复现数据（引号）在旧代码上失败，新代码通过 |
+| R2 坏的上游外层形状必须返回 502 而不是 500 | HTTP 200 先读 text，再由 `outputJson` 逐层校验：body 是对象、`status==='completed'`、output 是数组、message.content 是对象数组、无 refusal、`output_text.text` 是字符串，任何不符都返回 502 `AI_INVALID_OUTPUT`。网络、HTTP 和超时的错误映射不变 | 新增 7 个注入用例：200 非 JSON、output 为对象、content 为对象、text 非字符串、缺 text、null 项、数组 body。每例只发一次请求、返回 502、草稿和确认版不变；最后再生成成功一次，证明生成锁已释放。旧代码下该测试失败 |
+| R3 引荐后其他已打开候选的负载不刷新 | `mentor-workload.tsx` 增加页面内失效事件 `invalidateMentorWorkload()`，所有已挂载的负载视图（各个候选列表和工作台面板）收到后重新读取。引荐成功后触发该事件。候选区新增 “Refresh counts” 按钮。刷新或失败都不重置已选 Mentor 和理由，失败时显示 Unavailable/Retry，不显示 0，仍可人工引荐。无新依赖、无定时轮询 | 浏览器用例 “a referral refreshes … other open referral forms”：两个表单同时打开 → 第一处引荐 Sarah 后，第二处从 N 变为 N+1，与 API 一致，输入保留 → 手动刷新失败显示 Unavailable 且不显示数量 → Retry 恢复 → 第二处仍能引荐 → 工作台显示 N+2。临时去掉失效调用后该用例失败，重现了总控的 0 |
+| E1 真实 AI 证据 | 补交已有截图 `docs/evidence/p2-real-ai-browse-card.png`，以及脱敏结果 `docs/evidence/P2_REAL_AI_RESULT.md`（两句原文、三个标签、provider/model、generate/confirm 状态、确认前后可见性、原文不变）。**没有新增真实调用**，也不提供任何凭据 | — |
+
 ## 实现项
 
 - **类型与校验**：`src/shared/p2-types.ts` 按契约实现。`src/shared/p2-validation.ts` 是同一份 Zod 校验，模型输出、所有者确认和前端编辑都用它：1–3 句，每项用 `Intl.Segmenter` 判定恰好一句，≤280 字符，总计 ≤600；标签 trim、转小写，1–32 字符，不含换行，去重后 1–6 个；拒绝附加字段。
@@ -39,9 +48,9 @@
 | 命令 | 结果 |
 |---|---|
 | `npm run typecheck` | 通过 |
-| `npm run test:backend` | 7/7 通过（新增 2 项 P2，P1 两项和 P0 三项保留） |
+| `npm run test:backend` | 8/8 通过（P2 三项，含 R1/R2 回归；P1 两项和 P0 三项保留） |
 | `npm run build` | 通过 |
-| `npm run test:e2e` | 9/9 通过（47.7s）；Playwright 启动 `next start` 生产服务器（独立临时 PGlite）和本地 mock 模型服务器，即同时确认了生产启动 |
+| `npm run test:e2e` | 10/10 通过（48.9s，含 R3 用例）；Playwright 启动 `next start` 生产服务器（独立临时 PGlite）和本地 mock 模型服务器，即同时确认了生产启动 |
 | `git diff --check` | 通过 |
 
 **Mock（自动测试，不消耗额度）**：后端测试注入 transport。
@@ -68,11 +77,11 @@
 - 授权真实生成共 **2 次**（上限 3 次），都在独立生产服务器 `127.0.0.1:3300` 和临时 PGlite 上进行，没有使用 3000 服务或用户数据库。
   1. 第 1 次：HTTP 404，界面返回 503 `AI_UNAVAILABLE`，没有写入。原因是配置的模型名是 `gpt-6-Luna`，而 OpenAI 模型 ID 区分大小写。随后用 key 调用免费的 `/v1/models` 列表（不生成内容），确认账号可用的 ID 为 `gpt-6-luna`，只修正了 `.env.local` 的模型行。
   2. 第 2 次：**成功**，200，耗时 2.5s。项目是 `project-v2-paused`，身份 Alex。返回 2 句（每项都是一句）和 3 个标签：notifications、web、consent。内容只复述已保存的进展和暂停原因，没有编造成果。确认前公共卡片没有简介；按原样确认后返回 200，`/api/projects` 中出现 stale=false 的简介，与草稿一致；作者 summary 和 reflection 未改变；公开列表不含 draftId 或模型名。
-- 截图：真实 AI 确认后的首页卡片（`real-ai-browse-card.png`）。没有保存原始请求或响应日志，报告和截图中没有 key。
+- 截图与脱敏结果已提交：[docs/evidence/p2-real-ai-browse-card.png](evidence/p2-real-ai-browse-card.png)、[docs/evidence/P2_REAL_AI_RESULT.md](evidence/P2_REAL_AI_RESULT.md)。没有保存原始请求或响应日志，报告和截图中没有 key。
 
 ## 截图位置
 
-本机临时目录 `C:/Users/23678/AppData/Local/Temp/claude/D--Codes-Buckeye-baton/0ed38a91-4ca2-4b43-9f37-f40b93bd7c18/scratchpad/qa-p2/`，未提交到仓库：introduction-editor-desktop/mobile、browse-card-confirmed-desktop、browse-mobile、referral-candidates-desktop、staff-workload-desktop/mobile、real-ai-browse-card，以及沿用的 P0/P1 截图。
+真实 AI 截图已提交到 `docs/evidence/`。其余为 mock 测试截图，存放在本机临时目录 `C:/Users/23678/AppData/Local/Temp/claude/D--Codes-Buckeye-baton/0ed38a91-4ca2-4b43-9f37-f40b93bd7c18/scratchpad/qa-p2/` 和 `qa-p2-fix/`，未提交：introduction-editor-desktop/mobile、browse-card-confirmed-desktop、browse-mobile、referral-candidates-desktop、staff-workload-desktop/mobile、real-ai-browse-card，以及沿用的 P0/P1 截图。
 
 ## Not run、限制与风险
 

@@ -39,21 +39,30 @@ const schema = {
  additionalProperties: false,
 };
 
-// Bounded JSON input: shorten every string and list step by step until it fits.
-export function boundedInput(data: unknown) {
- let text = JSON.stringify(data);
- for (const limit of [2000, 800, 300, 120]) {
-  if (text.length <= MAX_INPUT) break;
-  const cut = (value: unknown): unknown => typeof value === 'string' ? value.slice(0, limit) : Array.isArray(value) ? value.slice(0, 10).map(cut) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, cut(v)])) : value;
-  text = JSON.stringify({ ...(cut(data) as object), truncated: true });
+// Bounded JSON input: trim inside the structure and re-serialize, so the result is always valid JSON.
+// Strings are cut by code point (never splitting a surrogate pair); lists are shortened too.
+const cutText = (value: string, limit: number) => { const chars = Array.from(value); return chars.length > limit ? chars.slice(0, limit).join('') : value; };
+function trimmed(value: unknown, limit: number, items: number): unknown {
+ if (typeof value === 'string') return cutText(value, limit);
+ if (Array.isArray(value)) return value.slice(0, items).map(v => trimmed(v, limit, items));
+ if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, trimmed(v, limit, items)]));
+ return value;
+}
+export function boundedInput(data: Record<string, unknown>) {
+ const full = JSON.stringify(data);
+ if (full.length <= MAX_INPUT) return full;
+ for (const [limit, items] of [[2000, 10], [800, 10], [300, 6], [120, 4], [60, 3], [30, 2], [12, 1]]) {
+  const text = JSON.stringify({ ...(trimmed(data, limit, items) as object), truncated: true });
+  if (text.length <= MAX_INPUT) return text;
  }
- return text.slice(0, MAX_INPUT);
+ // Minimal context: title, status and a few tags always fit (title <= 160 code points).
+ return JSON.stringify({ title: cutText(String(data.title ?? ''), 160), status: data.status, tags: Array.isArray(data.tags) ? data.tags.slice(0, 6).map(t => cutText(String(t), 32)) : [], truncated: true });
 }
 
-export async function generateIntroduction(data: unknown): Promise<{ content: IntroductionContent; model: string }> {
+export async function generateIntroduction(data: Record<string, unknown>): Promise<{ content: IntroductionContent; model: string }> {
  const config = aiConfig(); if (!config) throw unavailable();
  const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
- let body: any;
+ let raw: string;
  try {
   const response = await transport(endpoint(), {
    method: 'POST', signal: controller.signal,
@@ -61,20 +70,29 @@ export async function generateIntroduction(data: unknown): Promise<{ content: In
    body: JSON.stringify({ model: config.model, store: false, max_output_tokens: 2000, input: [{ role: 'system', content: instructions }, { role: 'user', content: boundedInput(data) }], text: { format: { type: 'json_schema', name: 'project_introduction', strict: true, schema } } }),
   });
   if (!response.ok) { console.error('AI request failed with status', response.status); throw unavailable(); }
-  body = await response.json();
+  raw = await response.text();
  } catch (error) {
   if (error instanceof ApiFailure) throw error;
   if (controller.signal.aborted) throw new ApiFailure(504, 'AI_TIMEOUT', 'The AI took too long to respond. Nothing was saved; try again.');
   throw unavailable();
  } finally { clearTimeout(timer); }
- if (body?.status !== 'completed') throw invalid();
- const message = (body.output ?? []).find((item: any) => item?.type === 'message');
- const content = message?.content ?? [];
- if (content.some((part: any) => part?.type === 'refusal')) throw invalid();
- const text = content.find((part: any) => part?.type === 'output_text')?.text;
- let parsed: unknown;
- try { parsed = JSON.parse(text); } catch { throw invalid(); }
- const result = introductionContent.safeParse(parsed);
+ // A 200 response of any unexpected shape is invalid output, never a server error.
+ const result = introductionContent.safeParse(outputJson(raw));
  if (!result.success) throw invalid();
  return { content: result.data, model: config.model };
+}
+
+// Validates the outer Responses API shape before reading the structured text.
+function outputJson(raw: string): unknown {
+ let body: unknown;
+ try { body = JSON.parse(raw); } catch { throw invalid(); }
+ const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value);
+ if (!record(body) || body.status !== 'completed' || !Array.isArray(body.output)) throw invalid();
+ const message = body.output.find(item => record(item) && item.type === 'message');
+ if (!record(message) || !Array.isArray(message.content)) throw invalid();
+ const parts = message.content.filter(record);
+ if (parts.length !== message.content.length || parts.some(part => part.type === 'refusal')) throw invalid();
+ const text = parts.find(part => part.type === 'output_text')?.text;
+ if (typeof text !== 'string') throw invalid();
+ try { return JSON.parse(text); } catch { throw invalid(); }
 }

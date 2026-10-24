@@ -219,3 +219,56 @@ test('Staff see Mentor Awaiting reply counts move with referrals, replies and fo
   await noOverflow(page);
   await page.screenshot({ path: path.join(evidenceDir, 'staff-workload-mobile.png'), fullPage: true });
 });
+
+// R3: a successful referral refreshes every open candidate list on the page; manual refresh keeps inputs.
+test('a referral refreshes Awaiting reply counts in other open referral forms', async ({ page }) => {
+  test.setTimeout(120_000);
+  const stamp = Date.now();
+  const first = `Two forms first ${stamp}`;
+  const second = `Two forms second ${stamp}`;
+  await page.goto('/');
+  await identity(page, 'student-mia');
+  await page.goto('/projects/project-v2-finished');
+  for (const title of [first, second]) {
+    await page.getByRole('button', { name: 'Ask a question', exact: true }).click();
+    await page.getByLabel('Your question').fill(title);
+    await page.getByRole('radio', { name: 'Yes, ask Staff to refer a mentor', exact: true }).check();
+    await page.getByRole('button', { name: 'Post question', exact: true }).click();
+    await expect(page.getByRole('article', { name: title, exact: true })).toContainText('Waiting for Staff referral');
+  }
+  await identity(page, 'staff-kevin');
+  await page.goto('/projects/project-v2-finished');
+  const a = page.getByRole('article', { name: first, exact: true });
+  const b = page.getByRole('article', { name: second, exact: true });
+  await a.getByRole('button', { name: 'Refer a mentor', exact: true }).click();
+  await b.getByRole('button', { name: 'Refer a mentor', exact: true }).click();
+  const sarahOption = (thread: typeof a) => thread.getByRole('option', { name: /^Sarah Patel/ });
+  await expect(sarahOption(a)).toHaveText(/Awaiting reply: \d+$/);
+  const n = Number((await sarahOption(b).innerText()).match(/Awaiting reply: (\d+)$/)![1]);
+  await expect(sarahOption(a)).toHaveText(new RegExp(`Awaiting reply: ${n}$`));
+  // Draft choices in the second form survive the refresh triggered by the first referral.
+  await b.getByRole('combobox', { name: 'Mentor', exact: true }).selectOption('mentor-sarah');
+  await b.getByLabel('Why this mentor fits').fill('Second form reason.');
+  await a.getByRole('combobox', { name: 'Mentor', exact: true }).selectOption('mentor-sarah');
+  await a.getByLabel('Why this mentor fits').fill('First form reason.');
+  await a.getByRole('button', { name: 'Send referral', exact: true }).click();
+  await expect(a).toContainText('Referred to Sarah Patel · waiting for reply');
+  await expect(sarahOption(b)).toHaveText(new RegExp(`Awaiting reply: ${n + 1}$`));
+  const api = await (await page.request.get('/api/mentors/workload', { headers: { 'x-demo-user-id': 'staff-kevin' } })).json();
+  expect(api.data.items.find((i: { mentor: { id: string } }) => i.mentor.id === 'mentor-sarah').awaitingReply).toBe(n + 1);
+  await expect(b.getByRole('combobox', { name: 'Mentor', exact: true })).toHaveValue('mentor-sarah');
+  await expect(b.getByLabel('Why this mentor fits')).toHaveValue('Second form reason.');
+  // Manual refresh failure: Unavailable with Retry, no fake 0, inputs kept, referral still possible.
+  await page.route('**/api/mentors/workload', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Unavailable"}}' }), { times: 1 });
+  await b.getByRole('button', { name: 'Refresh counts', exact: true }).click();
+  await expect(b.getByText('Workload unavailable.')).toBeVisible();
+  await expect(sarahOption(b)).not.toHaveText(/Awaiting reply/);
+  await expect(b.getByRole('combobox', { name: 'Mentor', exact: true })).toHaveValue('mentor-sarah');
+  await expect(b.getByLabel('Why this mentor fits')).toHaveValue('Second form reason.');
+  await b.getByRole('button', { name: 'Retry', exact: true }).click();
+  await expect(sarahOption(b)).toHaveText(new RegExp(`Awaiting reply: ${n + 1}$`));
+  await b.getByRole('button', { name: 'Send referral', exact: true }).click();
+  await expect(b).toContainText('Referred to Sarah Patel · waiting for reply');
+  await page.goto('/workspace');
+  await expect(page.getByRole('region', { name: 'Mentor workload' }).getByRole('listitem').filter({ hasText: 'Sarah Patel' })).toContainText(`Awaiting reply: ${n + 2}`);
+});
