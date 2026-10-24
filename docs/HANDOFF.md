@@ -2,7 +2,7 @@
 
 ## 当前准备P2
 
-唯一实现任务书 P2_AGENT_TASK.md，契约 P2_CONTRACT.md；从 origin/codex/p2-integration 建 codex/p2-implementation，一个Agent全栈交付。正常只转交最终READY短块，详细报告随分支保存为docs/P2_REPORT.md。总控独立验收后再提供产品预览，经用户验收/授权后才合入main。当前只有文档准备，P2功能验收0/10；不影响正在运行的P1服务和数据库。
+唯一实现任务书 P2_AGENT_TASK.md，契约 P2_CONTRACT.md；从 origin/codex/p2-integration 建 codex/p2-implementation，一个Agent全栈交付。正常只转交最终READY短块，详细报告随分支保存为docs/P2_REPORT.md。总控独立验收后再提供产品预览，经用户验收/授权后才合入main。实现方已交付677a1d7，总控独立验收7/10；集中返修及证据要求见P2_REVIEW.md。正常只需修完回传一次，未集成或合并，不影响P1服务和数据库。
 
 ## 已完成的P1
 
