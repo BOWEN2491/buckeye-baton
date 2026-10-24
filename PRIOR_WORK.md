@@ -1,23 +1,5 @@
-# Prior work disclosure / 赛前工作说明
+# Prior work and provenance
 
-Preparation date: **2026-10-22**, before HackOHI/O 2026.
+A generic development rehearsal existed before the Honda challenge: React/Vite echo UI, FastAPI echo API, Streamlit fallback and optional API connectivity scripts. The user requested their removal on 2026-10-24 because the competition app replaces them. Their original versions remain in Git history.
 
-Created with Codex assistance:
-
-- Project-local Python environment, dependency manifests, Git ignore rules and Windows launch scripts.
-- Generic React form, FastAPI health/echo endpoints and Streamlit echo example for environment testing.
-- Optional OpenAI connectivity test; user independently confirmed a successful API response before this kit was created.
-- Team workflow notes, manual preparation checklist and this disclosure template.
-
-No sponsor-specific implementation, competition dataset processing, model training or final product feature was implemented as part of this preparation.
-
-## To fill in at submission
-
-- Which preparation files/components were reused:
-- Libraries, models, datasets and external resources used:
-- AI coding tools used and their role, per event disclosure requirements:
-- Work completed during the official event period:
-- Contributions from each team member:
-- Known limitations and any recorded/mock material clearly labeled:
-
-Official policy: https://hackohio2026.devpost.com/rules
+The current Buckeye Baton implementation uses new Next.js routes/components, SQL schema and the approved fictional relay story. Retained repository documentation and collaboration conventions originated in the preparation period. Report pre-event preparation and competition-time contributions accurately in the submission; do not count historical environment tests as new product functionality.

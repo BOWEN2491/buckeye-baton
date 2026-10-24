@@ -1,7 +1,7 @@
 # Decisions
 
 ### Keep source and dependencies on D: with explicit project Python
-**Date:** 2026-10-22 · **Status:** Accepted
+**Date:** 2026-10-22 Â· **Status:** Accepted
 **Files:** `.venv/`, `start.ps1`, `.vscode/settings.json`
 
 In the context of a Windows hackathon workstation with Miniconda on C:,
@@ -11,7 +11,7 @@ to achieve predictable launches and isolated dependencies,
 accepting that Conda-specific native libraries would require a separate later environment.
 
 ### Rehearse connectivity without competition features or API spending
-**Date:** 2026-10-22 · **Status:** Accepted
+**Date:** 2026-10-22 Â· **Status:** Accepted
 **Files:** `backend/main.py`, `frontend/`, `fallback/app.py`, `scripts/check_api.py`, `PRIOR_WORK.md`
 
 In the context of preparation before the challenge is selected,
@@ -21,7 +21,7 @@ to achieve a testable local workflow and clear prior-work disclosure,
 accepting that public hosting and actual product logic remain future work.
 
 ### Keep project context in the repository for future conversations
-**Date:** 2026-10-23 · **Status:** Accepted
+**Date:** 2026-10-23 Â· **Status:** Accepted
 **Files:** `AGENTS.md`, `PROJECT_CONTEXT.md`, `project-docs/`, `CLAUDE.md`
 
 In the context of reopening coding-agent conversations and collaborating with a beginner teammate,
@@ -29,3 +29,15 @@ facing context loss and historical checklist assumptions,
 we decided for a short Markdown snapshot plus a maintained HTML project page linked from agent entry files,
 to achieve a discoverable handoff with explicit verification dates and unknowns,
 accepting that state changes require updating both the snapshot and the relevant HTML markers.
+
+
+### Preserve rehearsal and add the competition app in a separate directory
+**Date:** 2026-10-24 Â· **Status:** Accepted
+**Files:** `pass-it-on/`, `PROJECT_CONTEXT.md`, `project-docs/index.html`
+
+In the context of the user confirming Honda challenge and the buckeye-baton repository, facing a need to preserve pre-event work and concurrent teammate changes, we decided for an independent codex branch and a new pass-it-on/ application directory, to achieve reviewable integration without replacing rehearsal files, accepting two application entrypoints that documentation must distinguish. The current MVP uses Next.js 15 and Node.js 22 with hosted pg or explicitly selected local persistent PGlite; demo identity is not authentication. This adds a competition implementation without invalidating historical rehearsal decisions.
+
+### Buckeye Baton root application cleanup
+**Date:** 2026-10-24 · **Status:** Accepted
+
+In the context of the user renaming the product and explicitly requesting removal of obsolete rehearsal code, facing duplicate entrypoints and unrelated dependencies, we decided for the Next.js competition application at repository root and removal of the superseded tracked examples, to achieve one clear runnable project, accepting that historical rehearsal files must be recovered from Git. The app uses pg for hosted PostgreSQL and explicit persistent PGlite for local development; demo identity is not authentication.

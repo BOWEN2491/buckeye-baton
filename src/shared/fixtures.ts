@@ -1,0 +1,18 @@
+import type { User, Project, Lesson } from './types';
+const timestamp = '2026-10-24T12:00:00.000Z';
+/** Fictional demo content; no measured impact claims. */
+export const demoUsers: User[] = [
+  { id: 'student-alex', name: 'Alex Chen', role: 'student', headline: 'Student · Campus Signup team', tags: ['web', 'user-research'] },
+  { id: 'student-mia', name: 'Mia Johnson', role: 'student', headline: 'Student · Campus Events team', tags: ['design', 'web'] },
+  { id: 'mentor-sarah', name: 'Sarah Patel', role: 'mentor', headline: 'Industry mentor · Product engineer', tags: ['forms', 'accessibility', 'user-research'] },
+  { id: 'staff-kevin', name: 'Kevin Brooks', role: 'staff', headline: 'OSU staff · Project connections', tags: ['student-projects', 'mentoring'] },
+];
+export const demoProjects: Project[] = [
+  { id: 'project-signup', ownerId: 'student-alex', title: 'Campus Signup', summary: 'A mobile-friendly registration flow for student club events. Our team explored simpler forms and clearer confirmation messages.', courseOrClub: 'Student Innovation Club', term: 'Spring 2026', tags: ['web', 'forms', 'user-research'], demoUrl: null, codeUrl: null, status: 'finished', createdAt: timestamp, updatedAt: timestamp },
+  { id: 'project-events', ownerId: 'student-mia', title: 'Campus Events', summary: 'A new team building a signup experience for campus volunteer events, learning from earlier student projects.', courseOrClub: 'Student Innovation Club', term: 'Fall 2026', tags: ['web', 'volunteering', 'forms'], demoUrl: null, codeUrl: null, status: 'ongoing', createdAt: timestamp, updatedAt: timestamp },
+];
+export const demoLessons: Lesson[] = [
+  { id: 'lesson-fields', projectId: 'project-signup', authorId: 'student-alex', type: 'pitfall', title: 'Ask only for information you need now', assumed: 'We expected students to complete all registration fields in one visit.', happened: 'In our fictional demo scenario, students found a long mobile form difficult to finish.', change: 'We moved optional questions after registration and explained why required details were needed.', conditions: 'Useful for low-risk student event registration. Check which details are necessary for your event before removing them.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
+  { id: 'lesson-confirmation', projectId: 'project-signup', authorId: 'student-alex', type: 'worked', title: 'Show the next step after registration', assumed: 'A success message would be enough.', happened: 'People still wanted to know when and where to arrive.', change: 'We added event time, location, and contact details to confirmation.', conditions: 'Best for events with clear logistical information; keep details current.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
+  { id: 'lesson-accessibility', projectId: 'project-signup', authorId: 'student-alex', type: 'next_team', title: 'Test keyboard navigation before adding more features', assumed: 'Visual checks would catch the main usability problems.', happened: 'Keyboard-only usage revealed unclear focus and labels.', change: 'The next team can test the full flow with a keyboard and review labels with a mentor.', conditions: 'Relevant to web forms; combine this with testing with actual users.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
+];
