@@ -1,7 +1,7 @@
 # P1 共用契约与范围
 
 2026-10-24。这是本轮协调契约；尚未实现的端点不能标为运行接口。沿用 API_CONTRACT.md 的 {data:...}/{error:{code,message}}、英文消息、demo header、错误状态与所有者校验。
-Worker A 先交付 src/shared/relay-types.ts，完整实现以下公共请求/响应类型；总控确认后冻结。已有 User、Project、ProjectReflection、Lesson 引用 src/shared/types.ts，不重复定义。
+P1 由一个全栈 Agent 连续实现。先在 src/shared/relay-types.ts 实现下列公共类型，再实现数据、接口和页面；无需单独提交类型供另一个 worker 同步。契约语义变更仍由总控协调。已有 User、Project、ProjectReflection、Lesson 引用 src/shared/types.ts，不重复定义。完整任务见 P1_AGENT_TASK.md。
 
 ## 规则
 

@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P0 已完成；P1 共用契约、分工、10项进度门槛和英文界面约定已准备",
-  "nextUp": "A 先回传共用类型提交；B 并行布局，类型同步后接入；总控核验再累计进度",
+  "lastCompleted": "P0 已完成；P1 已合并为单 Agent 全栈任务，正常仅最终回传一次；功能验收仍为 0/10",
+  "nextUp": "用户将 P1_AGENT_TASK 启动提示词转交实现 Agent；全部完成后回传 READY，由总控独立核验",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -235,6 +235,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>P1 执行入口</h3><p><a href="../docs/P1_AGENT_TASK.md">单 Agent 全栈任务书</a>：实现、验证与最终 READY 回传；<a href="../docs/P1_CONTRACT.md">冻结契约</a>：数据及接口；<a href="../docs/EXECUTION_ROADMAP.md">总控台账</a>：P0–P4 与十项验收门槛。原 A/B 任务已取代。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>统一入口</h3><p><a href="../docs/PROJECT_OVERVIEW.md">项目总览</a>：定位、状态、已实现与下一轮；<a href="../design/README.md">设计说明</a>：队友原型及未确认差异；<a href="../docs/HANDOFF.md">协作说明</a>：main 共享基线与唯一工作目录。旧实施笔记移入 docs/legacy/planning/。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>v2 规格与旧版边界</h3><p><a href="../docs/MVP_SPEC.md">MVP_SPEC.md</a> 是新版依据；<a href="../docs/ACCEPTANCE.md">ACCEPTANCE.md</a> 是完整目标验收；<a href="../docs/PHASE1_ACCEPTANCE.md">PHASE1_ACCEPTANCE.md</a> 是当前第一轮验收。API_CONTRACT.md 和 src/shared/types.ts 已包含 reflection；docs/legacy/ 保存旧规格。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>文件地图</h3><table><tbody><tr><td><code>src/app/</code></td><td>页面与 /api 路由</td></tr><tr><td><code>src/components/</code></td><td>可复用界面</td></tr><tr><td><code>src/lib/client.ts</code></td><td>请求封装与带资源键的加载状态</td></tr><tr><td><code>src/server/</code></td><td>权限、输入校验、SQL 与事务</td></tr><tr><td><code>src/shared/</code></td><td>共用类型和虚构样例</td></tr><tr><td><code>db/schema.sql</code></td><td>数据库结构</td></tr><tr><td><code>scripts/</code></td><td>数据库初始化</td></tr><tr><td><code>tests/</code></td><td>接口与浏览器回归</td></tr><tr><td><code>docs/</code></td><td>范围、契约与验收</td></tr><tr><td><code>README.md</code></td><td>运行入口</td></tr><tr><td><code>AGENTS.md</code></td><td>后续 agent 工作约定</td></tr><tr><td><code>DECISIONS.md</code></td><td>决策与被替代的历史选择</td></tr></tbody></table></div>
@@ -245,7 +246,7 @@
 <!-- claude:architecture:entrypoints:end -->
 
     <!-- claude:architecture:conventions:start -->
-<div class="card" data-updated="2026-10-24"><h3>协作</h3><p>前端负责页面与组件，后端负责 SQL、服务端和路由。共用类型与依赖集中协调。独立 codex/ 分支，不覆盖队友工作。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>协作</h3><p>P1 由一个全栈 Agent 在 codex/p1-implementation 连续完成类型、SQL、API 和页面；总控管理契约与独立验收。正常只回传最终 READY，阻塞才提前报告。不覆盖队友工作，不自行合并 main。</p></div>
 <!-- claude:architecture:conventions:end -->
 
     <!-- claude:architecture:integrations:start -->
@@ -323,7 +324,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
-<div class="card" data-updated="2026-10-24"><h3>两 worker 执行准备</h3><p>路线与进度见 <a href="../docs/EXECUTION_ROADMAP.md">EXECUTION_ROADMAP</a>，P1 功能验收 0/10；契约与任务书已准备，两个外部 agent 尚待用户转交启动。产品文案使用英文，Awaiting reply 表示待回复。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P1 改为单 Agent 完整交付</h3><p>按用户最新决定合并前后端任务，正常只在全部实现、自测和推送后汇报一次。P1 功能验收仍为 0/10，本次仅更新交接文档。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>历史：两 worker 执行准备（已被取代）</h3><p>原路线的契约、十项验收门槛和英文界面约定保留，A/B 分工和中间类型交接已取消。Awaiting reply 表示待回复。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>现阶段整理</h3><p>新增项目总览，设计稿收入 design/，更新协作与队友说明；旧计划、进度和发现记录归档。清理两条本地/远程冗余分支及两个空闲工作目录；本次未修改应用或数据库。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 清理旧经验采用功能</h3><p>移除独立经验/采用界面与项目里的采用数字；旧经验链接跳回来源项目，历史经验内联保留。采用写接口返回 410，不删除旧数据库记录。类型检查、后端 3/3、生产构建与浏览器 5/5 通过；旧链接实测重定向，旧界面匹配及 pageerror 均为 0。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · v2 第一轮</h3><p>实现首页与三状态项目交互、总结表单和增量数据字段；新增第一轮验收，完整接棒与引荐仍未实现。类型检查、后端 2/2、生产构建与浏览器 4/4 通过；旧数据保留。</p></div>

@@ -1,5 +1,11 @@
 # Decisions
 
+### P1 single-agent delivery supersedes the two-worker split
+**Date:** 2026-10-24 · **Status:** Accepted by user
+**Supersedes:** P1 backend/frontend split in “Coordinate two external workers with a contract-first P1”.
+
+In the context of the user choosing one Agent for P1 and requesting minimal report forwarding, facing unnecessary type handoffs and branch coordination, we decided for one full-stack task branch and one final READY report, to achieve continuous implementation with independent coordinator acceptance, accepting that a single worker owns both API and UI. P1 contract and ten gates stay unchanged; only genuine blockers add reports. No application implementation is claimed by this documentation change.
+
 ### Coordinate two external workers with a contract-first P1
 **Date:** 2026-10-24 · **Status:** Accepted execution coordination
 **Files:** docs/EXECUTION_ROADMAP.md, docs/P1_CONTRACT.md, docs/workers/

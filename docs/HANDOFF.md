@@ -2,7 +2,7 @@
 
 ## 当前进行中的 P1
 
-本轮临时集成分支 codex/p1-integration；两个实际 worker 各建短期 codex/p1-api 和 codex/p1-ui，结束后清理，不恢复永久前后端分支。先读 EXECUTION_ROADMAP.md 与 P1_CONTRACT.md，再转交 workers/WORKER_A.md、workers/WORKER_B.md。类型提交先同步，其他实现并行；总控核验后才累计进度，main 继续作为稳定基线。
+本轮总控持有临时集成分支 codex/p1-integration；一个全栈 Agent 从它建立 codex/p1-implementation，连续完成 P1 后一次提交总控验收。不再使用 A/B 任务、类型交接或双分支同步。先读 EXECUTION_ROADMAP.md 与 P1_CONTRACT.md，再按 P1_AGENT_TASK.md 实施。main 继续作为稳定基线；总控核验后才累计进度。
 
 ## 从哪里开始
 
