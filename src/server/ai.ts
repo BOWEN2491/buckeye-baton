@@ -12,7 +12,8 @@ let timeoutMs = 30_000;
 // Tests shorten the 30 s limit to exercise the timeout path quickly.
 export function setTimeoutMs(ms: number | null) { timeoutMs = ms ?? 30_000; }
 const MAX_INPUT = 16_000;
-const ENDPOINT = 'https://api.openai.com/v1/responses';
+// OPENAI_BASE_URL is optional (same name as the official SDK); Playwright points it at a local mock.
+const endpoint = () => `${(process.env.OPENAI_BASE_URL?.trim() || 'https://api.openai.com/v1').replace(/\/$/, '')}/responses`;
 const unavailable = () => new ApiFailure(503, 'AI_UNAVAILABLE', 'AI introductions are unavailable right now. Your project content is unchanged.');
 const invalid = () => new ApiFailure(502, 'AI_INVALID_OUTPUT', 'The AI response could not be used. Nothing was saved; try again or keep your own summary.');
 
@@ -54,7 +55,7 @@ export async function generateIntroduction(data: unknown): Promise<{ content: In
  const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
  let body: any;
  try {
-  const response = await transport(ENDPOINT, {
+  const response = await transport(endpoint(), {
    method: 'POST', signal: controller.signal,
    headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' },
    body: JSON.stringify({ model: config.model, store: false, max_output_tokens: 2000, input: [{ role: 'system', content: instructions }, { role: 'user', content: boundedInput(data) }], text: { format: { type: 'json_schema', name: 'project_introduction', strict: true, schema } } }),

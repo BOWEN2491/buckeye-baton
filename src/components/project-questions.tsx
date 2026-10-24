@@ -5,6 +5,7 @@ import type { ProjectPostKind, QuestionThread } from "@/shared/relay-types";
 import { ApiRequestError, api, errorText, formatDate, formatDateTime, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
+import { MentorSelect } from "./mentor-workload";
 
 export function stateLabel(thread: QuestionThread) {
   const mentor = thread.referral?.mentor.name;
@@ -160,17 +161,7 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
         </button>
       )}
       {mentors.length ? (
-        <label>
-          Mentor
-          <select value={mentorId} disabled={busy} onChange={(e) => setMentorId(e.target.value)}>
-            <option value="">Choose a mentor</option>
-            {mentors.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name} · {m.headline}
-              </option>
-            ))}
-          </select>
-        </label>
+        <MentorSelect mentors={mentors} value={mentorId} disabled={busy} onChange={setMentorId} />
       ) : (
         <p className="subtle-empty">No mentors in the directory yet. The question stays under “Needs referral”.</p>
       )}

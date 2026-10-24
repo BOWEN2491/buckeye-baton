@@ -1561,3 +1561,87 @@ nav {
     padding: 10px 12px;
   }
 }
+
+/* P2: owner-reviewed introductions and Mentor workload */
+.ai-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #5b4b8a;
+  margin: -6px 0 12px;
+}
+.intro-published {
+  border: 1px solid #d9d2ec;
+  background: #f7f5fc;
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-wrap: anywhere;
+}
+.intro-published .ai-label {
+  margin: 0 0 6px;
+}
+.intro-draft {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  min-width: 0;
+}
+.intro-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #414c60;
+}
+.intro-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.intro-row .text-button {
+  margin-top: 12px;
+}
+.intro-draft > .text-button {
+  align-self: flex-start;
+  margin-top: 0;
+}
+.workload-panel {
+  margin-bottom: 22px;
+}
+.workload-panel .section-heading {
+  margin-bottom: 12px;
+}
+.workload-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workload-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  overflow-wrap: anywhere;
+}
+.workload-count {
+  font-weight: 700;
+  font-size: 13px;
+  color: #1d4ed8;
+}
+.workload-unavailable {
+  color: #a3132b;
+  font-size: 12px;
+  font-weight: 600;
+}
+.workload-unavailable .text-button {
+  margin-top: 0;
+}

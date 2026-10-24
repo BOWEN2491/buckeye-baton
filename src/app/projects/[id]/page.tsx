@@ -8,6 +8,7 @@ import { useIdentity } from "@/components/app-shell";
 import { Feedback, Loading, PageHeading, Status, Tags } from "@/components/ui";
 import { ProjectForm } from "@/components/project-form";
 import { ProjectQuestions } from "@/components/project-questions";
+import { IntroductionPanel } from "@/components/introduction-panel";
 import { flashKey, SourceLine, Successors } from "@/components/relay-links";
 function Text({ value, empty }: { value?: string; empty: string }) {
   return (
@@ -307,6 +308,7 @@ export default function ProjectPage({
                 ))}
               </section>
             )}
+            {mine && <IntroductionPanel key={p.updatedAt} projectId={p.id} />}
             <ProjectQuestions projectId={p.id} status={p.status} />
             <Successors successors={successors} />
           </div>
