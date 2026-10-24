@@ -1,6 +1,6 @@
 # 赛前 Checklist
 
-更新时间：2026-10-23（America/New_York）。勾选只代表已经验证，不代表账号设置已代办。
+更新时间：2026-10-24（America/New_York）。勾选只代表已经验证，不代表账号设置已代办。
 
 ## 自动准备和验证
 
@@ -16,12 +16,15 @@
 - [x] Git 本地初始提交。
 - [x] 2026-10-23 已连接并成功推送到 `BOWEN2491/Hacking1024`，本机 Git 写入权限已验证。
 - [x] 已建立 `AGENTS.md`、`PROJECT_CONTEXT.md` 和 `project-docs/`，用于新对话背景恢复与持续维护。
+- [x] 2026-10-24 实查队友 `nnyyttg` 拥有仓库 `write` 权限。
+- [ ] 队友 Windows 本机安装、启动和页面交互。她的 agent 仅报告云端 Linux 通过，不能替代本机验证。
+- [ ] 队友使用自己的 Git 登录完成分支推送和首个 PR。
 
 ## 需要你手动完成
 
 1. **OpenAI 账单和预算**：登录 [Billing](https://platform.openai.com/settings/organization/billing) 和 [Limits](https://platform.openai.com/settings/organization/limits)，确认正确组织/项目、有可用额度，并设置你自己愿意承担的预算/告警。一次成功请求不代表整个周末都有足够余额；页面预算/告警也不要未经确认就当作硬性封顶。无需为了准备重新创建 Key。
 2. **报名与 Discord**：确认你和队友都报名成功；从 [官方 Resources](https://hackohio2026.devpost.com/resources) 进入 Guidebook 和 Discord，确认赞助商题目、资格、所需数据/权限、提交 Form、Zoom 分组和现场签到要求。不要仅凭 Devpost 上的 Join 判断已完成主办方报名。
-3. **GitHub 协作**：仓库 [BOWEN2491/Hacking1024](https://github.com/BOWEN2491/Hacking1024) 已创建，当前为公开仓库。邀请队友并让其接受邀请，再按 `TEAMMATE.md` 完成一次 clone/分支/PR 演练。不要在公开或共享录屏里输入凭据。
+3. **GitHub 协作**：仓库 [BOWEN2491/Hacking1024](https://github.com/BOWEN2491/Hacking1024) 当前公开，队友 `nnyyttg` 的 `write` 权限已核实，无需重复邀请；按 `TEAMMATE.md` 完成她本机的 clone/分支/PR 演练。不要在公开或共享录屏里输入凭据。
 4. **队友验收**：把练习发给队友，让他独立启动，修改页面文字和错误提示，完成一个 PR。若他无法独立交付，让其比赛当天负责测试、素材和展示，你用 Streamlit 控制开发量。
 5. **演示与部署账号**：试录 30 秒视频，检查窗口、声音、鼠标和视频链接权限；确认 Zoom 可登录。Vercel 连接已可用，无需为了这次准备重新注册。若决定需要公网展示，再确认 Vercel/后端托管或 Streamlit Community Cloud 的 GitHub 授权与环境变量配置。尚未验证任何云端部署。
 6. **现场物品与网络**：电脑、充电器、证件、耳机、鼠标、转接头、热点和休息安排。准备一份演示输入、预期输出和失败时的录屏备份。

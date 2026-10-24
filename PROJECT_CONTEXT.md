@@ -1,13 +1,13 @@
 # Hacking1024 — 新对话背景
 
-最后更新：**2026-10-23，America/New_York**。本文件是简短摘要；完整状态和文件地图见 `project-docs/index.html`，修改规则见 `project-docs/MAINTENANCE.md`。
+最后更新：**2026-10-24，America/New_York**。本文件是简短摘要；完整状态和文件地图见 `project-docs/index.html`，修改规则见 `project-docs/MAINTENANCE.md`。
 
 ## 项目是什么
 
 - 仓库：[BOWEN2491/Hacking1024](https://github.com/BOWEN2491/Hacking1024)，当前公开。
 - 拥有者的本地目录：`D:\HackOHIO_1024`。旧聊天目录 `C:\Users\23678\Documents\ChatGPT\O` 不是项目目录。
-- 背景：准备参加 HackOHI/O 2026，赛事日期为 10 月 24–25 日。今天仍属于赛前准备。
-- 两人团队：用户承担架构、后端、AI/算法及集成；队友技术基础较弱，准备借助 coding agent 承担基础前端、测试和演示。队友安装和首次 PR 尚未确认。
+- 背景：参加 HackOHI/O 2026，赛事日期为 10 月 24–25 日。现有通用练习写于赛前；当前正式选题与比赛进展尚未向本对话确认。
+- 两人团队：用户承担核心开发；队友 GitHub 账号为 `nnyyttg`，技术基础较弱，准备借助 coding agent 承担基础前端、测试和演示。
 - **正式选题、Sponsor Challenge、数据集和产品功能尚未确定。当前仓库只有通用环境练习，不能把 echo 回显当作已完成的 AI 产品。**
 
 ## 已经完成且有证据
@@ -21,6 +21,13 @@
 - Git 忽略 `.env`、虚拟环境、依赖和构建产物；已有赛前工作披露模板 `PRIOR_WORK.md`。
 - 2026-10-23：已建立完整项目文档和新对话入口，验证六个页面标签、26 项文件地图、真实截图及本地待办保存。
 - Vercel 连接曾验证可读，但没有为此项目完成云端部署。
+- 2026-10-24：GitHub API 实查 `nnyyttg` 对本仓库的权限为 `write`，无需重复邀请。但她自己终端的 Git 登录与实际推送仍需验证。
+
+## 队友 Setup 的证据边界（2026-10-24）
+
+- 用户转述队友 agent 报告：在该 agent 的云端 Linux 环境中，Python 3.11、独立 .venv、锁文件依赖、npm ci、pip 依赖检查、健康检查、echo、空白输入 422、中文浏览器交互及构建通过。此项属于报告证据，本 agent 未访问或复查那个云端环境。
+- 报告明确说明：未连接她的 Windows 电脑，未验证其本机安装或 start.ps1，也未 commit、push 或开 PR。因此不能将“云端通过”标记为“队友本机 Setup 完成”。
+- 下一步是在她的真实 Windows 终端/本地 coding agent 中确认仓库实际目录、安装依赖并运行页面，随后完成一个小分支推送与 PR。报告中的 D:\\Hacking1024 只是建议路径，不能推断这个目录已存在。
 
 ## 当前运行方式
 
@@ -44,7 +51,7 @@ Windows PowerShell，在项目根目录：
 
 1. 用户是否已核对 OpenAI 组织/项目余额与预算，是否在当前终端或本机 `.env` 配置 Key。
 2. 两人的报名、Discord 权限、最新 Sponsor 题目与提交入口。
-3. 队友是否接受 Collaborator 邀请、成功克隆安装并完成首个 PR。
+3. 队友 Windows 本机的克隆、安装、start.ps1 与页面交互，以及她自己的 Git 登录、分支推送和首个 PR；服务端 write 权限已确认。
 4. 录屏、声音、视频链接权限与 Zoom；是否需要公网部署。
 5. 看到正式题目后再确定一个小而完整的 MVP；不提前引入登录、数据库、训练环境或复杂 Agent 架构。
 

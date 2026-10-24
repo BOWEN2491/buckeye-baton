@@ -41,7 +41,9 @@ HTTP 200 响应：
 https://github.com/BOWEN2491/Hacking1024.git
 ```
 
-拥有者先在 [Settings → Collaborators](https://github.com/BOWEN2491/Hacking1024/settings/access) 中邀请队友并让他接受邀请。仓库当前公开，可以直接克隆；推送分支需要写入权限。
+2026-10-24 已通过 GitHub API 确认队友 `nnyyttg` 具有 `write` 权限，无需再次邀请该账号。其他新成员需在 [Settings → Collaborators](https://github.com/BOWEN2491/Hacking1024/settings/access) 中邀请并接受邀请。仓库当前公开，可以直接克隆；推送分支还需要各自本机的 Git 登录有效。
+
+注意区分执行环境：coding agent 的云端 Linux 测试通过，只能证明那个云端环境可运行。本机 Setup 必须在自己的 Windows 电脑上执行安装、启动和页面交互后才能确认。先确认项目目录实际存在，不要把文档示例路径当作已创建的文件夹。
 
 队友在 PowerShell 中执行（Windows，Python 3.11 + Node.js 22.19.0 + Git）：
 
