@@ -6,16 +6,18 @@ Updated 2026-10-24, America/New_York. Repository: https://github.com/BOWEN2491/b
 Approved MVP v2: OSU teams publish projects with embedded reflections. Later teams reproduce, continue or improve a project by creating their own linked Ongoing project. Staff connect project questions with industry Mentors. See docs/MVP_SPEC.md for the five confirmed decisions; independent Lesson adoption is superseded as the target journey.
 
 ## Implementation
-The Next.js app is at repository root. Use Node 22 and npm. Current code, shared types, database and APIs still implement Lesson v1. V2 is specified, not implemented. API_CONTRACT.md marks this boundary; previous specifications and acceptance are in docs/legacy/. Explicit PGlite mode persists locally. Four demo identities are not authentication.
+The Next.js app is at repository root. Use Node 22 and npm. V2 phase 1 adds project-only exploration, three-state reflection details, owner editing and validated state changes. ProjectReflection is nullable JSONB; old projects retain null and display existing lessons inline as historical experience. Legacy Lesson APIs/records remain compatible. Pickup, project questions, Staff referral and Mentor guidance are placeholders with no writes; full project relay remains pending. See docs/PHASE1_ACCEPTANCE.md for current scope and verification status.
+
+Explicit PGlite mode persists locally; hosted pg requires DATABASE_URL. Four demo identities are not authentication. Incremental setup and additive seeds preserve existing records and edits.
 
 ## Verification boundary
-Earlier local Node 22 build, backend permissions/persistence/concurrency tests and manual browser journey passed. Automated browser tests found a resource-type switch race; the hook now keys data by request and hides mismatched responses synchronously. Branding/root cleanup passed a fresh production build and two automated browser acceptance tests, including the tab-switch regression and 390px layout. Neon connectivity, AWS credits, public hosting and teammate readiness remain unverified.
+Phase 1 typecheck, production build, backend integration 2/2 and production browser tests 4/4 passed (10.8 seconds). Browser coverage includes owned state edits and retained history, filters/legacy history/mobile state details, identity reset and non-mutating placeholders. Live local migration preserved all four existing projects unchanged and added only two new fixture rows. Earlier Lesson-v1 evidence remains historical; neither it nor phase 1 proves the complete v2 relay. Neon connectivity, AWS credits, public hosting and teammate readiness remain unverified.
 
 ## History and cleanup
 Previously named Pass It On during planning. The user renamed the project Buckeye Baton and authorized removal of obsolete preparation examples. React/Vite echo UI, FastAPI echo, Streamlit fallback, Python API checks and their dependencies are removed from this branch. Historical files remain recoverable through Git; PRIOR_WORK.md records provenance.
 
 ## Next
-Teammate supplies pickup-form and project question/referral/reply sketches. Coordinate v2 types, APIs and non-destructive legacy-record mapping before parallel implementation. Implement project relationships and run target acceptance. AI remains deferred; Neon/AWS need separate setup and verification.
+Teammate reviews phase 1 wording and card interactions, then supplies pickup-form and project question/referral/reply sketches; coordinate project relationship/question contracts and legacy discussion mapping before implementing full relay. AI remains deferred; Neon/AWS need separate setup and verification.
 
 ## Review handoff
 First usability feedback: identity changes return to unfiltered Explore projects and reset unsaved page state. Project/lesson explanations and the save-then-try-then-report instructions are explicit. Reopen a lesson after switching identities, or follow Staff/Mentor workspace links.

@@ -13,8 +13,10 @@ async function actor(req: Request, sql: Sql): Promise<User> { const id = req.hea
 function role(user: User, expected: string) { if (user.role !== expected) fail(403,'FORBIDDEN',`This action requires ${expected} role`); }
 async function ownProject(sql: Sql, id: string, user: User) { const p = await one(sql,'projects',id); role(user,'student'); if(p.ownerId !== user.id) fail(403,'FORBIDDEN','Only the project owner can edit this project'); return p; }
 async function parse(req: Request, schema: z.ZodType) { let body; try {body = await req.json();} catch {fail(400,'INVALID_INPUT','Malformed JSON body');} const parsed=schema.safeParse(body); if(!parsed.success) fail(400,'INVALID_INPUT',parsed.error.issues[0]?.message ?? 'Invalid input'); return parsed.data as Record<string, any>; }
-async function insert(sql: Sql, table: string, data: Record<string, any>, conflict = '') { const entries=Object.entries(data); const keys=entries.map(([key])=>`"${key}"`).join(','); const args=entries.map(([,value]) => Array.isArray(value) ? JSON.stringify(value) : value); return (await rows(sql,`INSERT INTO ${table} (${keys}) VALUES (${args.map((_,i)=>`$${i+1}`).join(',')}) ${conflict} RETURNING *`,args))[0]; }
-async function update(sql: Sql, table: string, id: string, data: Record<string,any>) { const entries=Object.entries(data); if(!entries.length) fail(400,'INVALID_INPUT','Provide at least one field'); return (await rows(sql,`UPDATE ${table} SET ${entries.map(([k],i)=>`"${k}"=$${i+1}`).join(',')}, "updatedAt"=now() WHERE id=$${entries.length+1} RETURNING *`,[...entries.map(([,val])=>Array.isArray(val)?JSON.stringify(val):val),id]))[0]; }
+const parameter = (value: unknown) => value !== null && typeof value === 'object' ? JSON.stringify(value) : value;
+function validateProject(data: Record<string, unknown>) { const parsed = v.completeProject.safeParse(data); if (!parsed.success) return fail(400,'INVALID_INPUT',parsed.error.issues[0]?.message ?? 'Invalid project'); return parsed.data; }
+async function insert(sql: Sql, table: string, data: Record<string, any>, conflict = '') { const entries=Object.entries(data); const keys=entries.map(([key])=>`"${key}"`).join(','); const args=entries.map(([,value]) => parameter(value)); return (await rows(sql,`INSERT INTO ${table} (${keys}) VALUES (${args.map((_,i)=>`$${i+1}`).join(',')}) ${conflict} RETURNING *`,args))[0]; }
+async function update(sql: Sql, table: string, id: string, data: Record<string,any>) { const entries=Object.entries(data); if(!entries.length) fail(400,'INVALID_INPUT','Provide at least one field'); return (await rows(sql,`UPDATE ${table} SET ${entries.map(([k],i)=>`"${k}"=$${i+1}`).join(',')}, "updatedAt"=now() WHERE id=$${entries.length+1} RETURNING *`,[...entries.map(([,val])=>parameter(val)),id]))[0]; }
 async function enrichAdoptions(sql: Sql, records: Record<string,any>[]): Promise<Record<string, any>[]> { return Promise.all(records.map(async a=>({...a,project:await one(sql,'projects',a.adoptingProjectId),author:await one(sql,'users',a.authorId)}))); }
 export async function handle(req: Request, resource: string, id?: string): Promise<Response> {
  try {
@@ -41,8 +43,22 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    return json({comments:await Promise.all(comments.map(async c=>({...c,author:await one(db,'users',c.authorId)}))),referrals:await Promise.all(referrals.map(async r=>({...r,mentor:await one(db,'users',r.mentorId),staff:await one(db,'users',r.staffId)})))});
   }
   const user=await actor(req,db);
-  if(resource==='projects'&&method==='POST') {role(user,'student'); return json(await insert(db,'projects',{id:randomUUID(),ownerId:user.id,codeUrl:null,demoUrl:null,...await parse(req,v.projectInput)}),201);}
-  if(resource==='project'&&method==='PATCH') {await ownProject(db,id!,user);return json(await update(db,'projects',id!,await parse(req,v.projectInput.partial())));}
+  if(resource==='projects'&&method==='POST') {
+   role(user,'student'); const input=await parse(req,v.projectInput);
+   const data=validateProject({codeUrl:null,demoUrl:null,...input,status:input.status??'ongoing',reflection:{...v.emptyReflection(),...input.reflection}});
+   return json(await insert(db,'projects',{id:randomUUID(),ownerId:user.id,...data}),201);
+  }
+  if(resource==='project'&&method==='PATCH') {
+   const input=await parse(req,v.projectInput.partial());
+   if (!Object.keys(input).length) fail(400,'INVALID_INPUT','Provide at least one field');
+   const project=await db.transaction(async sql=> {
+    const current=(await rows(sql,'SELECT * FROM projects WHERE id=$1 FOR UPDATE',[id]))[0]??fail(404,'NOT_FOUND','Record not found');
+    role(user,'student'); if(current.ownerId!==user.id) fail(403,'FORBIDDEN','Only the project owner can edit this project');
+    const {title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl}=current;
+    const data=validateProject({title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl,...input,reflection:{...v.emptyReflection(),...current.reflection,...input.reflection}});
+    return update(sql,'projects',id!,data);
+   }); return json(project);
+  }
   if(resource==='projectLessons'&&method==='POST') {await ownProject(db,id!,user);return json(await insert(db,'lessons',{id:randomUUID(),projectId:id,authorId:user.id,...await parse(req,v.lessonInput)}),201);}
   if(resource==='lesson'&&method==='PATCH') {const lesson=await one(db,'lessons',id!);await ownProject(db,lesson.projectId,user);return json(await update(db,'lessons',id!,await parse(req,v.lessonInput.partial())));}
   if(resource==='comments'&&method==='POST') {

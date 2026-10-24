@@ -1,8 +1,8 @@
 # Buckeye Baton
 
-Student project lessons that help the next team. A hackathon demo connecting students, industry mentors, and OSU Staff.
+OSU project handoffs and team reflections. A hackathon demo connecting students, industry mentors, and OSU Staff.
 
-Product update (2026-10-24): [MVP v2 specification](docs/MVP_SPEC.md) defines project-centered handoffs and successor projects. The running application still implements the earlier Lesson workflow. V2 is specified, not implemented; the [API contract](docs/API_CONTRACT.md) distinguishes current interfaces from pending changes.
+Product update (2026-10-24): v2 phase 1 implements project browsing, three state-specific details, owner reflection editing and validated status changes. Pickup, project questions and mentor connections currently show inline coming-next placeholders. Legacy Lesson routes/APIs remain compatible. See [phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md) for verification status; the [full MVP v2 target](docs/MVP_SPEC.md) is not yet complete.
 
 ## Run locally
 
@@ -15,7 +15,7 @@ npm run db:setup
 npm run dev
 ```
 
-Open http://localhost:3000. The explicit local `DATABASE_MODE=pglite` stores a PostgreSQL-compatible database in `.data/pglite`; it survives application restarts. Run one app process per data directory. `npm run db:seed` ensures fictional seed content exists without deleting user records.
+Open http://localhost:3000. The explicit local `DATABASE_MODE=pglite` stores a PostgreSQL-compatible database in `.data/pglite`; it survives application restarts. Run one app process per data directory. `npm run db:seed` ensures fictional seed content exists without deleting or overwriting user records. Schema setup adds the nullable project reflection column without resetting tables; old Lesson content remains available as historical experience.
 
 To use Neon/hosted PostgreSQL, remove `DATABASE_MODE` from `.env.local` and provide your own `DATABASE_URL`. Use the provider's TLS connection string. Run `npm run db:setup` against that database. Never commit credentials. The application does not create a Neon account or AWS resources.
 
@@ -28,7 +28,7 @@ npm run build
 npm start
 ```
 
-Run the production browser journey after building (the test starts its own server and isolated local database):
+Run the phase 1 production browser scenarios after building (the test starts its own server and isolated local database):
 
 ```powershell
 npx playwright install chromium
@@ -43,7 +43,8 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 
 - [MVP and roles](docs/MVP_SPEC.md)
 - [API contract](docs/API_CONTRACT.md)
-- [Acceptance journey](docs/ACCEPTANCE.md)
+- [Current phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md)
+- [Full v2 target journey, pending](docs/ACCEPTANCE.md)
 - [Parallel chat handoff](docs/HANDOFF.md)
 - Shared TypeScript interfaces and fictional fixtures: `src/shared/`.
 

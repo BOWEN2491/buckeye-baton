@@ -1,6 +1,6 @@
 # Buckeye Baton — MVP v2 验收与演示
 
-更新：2026-10-24。**本文件是目标验收，尚未执行或通过。** 当前代码和测试验证旧版 Lesson 流程；旧剧本见 legacy/ACCEPTANCE_LESSON_V1.md。产品要求见 MVP_SPEC.md。
+更新：2026-10-24。**本文件是完整 v2 目标验收，尚未执行或通过。** 当前第一轮仅覆盖首页、三状态详情与经验编辑，验收见 PHASE1_ACCEPTANCE.md。接棒、项目提问和引荐仍为占位，不使用本剧本宣称完成。旧剧本见 legacy/ACCEPTANCE_LESSON_V1.md。产品要求见 MVP_SPEC.md。
 
 ## 固定数据与主线
 

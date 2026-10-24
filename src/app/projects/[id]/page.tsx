@@ -1,55 +1,175 @@
 "use client";
 import Link from "next/link";
 import { use, useState } from "react";
-import type { ProjectDetail, ProjectStatus } from "@/shared/types";
-import { api, useResource } from "@/lib/client";
-import { useIdentity, Icon } from "@/components/app-shell";
-import {
-  Empty,
-  Feedback,
-  LessonCard,
-  Loading,
-  PageHeading,
-  Status,
-  Tags,
-} from "@/components/ui";
-import { LessonForm } from "@/components/lesson-form";
-function BorrowedLessons({
-  items,
-}: {
-  items: ProjectDetail["adoptedLessons"];
-}) {
-  if (!items?.length) return null;
+import type { ProjectDetail, ProjectReflection } from "@/shared/types";
+import { useResource } from "@/lib/client";
+import { useIdentity } from "@/components/app-shell";
+import { Feedback, Loading, PageHeading, Status, Tags } from "@/components/ui";
+import { ProjectForm } from "@/components/project-form";
+function Text({ value, empty }: { value?: string; empty: string }) {
   return (
-    <section className="section-block">
-      <h2>Lessons we’re building on</h2>
-      <p className="muted">The work that gave this team a starting point.</p>
-      {items.map(({ adoption, lesson, sourceProject }) => (
-        <article className="adoption-row" key={adoption.id}>
-          <Icon name="relay" />
-          <div>
-            <Link className="text-link" href={`/lessons/${lesson.id}`}>
-              {lesson.title}
-            </Link>
-            <p className="metadata">
-              From{" "}
-              <Link href={`/projects/${sourceProject.id}`}>
-                {sourceProject.title}
-              </Link>
-            </p>
-            <div className="result-label">
-              {adoption.result === "worked"
-                ? "Worked for our team"
-                : adoption.result === "partial"
-                  ? "Adapted and used"
-                  : adoption.result === "failed"
-                    ? "Different outcome"
-                    : "Saved · not yet tried"}
-            </div>
-            {adoption.note && <p>{adoption.note}</p>}
-          </div>
-        </article>
+    <p className={value ? "reflection-prose" : "subtle-empty"}>
+      {value || empty}
+    </p>
+  );
+}
+function Items({ values, empty }: { values?: string[]; empty: string }) {
+  return values?.length ? (
+    <ul className="reflection-list">
+      {values.map((v, i) => (
+        <li key={i}>{v}</li>
       ))}
+    </ul>
+  ) : (
+    <p className="subtle-empty">{empty}</p>
+  );
+}
+function Reflections({
+  status,
+  reflection,
+  summary,
+}: {
+  status: string;
+  reflection: ProjectReflection | null;
+  summary: string;
+}) {
+  if (status === "ongoing")
+    return (
+      <section className="reflection-hero ongoing">
+        <p className="eyebrow">From the team</p>
+        <h2>What we’re working toward</h2>
+        <p className="reflection-prose">{summary}</p>
+        <h2>Current progress</h2>
+        <Text
+          value={reflection?.progress}
+          empty="The team has not shared its progress yet."
+        />
+      </section>
+    );
+  if (status === "finished")
+    return (
+      <section className="reflection-hero finished">
+        <p className="eyebrow">From the team</p>
+        <h2>What we got</h2>
+        <Items
+          values={reflection?.outcomes}
+          empty="The team has not added its outcomes yet."
+        />
+        <h2>Problems we encountered</h2>
+        {reflection?.problems.length ? (
+          reflection.problems.map((p, i) => (
+            <article className="problem-box" key={i}>
+              <h3>{p.title}</h3>
+              <dl className="reflection-steps">
+                <dt>We assumed</dt>
+                <dd>{p.assumed}</dd>
+                <dt>What happened</dt>
+                <dd>{p.happened}</dd>
+                <dt>We changed</dt>
+                <dd>{p.changed}</dd>
+              </dl>
+            </article>
+          ))
+        ) : (
+          <p className="subtle-empty">No problem reflections shared yet.</p>
+        )}
+        <h2>For the next team</h2>
+        <Text
+          value={reflection?.nextTeam}
+          empty="The team has not shared its advice yet."
+        />
+      </section>
+    );
+  return (
+    <section className="reflection-hero paused">
+      <p className="eyebrow">From the team</p>
+      <h2>Why we paused</h2>
+      <Text
+        value={reflection?.whyPaused}
+        empty="The team has not shared why it paused yet."
+      />
+      <h2>If we did it again</h2>
+      <Items
+        values={reflection?.ifAgain}
+        empty="No restart suggestions shared yet."
+      />
+      <h2>What you can reuse</h2>
+      {reflection?.reusable.length ? (
+        <div className="reusable-grid">
+          {reflection.reusable.map((v, i) => (
+            <div className="problem-box" key={i}>
+              <h3>{v.label}</h3>
+              {v.url ? (
+                <a
+                  className="text-link"
+                  href={v.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open material ↗
+                </a>
+              ) : (
+                <p className="metadata">No link provided.</p>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="subtle-empty">No reusable materials shared yet.</p>
+      )}
+    </section>
+  );
+}
+function ConnectionPlaceholder({ status }: { status: string }) {
+  const { user } = useIdentity();
+  const [message, setMessage] = useState("");
+  const label =
+    user?.role === "staff"
+      ? "Refer a mentor"
+      : user?.role === "mentor"
+        ? "Add guidance"
+        : status === "finished"
+          ? "Pick up the baton"
+          : status === "paused"
+            ? "Continue this project"
+            : "";
+  return (
+    <section className="panel contextual-panel">
+      <p className="eyebrow">Next connections</p>
+      <h3>
+        {status === "paused"
+          ? "A pause can be a starting point."
+          : status === "finished"
+            ? "Leave a place for the next team."
+            : "Bring the right people into the project."}
+      </h3>
+      <p>
+        {user?.role === "staff"
+          ? "Connect a concrete project question with a suitable mentor."
+          : user?.role === "mentor"
+            ? "Help a team work through a concrete project question."
+            : "Reproduce a result, continue unfinished work, or improve one part of a project."}
+      </p>
+      {label && (
+        <button
+          className="button primary"
+          onClick={() =>
+            setMessage(
+              user?.role === "student"
+                ? "Project pickup will open next round. No new project has been created."
+                : "Project questions and mentor connections will open next round. Nothing has been submitted.",
+            )
+          }
+        >
+          {label}
+        </button>
+      )}
+      {message && (
+        <p className="placeholder-message" role="status">
+          {message}
+        </p>
+      )}
+      <span className="field-help">Coming next round</span>
     </section>
   );
 }
@@ -59,33 +179,20 @@ export default function ProjectPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { userId, users } = useIdentity();
+  const { userId, user, users } = useIdentity();
   const { data, error, loading, reload } = useResource<ProjectDetail>(
     `/projects/${id}`,
     userId,
   );
-  const [showForm, setShowForm] = useState(false);
-  const [actionError, setActionError] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function status(value: ProjectStatus) {
-    setBusy(true);
-    setActionError("");
-    try {
-      await api(`/projects/${id}`, userId, { status: value }, "PATCH");
-      await reload();
-    } catch (e) {
-      setActionError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
+  const [editing, setEditing] = useState(false);
+  const [success, setSuccess] = useState("");
   if (loading && !data) return <Loading />;
   if (!data) return <Feedback error={error} />;
-  const { project: p, lessons, downstreamAdoptions } = data;
+  const { project: p, lessons } = data;
   const owner = users.find((u) => u.id === p.ownerId);
-  const mine = p.ownerId === userId;
+  const mine = user?.role === "student" && p.ownerId === userId;
   return (
-    <div>
+    <div className="project-detail">
       <Link href="/" className="breadcrumb">
         ← Explore projects
       </Link>
@@ -95,10 +202,26 @@ export default function ProjectPage({
           {p.courseOrClub} · {p.term}
         </span>
       </div>
-      <PageHeading title={p.title} description={p.summary} />
+      <PageHeading
+        title={p.title}
+        description={p.summary}
+        action={
+          mine && !editing ? (
+            <button
+              className="button secondary"
+              onClick={() => {
+                setEditing(true);
+                setSuccess("");
+              }}
+            >
+              Edit project
+            </button>
+          ) : undefined
+        }
+      />
       <div className="project-meta-bar">
         <span className="author-line">
-          <span className="avatar small">{owner?.name.charAt(0) || "A"}</span>
+          <span className="avatar small">{owner?.name.charAt(0) || "S"}</span>
           Shared by <strong>{owner?.name || "Student team"}</strong>
         </span>
         <div className="inline-actions">
@@ -125,119 +248,83 @@ export default function ProjectPage({
         </div>
       </div>
       <Tags tags={p.tags} />
-      <Feedback error={error || actionError} />
-      <div className="detail-grid">
-        <section>
-          <div className="section-heading">
-            <div>
-              <h2>Lessons from this project</h2>
-              <p>Each lesson captures one discovery or setback from this project. Open one to ask a question or use it in your own project.</p>
-            </div>
-            {mine && (
-              <button
-                className="button secondary"
-                onClick={() => setShowForm(!showForm)}
-              >
-                <Icon name="plus" size={17} />
-                {showForm ? "Close form" : "Add lesson"}
-              </button>
-            )}
-          </div>
-          {showForm && (
-            <LessonForm
-              projectId={id}
-              onSaved={() => {
-                setShowForm(false);
-                void reload();
-              }}
+      <Feedback error={error} success={success} />
+      {editing ? (
+        <div className="project-editor-wrap">
+          <ProjectForm
+            project={p}
+            onCancel={() => setEditing(false)}
+            onSaved={async () => {
+              await reload();
+              setEditing(false);
+              setSuccess(
+                "Project saved. Your earlier reflections and historical records are kept.",
+              );
+            }}
+          />
+        </div>
+      ) : (
+        <div className="detail-grid">
+          <div>
+            <Reflections
+              status={p.status}
+              reflection={p.reflection}
+              summary={p.summary}
             />
-          )}
-          <div className="lesson-list">
-            {lessons.length ? (
-              lessons.map((l) => <LessonCard key={l.id} lesson={l} />)
-            ) : (
-              <Empty title="The first lesson is still ahead">
-                {mine
-                  ? "Share one useful discovery to give the next team a starting point."
-                  : "Check back as this team shares what they learn."}
-              </Empty>
+            {p.reflection === null && lessons.length > 0 && (
+              <section className="section-block">
+                <h2>Historical experience</h2>
+                <p className="muted">
+                  Earlier lessons from this project, kept in their original
+                  form.
+                </p>
+                {lessons.map((l) => (
+                  <article className="problem-box" key={l.id}>
+                    <h3>{l.title}</h3>
+                    <dl className="reflection-steps">
+                      <dt>We assumed</dt>
+                      <dd>{l.assumed}</dd>
+                      <dt>What happened</dt>
+                      <dd>{l.happened}</dd>
+                      <dt>We changed</dt>
+                      <dd>{l.change}</dd>
+                    </dl>
+                    <p className="metadata">Applies when: {l.conditions}</p>
+                    <Link className="text-link" href={`/lessons/${l.id}`}>
+                      Open historical discussion →
+                    </Link>
+                  </article>
+                ))}
+              </section>
             )}
-          </div>
-          <BorrowedLessons items={data.adoptedLessons} />
-          <section className="section-block">
-            <h2>The relay continues</h2>
-            <p className="muted">Where this project’s lessons went next.</p>
-            {downstreamAdoptions.filter((a) => a.result).length ? (
-              downstreamAdoptions
-                .filter((a) => a.result)
-                .map((a) => (
-                  <div className="adoption-row" key={a.id}>
-                    <Icon name="relay" />
-                    <div>
-                      <Link
-                        href={`/projects/${a.project.id}`}
-                        className="text-link"
-                      >
-                        {a.project.title}
-                      </Link>
-                      <p>{a.note}</p>
-                      <span className="metadata">
-                        {a.result === "partial"
-                          ? "Adapted and used"
-                          : a.result === "worked"
-                            ? "Worked for this team"
-                            : "Different outcome"}{" "}
-                        · {a.author.name}
-                      </span>
-                    </div>
-                  </div>
-                ))
-            ) : (
+            <section className="section-block">
+              <h2>Questions &amp; guidance</h2>
               <p className="subtle-empty">
-                No reported outcomes yet. The next team could start here.
+                Project questions will open next round.
               </p>
-            )}
-          </section>
-        </section>
-        <aside>
-          <div className="panel contextual-panel">
-            <h3>
-              {p.status === "ongoing"
-                ? "A project in progress"
-                : p.status === "paused"
-                  ? "A pause is a starting point"
-                  : "The work is finished. The learning isn’t."}
-            </h3>
-            <p>
-              {p.status === "ongoing"
-                ? "Read the lessons, ask a focused question, or bring a useful perspective to this team."
-                : p.status === "paused"
-                  ? "Look for what is reusable, why the team stopped, and what another team could try."
-                  : "Build on what this team discovered, and share how it works in your own context."}
-            </p>
+              <h3 className="guidance-heading">Mentor guidance</h3>
+              <p className="muted">
+                No project-level mentor guidance yet. Historical lesson
+                discussions remain available through their original links.
+              </p>
+            </section>
           </div>
-          {mine && (
-            <div className="panel form-stack">
-              <h3>Project status</h3>
-              <label>
-                Update progress
-                <select
-                  value={p.status}
-                  disabled={busy}
-                  onChange={(e) => void status(e.target.value as ProjectStatus)}
-                >
-                  <option value="ongoing">Ongoing</option>
-                  <option value="finished">Finished</option>
-                  <option value="paused">Paused</option>
-                </select>
-              </label>
-              <p className="field-help">
-                Your lessons and discussions stay with the project.
+          <aside>
+            <ConnectionPlaceholder
+              key={`${userId}-${p.status}`}
+              status={p.status}
+            />
+            <div className="panel contextual-panel">
+              <h3>Your project keeps its history.</h3>
+              <p>
+                Switching between Ongoing, Finished, and Paused changes what
+                readers see first. Saved reflections and earlier records stay
+                with the project.
               </p>
             </div>
-          )}
-        </aside>
-      </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }

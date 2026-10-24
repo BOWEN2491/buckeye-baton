@@ -1,3 +1,13 @@
+# Current phase 1 verification
+
+2026-10-24: project-centered phase 1 passed typecheck, backend 2/2, production build and browser 4/4 (10.8 seconds). Browser plugin not available; the repository Playwright workflow runs a production server with an isolated SQL database. Verified flow: project creation/edit -> Finished/Paused validation -> Ongoing with historical summaries retained; filters, identity reset, placeholders with no mutations and 390px state details.
+
+Screenshots were captured externally using QA_SCREENSHOT_DIR (homepage and each state at desktop/mobile). The live database retained all four baseline project IDs/titles/states and null reflections, adding only the two missing samples. project-docs/take-screenshots.mjs refreshes the living documentation after the current production server is restarted. Results below describe the historical v1 interface; the current verification is the phase 1 block above. Full v2 relay, hosted PostgreSQL, AWS and public deployment remain unverified. See PHASE1_ACCEPTANCE.md.
+
+---
+
+## Historical v1 evidence (superseded UI)
+
 # UI verification and visual reference ledger
 
 Reviewed on October 24, 2026. The generated `explore-concept.png` is the visual reference, not an application asset or a pixel-perfect acceptance claim. The implementation is a functional GitHub-style knowledge relay using the approved data contract.

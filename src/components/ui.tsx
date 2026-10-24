@@ -84,10 +84,33 @@ export function ProjectCard({ project }: { project: Project }) {
         {project.courseOrClub} <span>·</span> {project.term}
       </p>
       <p className="card-summary">{project.summary}</p>
+      <div className="card-highlight">
+        <strong>
+          {project.status === "finished"
+            ? "Outcome"
+            : project.status === "paused"
+              ? "Why we paused"
+              : "Progress"}
+        </strong>
+        <p>
+          {(project.status === "finished"
+            ? project.reflection?.outcomes[0]
+            : project.status === "paused"
+              ? project.reflection?.whyPaused
+              : project.reflection?.progress) ||
+            "The team has not shared this update yet."}
+        </p>
+      </div>
       <Tags tags={project.tags} />
       <div className="card-footer">
         <Icon name="book" size={17} />
-        <span>Explore project lessons</span>
+        <span>
+          {project.status === "finished"
+            ? "Read the team’s reflections"
+            : project.status === "paused"
+              ? "Find a place to continue"
+              : "See the current progress"}
+        </span>
         <span className="footer-arrow">↗</span>
       </div>
     </article>

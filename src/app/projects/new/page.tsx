@@ -9,7 +9,7 @@ export default function NewProject() {
       </Link>
       <PageHeading
         title="Leave a starting point"
-        description="Share your project. The lessons come next."
+        description="Start an Ongoing project. Add your progress and team reflections as you go."
       />
       <ProjectForm />
     </div>

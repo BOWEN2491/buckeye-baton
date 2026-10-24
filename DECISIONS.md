@@ -48,3 +48,9 @@ In the context of the user confirming Honda challenge and the buckeye-baton repo
 **Date:** 2026-10-24 · **Status:** Accepted
 
 In the context of the user renaming the product and explicitly requesting removal of obsolete rehearsal code, facing duplicate entrypoints and unrelated dependencies, we decided for the Next.js competition application at repository root and removal of the superseded tracked examples, to achieve one clear runnable project, accepting that historical rehearsal files must be recovered from Git. The app uses pg for hosted PostgreSQL and explicit persistent PGlite for local development; demo identity is not authentication.
+
+### Deliver project reflections first and preserve legacy records additively
+**Date:** 2026-10-24 · **Status:** Accepted
+**Files:** db/schema.sql, src/shared/types.ts, docs/PHASE1_ACCEPTANCE.md
+
+In the context of the user authorizing homepage/card interactions before pickup and discussion sketches, facing the risk of deleting existing Lesson histories or claiming an unfinished relay, we decided for nullable project reflection JSONB via a repeatable additive migration, inline historical lessons for null reflections, and non-mutating inline placeholders for future actions, to achieve a usable first project-centered slice while preserving records, accepting that old endpoints coexist until the next coordinated phase. This stages the approved project-centered specification rather than superseding its complete relay target.

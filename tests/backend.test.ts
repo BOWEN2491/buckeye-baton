@@ -4,7 +4,8 @@ import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { handle } from '../src/server/api';
-import { closeDatabase, database } from '../src/server/db';
+import { closeDatabase, database, setup } from '../src/server/db';
+import { seed } from '../src/server/seed';
 import { GET as projectGET } from '../src/app/api/projects/[id]/route';
 import { GET as usersGET } from '../src/app/api/users/route';
 
@@ -53,7 +54,7 @@ test('complete journey uses real PostgreSQL engine, permissions, idempotence and
   assert.equal((await request('adoption',adoption.data.id,'PATCH','student-mia',{result:'worked',note:'Worked after testing.'})).status,200);
   assert.equal((await request('lesson',lesson.data.id)).data.stats.total,1);
   assert.equal((await request('project','project-events')).data.adoptedLessons[0].adoption.result,'worked');
-  assert.equal((await request('project',created.data.id,'PATCH','student-alex',{status:'paused'})).status,200);
+  assert.equal((await request('project',created.data.id,'PATCH','student-alex',{status:'paused',reflection:{whyPaused:'Project time ended.',ifAgain:['Plan a smaller first release.']}})).status,200);
   assert.equal((await request('project',created.data.id)).data.downstreamAdoptions.length,1);
   assert.equal((await request('lesson','missing')).status,404);
   const malformed=await handle(new Request('http://localhost/api/projects',{method:'POST',headers:{'x-demo-user-id':'student-alex'},body:'{'}),'projects');assert.equal(malformed.status,400);
@@ -64,5 +65,58 @@ test('complete journey uses real PostgreSQL engine, permissions, idempotence and
   // Transaction rollback prevents partial writes.
   const db=await database();await assert.rejects(db.transaction(async sql=>{await sql.query('UPDATE projects SET title=$1 WHERE id=$2',['Never persist',created.data.id]);throw new Error('rollback');}));
   assert.equal((await request('project',created.data.id)).data.project.title,'New project');
+ } finally {await closeDatabase();}
+});
+
+test('project reflections validate merged state, retain history and survive additive migrations', async () => {
+ process.env.DATABASE_MODE='pglite'; process.env.PGLITE_DATA_DIR=await mkdtemp(path.join(tmpdir(),'buckeye-baton-v2-'));
+ try {
+  const input={title:'Reflection journey',summary:'Fictional test project',courseOrClub:'OSU',term:'Fall 2026',tags:['web']};
+  const created=await request('projects',undefined,'POST','student-alex',input);
+  assert.equal(created.status,201); assert.equal(created.data.status,'ongoing');
+  assert.deepEqual(created.data.reflection,{progress:'',outcomes:[],problems:[],nextTeam:'',whyPaused:'',ifAgain:[],reusable:[]});
+  const id=created.data.id;
+  assert.equal((await request('project',id,'PATCH','student-mia',{reflection:{progress:'Not mine'}})).status,403);
+  assert.equal((await request('project',id,'PATCH','mentor-sarah',{reflection:{progress:'Not mine'}})).status,403);
+  assert.equal((await request('project',id,'PATCH','student-alex',{status:'finished'})).status,400);
+  assert.equal((await request('project',id)).data.project.status,'ongoing');
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:{progress:'Working prototype',outcomes:['Built the form']}})).status,200);
+  const finished=await request('project',id,'PATCH','student-alex',{status:'finished',reflection:{nextTeam:'Test with your own users.'}});
+  assert.equal(finished.status,200);assert.equal(finished.data.reflection.progress,'Working prototype');assert.deepEqual(finished.data.reflection.outcomes,['Built the form']);
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:{nextTeam:'  '}})).status,400);
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:{outcomes:[]}})).status,400);
+  assert.equal((await request('project',id,'PATCH','student-alex',{status:'paused',reflection:{whyPaused:'Need more time'}})).status,400);
+  const paused=await request('project',id,'PATCH','student-alex',{status:'paused',reflection:{whyPaused:'Need more time',ifAgain:['Scope smaller.'],reusable:[{label:'Source',url:'https://example.com/source'}]}});
+  assert.equal(paused.status,200);assert.equal(paused.data.reflection.nextTeam,'Test with your own users.');
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:{reusable:[{label:'Unsafe',url:'javascript:alert(1)'}]}})).status,400);
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:null})).status,400);
+  assert.equal((await request('project',id,'PATCH','student-alex',{reflection:{ifAgain:['  ']}})).status,400);
+  assert.equal((await request('project',id,'PATCH','student-alex',{status:'ongoing'})).status,200);
+  const edits=await Promise.all([request('project',id,'PATCH','student-alex',{reflection:{progress:'Reopened for testing'}}),request('project',id,'PATCH','student-alex',{reflection:{nextTeam:'Check keyboard navigation.'}})]);
+  assert.ok(edits.every(edit=>edit.status===200));
+  const merged=(await request('project',id)).data.project;
+  assert.equal(merged.reflection.progress,'Reopened for testing');assert.equal(merged.reflection.nextTeam,'Check keyboard navigation.');
+  assert.equal(merged.reflection.whyPaused,'Need more time');assert.deepEqual(merged.reflection.outcomes,['Built the form']);
+  assert.equal((await request('projects',undefined,'POST','student-alex',{...input,status:'finished'})).status,400);
+  assert.equal((await request('projects',undefined,'POST','student-alex',{...input,status:'paused',reflection:{whyPaused:'Time',ifAgain:['Start smaller']}})).status,201);
+  assert.equal((await request('project','project-signup')).data.project.reflection,null);
+  assert.equal((await request('project','project-signup','PATCH','student-alex',{title:'Legacy needs summary'})).status,400);
+  const legacy=(await request('project','project-signup')).data.project;assert.equal(legacy.title,'Campus Signup');assert.equal(legacy.status,'finished');
+  const question=await request('comments','lesson-fields','POST','student-mia',{kind:'question',body:'Keep this legacy question.'});
+  const adoption=await request('adoptions','lesson-fields','POST','student-mia',{adoptingProjectId:'project-events'});
+  const db=await database();await setup(db);await setup(db);await seed(db);
+  assert.equal((await request('project',id)).data.project.reflection.progress,'Reopened for testing');
+  assert.equal((await request('project','project-signup')).data.project.reflection,null);
+  assert.equal((await request('comments','lesson-fields')).data.comments[0].id,question.data.id);
+  assert.equal((await request('project','project-events')).data.adoptedLessons[0].adoption.id,adoption.data.id);
+  await closeDatabase();
+  const restarted=(await request('project',id)).data.project;
+  assert.deepEqual(restarted.reflection,merged.reflection);assert.equal(restarted.status,'ongoing');
+  // Simulate a pre-v2 schema with real legacy rows, then apply the migration twice.
+  const reopened=await database();await reopened.query('ALTER TABLE projects DROP COLUMN reflection');await setup(reopened);await setup(reopened);
+  assert.equal((await request('project','project-signup')).data.project.reflection,null);
+  assert.equal((await request('project','project-signup')).data.project.status,'finished');
+  assert.equal((await request('comments','lesson-fields')).data.comments[0].id,question.data.id);
+  assert.equal((await request('project','project-events')).data.adoptedLessons[0].adoption.id,adoption.data.id);
  } finally {await closeDatabase();}
 });

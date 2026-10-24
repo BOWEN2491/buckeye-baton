@@ -1,100 +1,69 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import type { Project, Lesson } from "@/shared/types";
+import type { Project } from "@/shared/types";
 import { useResource } from "@/lib/client";
-import { Icon } from "@/components/app-shell";
+import { useIdentity, Icon } from "@/components/app-shell";
 import {
   Empty,
   Feedback,
-  LessonCard,
   Loading,
   PageHeading,
   ProjectCard,
 } from "@/components/ui";
 export default function Explore() {
-  const [tab, setTab] = useState("projects");
+  const { user } = useIdentity();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
-  const query = new URLSearchParams({
-    q,
-    ...(status && tab === "projects" ? { status } : {}),
-  });
-  const { data, error, loading } = useResource<Project[] | Lesson[]>(
-    `/${tab}?${query}`,
-  );
+  const query = new URLSearchParams({ q, ...(status ? { status } : {}) });
+  const { data, error, loading } = useResource<Project[]>(`/projects?${query}`);
   return (
     <div className="explore-layout">
       <section>
         <PageHeading
           title="Explore projects"
-          description="Projects tell the whole story. Lessons are specific discoveries you can use in your own project."
+          description="See what teams built, what they learned, and where the next team could begin."
           action={
-            <Link href="/projects/new" className="button primary">
-              <Icon name="plus" />
-              New project
-            </Link>
+            user?.role === "student" ? (
+              <Link href="/projects/new" className="button primary">
+                <Icon name="plus" />
+                New project
+              </Link>
+            ) : undefined
           }
         />
         <div className="search-box">
           <Icon name="search" />
           <input
-            aria-label="Search projects or lessons"
-            placeholder={
-              tab === "projects"
-                ? "Search projects, topics, or teams…"
-                : "Search lessons and lessons learned…"
-            }
+            aria-label="Search projects"
+            placeholder="Search project titles or descriptions…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
-          <kbd>⌕</kbd>
-        </div>
-        <div className="tabs" role="tablist" aria-label="Explore content">
-          {["projects", "lessons"].map((t) => (
-            <button
-              role="tab"
-              aria-selected={tab === t}
-              className={tab === t ? "selected" : ""}
-              key={t}
-              onClick={() => setTab(t)}
-            >
-              {t === "projects" ? "Projects" : "Lessons"}
-            </button>
-          ))}
         </div>
         <div className="filter-bar">
-          <div className="filter-buttons">
-            {tab === "projects" ? (
-              ["", "ongoing", "finished", "paused"].map((s) => (
-                <button
-                  key={s}
-                  className={status === s ? "selected" : ""}
-                  onClick={() => setStatus(s)}
-                >
-                  {s ? s.charAt(0).toUpperCase() + s.slice(1) : "All projects"}
-                </button>
-              ))
-            ) : (
-              <span className="metadata">Experience you can build on</span>
-            )}
+          <div className="filter-buttons" aria-label="Project status filters">
+            {["", "ongoing", "finished", "paused"].map((s) => (
+              <button
+                key={s}
+                aria-pressed={status === s}
+                className={status === s ? "selected" : ""}
+                onClick={() => setStatus(s)}
+              >
+                {s ? s.charAt(0).toUpperCase() + s.slice(1) : "All projects"}
+              </button>
+            ))}
           </div>
-          <span className="result-count">
-            {data?.length ?? "—"} {tab}
-          </span>
+          <span className="result-count">{data?.length ?? "—"} projects</span>
         </div>
         <Feedback error={error} />
         {loading ? (
           <Loading />
         ) : data?.length ? (
           <div className="project-grid">
-            {tab === "projects"
-              ? (data as Project[]).map((p) => (
-                  <ProjectCard key={p.id} project={p} />
-                ))
-              : (data as Lesson[]).map((l) => (
-                  <LessonCard key={l.id} lesson={l} />
-                ))}
+            {data.map((p) => (
+              <ProjectCard key={p.id} project={p} />
+            ))}
           </div>
         ) : (
           !error && (
@@ -106,34 +75,34 @@ export default function Explore() {
       </section>
       <aside className="explore-aside">
         <div className="relay-panel">
-          <h2>How the relay works</h2>
+          <h2>A starting point for the next team</h2>
           <ol>
             <li>
               <span>1</span>
               <div>
-                <h3>Read a lesson</h3>
+                <h3>Explore the project</h3>
                 <p>
-                  See what the last team tried, what worked, and what didn’t.
+                  Understand the goal, the progress, and the people it was built
+                  for.
                 </p>
               </div>
             </li>
             <li>
               <span>2</span>
               <div>
-                <h3>Ask a better question</h3>
+                <h3>Learn from the team</h3>
                 <p>
-                  Bring your context. Connect with people who can help you move
-                  forward.
+                  Read what worked, what changed, and what they would try again.
                 </p>
               </div>
             </li>
             <li>
               <span>3</span>
               <div>
-                <h3>Try it and pass it on</h3>
+                <h3>Find your next step</h3>
                 <p>
-                  Apply what you learn, share the result, and leave a starting
-                  point.
+                  Look for reusable work and unfinished ideas. Project pickup
+                  and mentor connections are coming next round.
                 </p>
               </div>
             </li>
@@ -142,18 +111,10 @@ export default function Explore() {
         <div className="starting-panel">
           <Icon name="relay" size={26} />
           <h3>Good work travels.</h3>
-          <p>
-            A setback, a small discovery, a better approach. Your experience
-            could be another team’s next step.
-          </p>
-          <Link href="/projects/new" className="text-link">
-            Share your project <Icon name="arrow" size={16} />
-          </Link>
+          <p>Your project can leave someone else a better place to begin.</p>
         </div>
         <p className="aside-footnote">
-          Built for the OSU community.
-          <br />
-          Connected by shared experience.
+          Fictional demo projects for the OSU community.
         </p>
       </aside>
     </div>
