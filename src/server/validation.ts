@@ -20,6 +20,4 @@ export const completeProject = projectInput.extend({ status: z.enum(['ongoing','
 export const lessonInput = z.object({ type: z.enum(['worked','pitfall','next_team']), title: text.max(160), assumed: text, happened: text, change: text, conditions: text, artifacts: z.array(z.object({label: text.max(160), url}).strict()).max(10) }).strict();
 export const commentInput = z.object({body: text, kind: z.enum(['question','comment','reply']), parentId: text.nullable().optional()}).strict();
 export const referralInput = z.object({questionCommentId: text, mentorId: text, reason: text}).strict();
-export const adoptionInput = z.object({adoptingProjectId: text}).strict();
-export const adoptionUpdate = z.object({result: z.enum(['worked','partial','failed']), note: text, artifactUrl: link}).strict();
 export const replyInput = z.object({body: text}).strict();

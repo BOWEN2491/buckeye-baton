@@ -290,9 +290,21 @@ export default function ProjectPage({
                       <dd>{l.change}</dd>
                     </dl>
                     <p className="metadata">Applies when: {l.conditions}</p>
-                    <Link className="text-link" href={`/lessons/${l.id}`}>
-                      Open historical discussion →
-                    </Link>
+                    {l.artifacts.length > 0 && (
+                      <div className="inline-actions">
+                        {l.artifacts.map((artifact) => (
+                          <a
+                            key={artifact.url}
+                            className="text-link"
+                            href={artifact.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {artifact.label} ↗
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </article>
                 ))}
               </section>
@@ -304,8 +316,7 @@ export default function ProjectPage({
               </p>
               <h3 className="guidance-heading">Mentor guidance</h3>
               <p className="muted">
-                No project-level mentor guidance yet. Historical lesson
-                discussions remain available through their original links.
+                No project-level mentor guidance yet.
               </p>
             </section>
           </div>

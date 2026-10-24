@@ -53,4 +53,11 @@ In the context of the user renaming the product and explicitly requesting remova
 **Date:** 2026-10-24 · **Status:** Accepted
 **Files:** db/schema.sql, src/shared/types.ts, docs/PHASE1_ACCEPTANCE.md
 
-In the context of the user authorizing homepage/card interactions before pickup and discussion sketches, facing the risk of deleting existing Lesson histories or claiming an unfinished relay, we decided for nullable project reflection JSONB via a repeatable additive migration, inline historical lessons for null reflections, and non-mutating inline placeholders for future actions, to achieve a usable first project-centered slice while preserving records, accepting that old endpoints coexist until the next coordinated phase. This stages the approved project-centered specification rather than superseding its complete relay target.
+In the context of the user authorizing homepage/card interactions before pickup and discussion sketches, facing the risk of deleting existing Lesson histories or claiming an unfinished relay, we decided for nullable project reflection JSONB via a repeatable additive migration, inline historical lessons for null reflections, and non-mutating inline placeholders for future actions, to achieve a usable first project-centered slice while preserving records, accepting historical data retention; the adoption endpoint/UI exception is superseded by the cleanup decision below. This stages the approved project-centered specification rather than superseding its complete relay target.
+
+### Retire independent Lesson and adoption UI while preserving history
+**Date:** 2026-10-24 · **Status:** Accepted
+**Files:** src/app/lessons/[id]/page.tsx, src/server/api.ts, tests/e2e/journey.spec.ts
+**Supersedes:** The adoption compatibility portion of “Deliver project reflections first and preserve legacy records additively”.
+
+In the context of the user explicitly asking to delete the remaining old adoption implementation, facing old links that still exposed a superseded workflow, we decided for source-project redirects, removal of unused lesson/adoption components and adoption response fields, and HTTP 410 for retired adoption writes, to achieve one project-centered interface, accepting a deliberate compatibility break for obsolete adoption clients while preserving all stored history and inline historical experience.

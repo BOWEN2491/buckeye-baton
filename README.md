@@ -2,7 +2,7 @@
 
 OSU project handoffs and team reflections. A hackathon demo connecting students, industry mentors, and OSU Staff.
 
-Product update (2026-10-24): v2 phase 1 implements project browsing, three state-specific details, owner reflection editing and validated status changes. Pickup, project questions and mentor connections currently show inline coming-next placeholders. Legacy Lesson routes/APIs remain compatible. See [phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md) for verification status; the [full MVP v2 target](docs/MVP_SPEC.md) is not yet complete.
+Product update (2026-10-24): v2 phase 1 implements project browsing, three state-specific details, owner reflection editing and validated status changes. Pickup, project questions and mentor connections currently show inline coming-next placeholders. Independent Lesson pages and adoption UI are retired. Existing /lessons/:id links redirect to their source project; historical lessons remain inline. Adoption writes return HTTP 410 and stored records are preserved. See [phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md) for verification status; the [full MVP v2 target](docs/MVP_SPEC.md) is not yet complete.
 
 ## Run locally
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Project, Lesson } from "@/shared/types";
+import type { Project } from "@/shared/types";
 import { readable } from "@/lib/client";
 import { Icon } from "./app-shell";
 export function Feedback({
@@ -114,24 +114,6 @@ export function ProjectCard({ project }: { project: Project }) {
         <span className="footer-arrow">↗</span>
       </div>
     </article>
-  );
-}
-export function LessonCard({ lesson }: { lesson: Lesson }) {
-  return (
-    <Link href={`/lessons/${lesson.id}`} className="lesson-card">
-      <span className={`lesson-type ${lesson.type}`}>
-        {lesson.type === "worked"
-          ? "What worked"
-          : lesson.type === "pitfall"
-            ? "A lesson from a setback"
-            : "For the next team"}
-      </span>
-      <h3>{lesson.title}</h3>
-      <p>{lesson.happened}</p>
-      <div className="quiet-link">
-        Read the lesson <Icon name="arrow" size={16} />
-      </div>
-    </Link>
   );
 }
 export function PageHeading({

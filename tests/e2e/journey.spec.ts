@@ -171,3 +171,28 @@ test('pickup and role guidance placeholders stay inline without mutations', asyn
   }
   expect(mutations).toEqual([]);
 });
+
+test('retired lesson pages redirect to projects and adoption controls stay removed', async ({ page }) => {
+  await page.goto('/lessons/lesson-fields#discussion');
+  await expect(page).toHaveURL(/\/projects\/project-signup(?:#discussion)?$/);
+  await expect(page.getByRole('heading', { name: 'Historical experience', exact: true })).toBeVisible();
+  const checkProjectOnly = async () => {
+    await expect(page.getByText('Use this lesson in your project', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Add to my project/i })).toHaveCount(0);
+    await expect(page.getByText(/project reported an outcome|projects reported an outcome|Lessons we.re building on|The relay continues/)).toHaveCount(0);
+    await expect(page.locator('a[href^="/lessons/"]')).toHaveCount(0);
+  };
+  await checkProjectOnly();
+  for (const route of ['/', '/projects/project-events', '/projects/project-v2-finished', '/projects/project-v2-paused', '/workspace']) {
+    await page.goto(route);
+    await expect(page.getByLabel('Exploring as')).toBeVisible();
+    if (route.startsWith('/projects/')) await expect(page.locator('.reflection-hero')).toBeVisible();
+    await checkProjectOnly();
+  }
+  await identity(page, 'staff-kevin');
+  await page.goto('/workspace');
+  await checkProjectOnly();
+  await identity(page, 'mentor-sarah');
+  await page.goto('/workspace');
+  await checkProjectOnly();
+});

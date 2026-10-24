@@ -1,6 +1,6 @@
 # Buckeye Baton — API contract
 
-> **版本边界（2026-10-24）：当前实现 v2 第一轮项目浏览与总结编辑，兼容旧 Lesson v1 接口。** 完整接棒、项目问题与引荐尚未实现；相关按钮只原地提示。第一轮验收见 PHASE1_ACCEPTANCE.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
+> **版本边界（2026-10-24）：当前实现 v2 第一轮项目浏览与总结编辑，保留历史经验数据，独立 Lesson 页面和采用功能已退出产品。** 完整接棒、项目问题与引荐尚未实现；相关按钮只原地提示。第一轮验收见 PHASE1_ACCEPTANCE.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
 
 ## Phase 1 project reflection contract
 
@@ -18,7 +18,7 @@ interface ProjectReflection {
 }
 ```
 
-- GET 项目列表/详情返回 reflection；原有详情数组保留兼容。
+- GET 项目列表/详情返回 reflection；项目详情只返回 project / lessons，不再返回 adoptedLessons 或 downstreamAdoptions。
 - POST `/api/projects` 省略 status 时默认 ongoing，可带部分 reflection；空总结使用空字符串/数组规范化。
 - PATCH `/api/projects/:id` 接受部分基本资料及部分 reflection；先与已保存项目合并，再按最终状态验证，保存状态与内容。遗漏 reflection 字段保留；传入数组替换对应数组。
 - Finished 至少一条非空成果及非空 nextTeam；Paused 必须 whyPaused 与至少一条 ifAgain；状态切换不擦除其他状态总结。旧 null 项目不在只读查询时被强制改写。
@@ -50,8 +50,7 @@ Success: `{ "data": value }`. Error: `{ "error": { "code": "...", "message": "..
 - Lesson: `id,projectId,authorId,type,title,assumed,happened,change,conditions,artifacts,createdAt,updatedAt`. Artifact: `{label,url}`.
 - Comment: `id,lessonId,authorId,body,parentId,kind,referralId,createdAt`; kind is `question|comment|reply`.
 - Referral: `id,lessonId,questionCommentId,staffId,mentorId,reason,status,createdAt`; status is `pending|completed`.
-- Adoption: `id,lessonId,adoptingProjectId,authorId,result,note,artifactUrl,createdAt,updatedAt`.
-- Enriched discussion comments include `author`; referrals include `mentor` and `staff`; enriched adoptions include `project` and `author`.
+- Enriched historical discussion comments include `author`; referrals include `mentor` and `staff`. Adoption records remain stored, but their application types, statistics and public response fields are retired.
 
 ## Endpoints
 | Method and path | Input | `data` response |
@@ -60,32 +59,31 @@ Success: `{ "data": value }`. Error: `{ "error": { "code": "...", "message": "..
 | GET `/api/health` | — | `{status:'ok',databaseMode,demoIdentity:true}` after storage check |
 | GET `/api/projects` | query `q`, `status` optional | `Project[]` |
 | POST `/api/projects` | `ProjectInput` | created `Project` |
-| GET `/api/projects/:id` | — | `{project,lessons,downstreamAdoptions,adoptedLessons}` |
+| GET `/api/projects/:id` | — | `{project,lessons}` |
 | PATCH `/api/projects/:id` | partial `ProjectInput` | updated `Project` |
 | GET `/api/lessons` | query `q` optional | `Lesson[]` |
 | POST `/api/projects/:id/lessons` | `LessonInput` | created `Lesson` |
-| GET `/api/lessons/:id` | — | `{lesson,project,adoptions,stats}` |
+| GET `/api/lessons/:id` | — | `{lesson,project}` |
 | PATCH `/api/lessons/:id` | partial `LessonInput` | updated `Lesson` |
 | GET `/api/lessons/:id/comments` | — | `{comments,referrals}` enriched as above |
 | POST `/api/lessons/:id/comments` | `{body,kind,parentId?}` | created `Comment` |
 | POST `/api/referrals` | `{questionCommentId,mentorId,reason}` | created `Referral` |
 | POST `/api/referrals/:id/replies` | `{body}` | created `Comment` linked to referral and question |
-| POST `/api/lessons/:id/adoptions` | `{adoptingProjectId}` | created or existing `Adoption` |
-| PATCH `/api/adoptions/:id` | `{result,note,artifactUrl?}` | updated `Adoption` |
+| POST `/api/lessons/:id/adoptions` | retired | HTTP 410 `{error:{code,message}}`; no database writes |
+| PATCH `/api/adoptions/:id` | retired | HTTP 410 `{error:{code,message}}`; no database writes |
 
-`ProjectInput`: title, summary, courseOrClub, term, tags; optional status (default ongoing), demoUrl/codeUrl and partial reflection. PATCH uses partial ProjectInput. `LessonInput`: type, title, assumed, happened, change, conditions, artifacts. Stats: `{total,worked,partial,failed}`; total counts only non-null results.
+`ProjectInput`: title, summary, courseOrClub, term, tags; optional status (default ongoing), demoUrl/codeUrl and partial reflection. PATCH uses partial ProjectInput. `LessonInput`: type, title, assumed, happened, change, conditions, artifacts.
 
 ## Checks
-- Project and lesson writes require student ownership. Lesson editing is included to support correction after later feedback.
+- Project writes require student ownership. Historical Lesson write endpoints retain ownership checks, but the product no longer offers a separate Lesson editor.
 - A reply parent must belong to the same lesson. A referral must target a question and a mentor user; its lesson is derived from that question.
 - Only Staff creates referrals; only the referred Mentor completes a referral. Reply and completion must save atomically. The returned comment links to its referral and original question.
-- Adopting project must belong to the acting student and differ from the lesson's source project. One record per `(lessonId, adoptingProjectId)`; repeated adoption returns the same record.
-- Adopted results are self-reported. A meaningful note is required; accepted links are HTTP(S). State changes never cascade-delete history.
+- Adoption endpoints return 410 before parsing identity or accessing storage. No replacement project relationship is created. State changes never cascade-delete history.
 
 ## Demo identifiers
 Users: `student-alex`, `student-mia`, `mentor-sarah`, `staff-kevin`.
 Projects: `project-signup` (Alex, finished, legacy null reflection), `project-events` (Mia, ongoing, legacy null reflection), `project-v2-finished` and `project-v2-paused` (fictional reflection samples).
-Lessons: `lesson-fields`, `lesson-confirmation`, `lesson-accessibility`, all from Campus Signup. Fixtures contain no initial comments, referrals, or adoptions so the journey can be demonstrated live.
+Lessons: `lesson-fields`, `lesson-confirmation`, `lesson-accessibility`, all from Campus Signup. Fixtures contain no fabricated initial comments, referrals, or adoptions; the current product exposes project reflections and non-mutating future-action placeholders.
 
-### Adopted experiences on destination projects
-`ProjectDetail.adoptedLessons` is a required array of `{ adoption: Adoption, lesson: Lesson, sourceProject: Project }`. It includes both saved entries (`adoption.result === null`) and reported outcomes. Use it to show the adopting project's borrowed lessons and links to their source projects. `downstreamAdoptions` remains reported outcomes on lessons belonging to this source project.
+### Retired UI and links
+Independent `/lessons/:id` pages redirect to the source `/projects/:id`; missing lessons return 404. The product has no links into independent lesson pages, lesson forms/discussions, adoption controls or adoption counts. Inline Historical experience stays readable. Old Lesson/comment/referral APIs are retained for history compatibility only; project-level help remains a non-mutating placeholder.

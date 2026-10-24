@@ -1,6 +1,6 @@
 # Buckeye Baton — parallel handoff
 
-> **2026-10-24 第一轮：** 首页与三状态项目详情、总结编辑、校验保存已进入当前实现；验证状态见 PHASE1_ACCEPTANCE.md。接棒、项目求助、Staff 引荐与 Mentor 指导仅占位，下一轮再接真实交互。本轮先不需要接棒/讨论草图。旧 Lesson 接口和数据兼容保留，不扩展采用统计。完整目标仍见 MVP_SPEC.md / ACCEPTANCE.md。
+> **2026-10-24 第一轮：** 首页与三状态项目详情、总结编辑、校验保存已进入当前实现；验证状态见 PHASE1_ACCEPTANCE.md。接棒、项目求助、Staff 引荐与 Mentor 指导仅占位，下一轮再接真实交互。本轮先不需要接棒/讨论草图。独立 Lesson 页面重定向来源项目，采用界面和统计已删除；采用写接口返回 410。数据库历史保留，其他旧接口仅兼容，不作为产品入口。完整目标仍见 MVP_SPEC.md / ACCEPTANCE.md。
 
 ## Baseline
 The application is at the repository root on codex/buckeye-baton-mvp. Old Python/Vite/Streamlit rehearsal code was removed on request; see PRIOR_WORK.md and Git history. The baseline adds phase 1 reflections on top of compatible v1 records; full v2 project relay is not yet implemented. Reuse identity, database, permissions and referral infrastructure.

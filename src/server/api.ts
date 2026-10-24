@@ -17,9 +17,9 @@ const parameter = (value: unknown) => value !== null && typeof value === 'object
 function validateProject(data: Record<string, unknown>) { const parsed = v.completeProject.safeParse(data); if (!parsed.success) return fail(400,'INVALID_INPUT',parsed.error.issues[0]?.message ?? 'Invalid project'); return parsed.data; }
 async function insert(sql: Sql, table: string, data: Record<string, any>, conflict = '') { const entries=Object.entries(data); const keys=entries.map(([key])=>`"${key}"`).join(','); const args=entries.map(([,value]) => parameter(value)); return (await rows(sql,`INSERT INTO ${table} (${keys}) VALUES (${args.map((_,i)=>`$${i+1}`).join(',')}) ${conflict} RETURNING *`,args))[0]; }
 async function update(sql: Sql, table: string, id: string, data: Record<string,any>) { const entries=Object.entries(data); if(!entries.length) fail(400,'INVALID_INPUT','Provide at least one field'); return (await rows(sql,`UPDATE ${table} SET ${entries.map(([k],i)=>`"${k}"=$${i+1}`).join(',')}, "updatedAt"=now() WHERE id=$${entries.length+1} RETURNING *`,[...entries.map(([,val])=>parameter(val)),id]))[0]; }
-async function enrichAdoptions(sql: Sql, records: Record<string,any>[]): Promise<Record<string, any>[]> { return Promise.all(records.map(async a=>({...a,project:await one(sql,'projects',a.adoptingProjectId),author:await one(sql,'users',a.authorId)}))); }
 export async function handle(req: Request, resource: string, id?: string): Promise<Response> {
  try {
+  if(resource==='adoptions'||resource==='adoption') fail(410,'FEATURE_RETIRED','Lesson adoption has been retired. Experience is now part of the project.');
   const db=await database(); const method=req.method; const search=new URL(req.url).searchParams;
   if(resource==='health') { await db.query('SELECT 1'); return json({status:'ok',databaseMode:db.mode,demoIdentity:true}); }
   if(resource==='users'&&method==='GET') return json(await rows(db,'SELECT * FROM users ORDER BY name'));
@@ -28,15 +28,12 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    return json(await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC',[`%${q}%`,status]));
   }
   if(resource==='project'&&method==='GET') {
-   const saved=await rows(db,'SELECT * FROM adoptions WHERE "adoptingProjectId"=$1 ORDER BY "updatedAt" DESC',[id]);
-   const adoptedLessons=await Promise.all(saved.map(async adoption=>{const lesson=await one(db,'lessons',adoption.lessonId);return {adoption,lesson,sourceProject:await one(db,'projects',lesson.projectId)};}));
-   return json({project:await one(db,'projects',id!),lessons:await rows(db,'SELECT * FROM lessons WHERE "projectId"=$1 ORDER BY "createdAt"',[id]),downstreamAdoptions:await enrichAdoptions(db,await rows(db,'SELECT a.* FROM adoptions a JOIN lessons l ON a."lessonId"=l.id WHERE l."projectId"=$1 AND a.result IS NOT NULL ORDER BY a."updatedAt" DESC',[id])),adoptedLessons});
+   return json({project:await one(db,'projects',id!),lessons:await rows(db,'SELECT * FROM lessons WHERE "projectId"=$1 ORDER BY "createdAt"',[id])});
   }
   if(resource==='lessons'&&method==='GET') {const q=`%${search.get('q')??''}%`;return json(await rows(db,'SELECT * FROM lessons WHERE title ILIKE $1 OR assumed ILIKE $1 OR happened ILIKE $1 OR change ILIKE $1 OR conditions ILIKE $1 ORDER BY "createdAt" DESC',[q]));}
   if(resource==='lesson'&&method==='GET') {
-   const lesson=await one(db,'lessons',id!); const adoptions=await enrichAdoptions(db,await rows(db,'SELECT * FROM adoptions WHERE "lessonId"=$1 ORDER BY "updatedAt" DESC',[id]));
-   const stats={total:0,worked:0,partial:0,failed:0}; for(const a of adoptions) {if(a.result) {stats.total++; stats[a.result as 'worked'|'partial'|'failed']++;}}
-   return json({lesson,project:await one(db,'projects',lesson.projectId),adoptions,stats});
+   const lesson=await one(db,'lessons',id!);
+   return json({lesson,project:await one(db,'projects',lesson.projectId)});
   }
   if(resource==='comments'&&method==='GET') {
    await one(db,'lessons',id!); const comments=await rows(db,'SELECT * FROM comments WHERE "lessonId"=$1 ORDER BY "createdAt", id',[id]); const referrals=await rows(db,'SELECT * FROM referrals WHERE "lessonId"=$1 ORDER BY "createdAt"',[id]);
@@ -77,11 +74,6 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    const reply=await db.transaction(async sql=> { const r=(await rows(sql,'SELECT * FROM referrals WHERE id=$1 FOR UPDATE',[id]))[0]??fail(404,'NOT_FOUND','Referral not found');if(r.mentorId!==user.id)fail(403,'FORBIDDEN','Only the assigned mentor can complete this referral');if(r.status==='completed')fail(409,'CONFLICT','This referral has already been answered');
     const comment=await insert(sql,'comments',{id:randomUUID(),lessonId:r.lessonId,authorId:user.id,kind:'reply',body:data.body,parentId:r.questionCommentId,referralId:r.id});await sql.query("UPDATE referrals SET status='completed' WHERE id=$1",[id]);return comment;});return json(reply,201);
   }
-  if(resource==='adoptions'&&method==='POST') {
-   role(user,'student');const data=await parse(req,v.adoptionInput);const lesson=await one(db,'lessons',id!);await ownProject(db,data.adoptingProjectId,user);if(lesson.projectId===data.adoptingProjectId)fail(400,'INVALID_INPUT','Choose a different project from the source project');
-   return json(await insert(db,'adoptions',{id:randomUUID(),lessonId:id,adoptingProjectId:data.adoptingProjectId,authorId:user.id,result:null,note:'',artifactUrl:null},'ON CONFLICT ("lessonId","adoptingProjectId") DO UPDATE SET "lessonId"=EXCLUDED."lessonId"'),201);
-  }
-  if(resource==='adoption'&&method==='PATCH') {const adoption=await one(db,'adoptions',id!);await ownProject(db,adoption.adoptingProjectId,user);const data=await parse(req,v.adoptionUpdate);return json(await update(db,'adoptions',id!,{...data,artifactUrl:data.artifactUrl??null}));}
   return fail(405,'METHOD_NOT_ALLOWED','Unsupported operation');
  } catch(error) {
   if(error instanceof ApiFailure)return Response.json({error:{code:error.code,message:error.message}},{status:error.status});

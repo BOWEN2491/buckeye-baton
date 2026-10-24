@@ -5,7 +5,7 @@ Use the repository root, Node 22, and README setup commands. This replaces the e
 ## Shared source of truth
 
 - docs/MVP_SPEC.md: complete approved project-centered target and current first-round boundary.
-- docs/API_CONTRACT.md and src/shared/types.ts: implemented reflection shapes and compatible legacy interfaces.
+- docs/API_CONTRACT.md and src/shared/types.ts: implemented reflection shapes and retained history APIs; independent lesson pages redirect to projects and adoption writes are retired (410).
 - docs/PHASE1_ACCEPTANCE.md: current project interactions and verification status.
 - docs/ACCEPTANCE.md: full future relay story, not implemented by this round.
 

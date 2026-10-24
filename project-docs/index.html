@@ -7,7 +7,7 @@
 
 <!-- claude:meta:start -->
 <script type="application/json" id="meta">
-{"project":"Buckeye Baton","tagline":"HackOHI/O 2026 · Honda challenge · 项目经验接力","url":"https://github.com/BOWEN2491/buckeye-baton","lastUpdated":"2026-10-24","currentFocus":"","lastCompleted":"v2 第一轮本地通过：类型检查、后端 2/2、生产构建、浏览器 4/4","nextUp":"队友试用首页与卡片；下一轮实现项目问题、引荐与接棒关系","blockers":["真实 Neon 连接、AWS 权益及公网部署未验证"],"health":{"featuresDone":6,"featuresTotal":8}}
+{"project":"Buckeye Baton","tagline":"HackOHI/O 2026 · Honda challenge · 项目经验接力","url":"https://github.com/BOWEN2491/buckeye-baton","lastUpdated":"2026-10-24","currentFocus":"","lastCompleted":"旧经验采用界面已清理；类型检查、后端 3/3、生产构建、浏览器 5/5 通过","nextUp":"队友试用首页与卡片；下一轮实现项目问题、引荐与接棒关系","blockers":["真实 Neon 连接、AWS 权益及公网部署未验证"],"health":{"featuresDone":6,"featuresTotal":8}}
 </script>
 <!-- claude:meta:end -->
 
@@ -160,7 +160,7 @@
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>第一轮类型检查、后端 2/2、生产构建和浏览器 4/4 已通过；保留原有四个项目。桌面与 390px 布局已有自动化覆盖，云端与完整接棒仍未验证。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>清理后类型检查、后端 3/3、生产构建和浏览器 5/5（10.4 秒）已通过；保留原有四个项目。桌面与 390px 布局已有自动化覆盖，云端与完整接棒仍未验证。</p></div>
 <!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
@@ -175,7 +175,7 @@
     <!-- claude:features:start -->
 <div class="card" data-updated="2026-10-24"><h3>v2 第一轮 <span class="badge done">本地通过</span></h3><p>项目搜索和状态筛选、三状态总结、所有者表单编辑、状态校验与历史保留；旧经验以 Historical experience 内联展示。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>完整项目接棒 <span class="badge planned">planned</span></h3><p>项目问题、Staff 引荐、Mentor 回复与关联后续项目尚未接通；本轮按钮只原地说明下一轮开放，不发送写请求。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>Lesson、评论、引荐与采用接口和数据保留，独立 Lessons 不再作为首页入口；旧完整旅程不等于新版接棒。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>独立 Lesson 页面重定向来源项目；采用界面、数字与响应字段已删除，采用写接口返回 410。旧数据库记录保留，经验只在项目内展示；旧完整旅程不等于新版接棒。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI、真实认证、上传、代码 fork、复杂关系图和通知。</p></div>
 <!-- claude:features:end -->
   </section>
@@ -237,7 +237,7 @@
 <!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
-<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 增加可空 reflection JSONB，使用幂等增量迁移，不重建旧表。Lesson、Comment、Referral、Adoption 兼容保留；种子只补缺失 ID，不覆盖用户编辑。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 增加可空 reflection JSONB，使用幂等增量迁移，不重建旧表。Lesson、Comment、Referral、Adoption 数据保留，采用应用逻辑已退役；种子只补缺失 ID，不覆盖用户编辑。</p></div>
 <!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
@@ -255,13 +255,14 @@ npm start</pre></div>
 <!-- claude:architecture:commands:end -->
 
     <!-- claude:architecture:decisions:start -->
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 旧采用功能退役</h3><p>按用户要求删除独立经验与采用界面，旧链接转到来源项目。采用写接口返回 410，数据库历史保留，避免新旧两种主流程并存。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 分阶段交付</h3><p>先实现真实项目总结与状态交互，接棒与连接使用不写数据的占位。可空 JSONB 与旧经验内联保护历史，完整接棒留待下一轮。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Project 成为核心</h3><p>按用户确认，将经验嵌入项目，以重现、继续、改进创建新团队的关联项目；问题与引荐改归项目。本次只写规格，旧应用与数据未变；迁移需保留历史。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>最新决定</h3><p>用户将 Pass It On 更名为 Buckeye Baton，并授权清理旧环境练习。应用提升到根目录；保留协作约定、先前工作来源说明与 Git 历史。</p></div>
 <!-- claude:architecture:decisions:end -->
 
     <!-- claude:architecture:glossary:start -->
-<div class="card" data-updated="2026-10-24"><h3>术语</h3><p>Project：团队负责的一次明确实践；Reflection：项目内的经验与交接内容；Lesson/Adoption：保留兼容的旧版记录；接棒：下一轮将创建有来源关联的新项目。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>术语</h3><p>Project：团队负责的一次明确实践；Reflection：项目内的经验与交接内容；Lesson：项目内保留的历史经验；Adoption：仅存储保留、写接口已停用的旧记录；接棒：下一轮将创建有来源关联的新项目。</p></div>
 <!-- claude:architecture:glossary:end -->
 
     <!-- claude:architecture:end -->
@@ -305,6 +306,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 清理旧经验采用功能</h3><p>移除独立经验/采用界面与项目里的采用数字；旧经验链接跳回来源项目，历史经验内联保留。采用写接口返回 410，不删除旧数据库记录。类型检查、后端 3/3、生产构建与浏览器 5/5 通过；旧链接实测重定向，旧界面匹配及 pageerror 均为 0。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · v2 第一轮</h3><p>实现首页与三状态项目交互、总结表单和增量数据字段；新增第一轮验收，完整接棒与引荐仍未实现。类型检查、后端 2/2、生产构建与浏览器 4/4 通过；旧数据保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 新版五项规格</h3><p>写入接棒创建、状态对应经验、角色与讨论、状态切换、贡献展示；同步验收、上下文和交接提示。旧规格归档，旧测试不代表新版已实现。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 首轮试用反馈</h3><p>切换身份后返回 Explore projects 并重置页面筛选与未保存表单。页面说明一个项目包含多条可复用经验，经验保存区明确先保存、实践后再反馈；记录仍保留。</p></div>

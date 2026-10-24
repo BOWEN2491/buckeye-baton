@@ -73,8 +73,6 @@ export default function Workspace() {
         <p>
           Use the identity selector to explore as Alex, Mia, Sarah, and Kevin.
           This switcher is for the demonstration, not real authentication.
-          Existing lesson discussions and referrals remain saved under their
-          original URLs.
         </p>
       </div>
     </div>
