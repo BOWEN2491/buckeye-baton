@@ -132,3 +132,13 @@ export async function workbench(db: Sql, user: User) {
  }
  return fail(403, 'FORBIDDEN', 'The workbench is for Staff and Mentors');
 }
+
+// Staff-wide Awaiting reply counts; same thread state as the Mentor workbench above.
+export async function mentorWorkload(db: Sql, user: User) {
+ role(user, 'staff');
+ const mentors = await rows(db, "SELECT * FROM users WHERE role='mentor' ORDER BY name, id");
+ const referred = await threads(db, 'id IN (SELECT "questionId" FROM project_referrals)', []);
+ const counts = new Map<string, number>();
+ for (const t of referred) if (t.state === 'awaiting_reply') counts.set(t.referral!.mentorId, (counts.get(t.referral!.mentorId) ?? 0) + 1);
+ return json({ items: mentors.map(m => ({ mentor: m, awaitingReply: counts.get(m.id) ?? 0 })), asOf: new Date().toISOString() });
+}
