@@ -1,4 +1,6 @@
-# HackOHI/O 2026 赛前准备
+# Hacking1024 — HackOHI/O 2026 赛前准备
+
+仓库：https://github.com/BOWEN2491/Hacking1024
 
 这是 **2026-10-22 创建的通用环境练习**。正式比赛项目和题目尚未确定。如果复用这里的代码，请按 `PRIOR_WORK.md` 披露赛前工作。
 
@@ -45,16 +47,31 @@ API 在你此前的 PowerShell 中已经测试成功。若要用这里的 `-Mode
 
 ## 队友或重装时
 
-需有 Python 3.11、Node.js（本机验证为 22.19.0）和 Git：
+Windows 首次安装需有 Python 3.11、Node.js（本机验证为 22.19.0）和 Git。先确认 `python --version`、`node --version`、`npm.cmd --version`、`git --version` 有输出。选择一个尚不存在的本地目录克隆，目录不必与队友相同：
 
 ```powershell
+git clone https://github.com/BOWEN2491/Hacking1024.git
+cd Hacking1024
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
 npm.cmd --prefix frontend ci
+.\start.ps1 -Mode check
 .\start.ps1
 ```
 
 `requirements-lock.txt` 记录本机 Windows 上实测的完整版本；不同操作系统若有兼容问题，可用 `requirements.txt` 重新解析后验证。`frontend/package-lock.json` 由 npm 管理，不要手动改。
+
+拥有者的现有目录 `D:\HackOHIO_1024` 已经安装完毕并连接此仓库，不需要再次克隆或重新建立 `.venv`。更新代码可执行 `git pull --ff-only`；若有本地改动，先提交到自己的工作分支再拉取。
+
+macOS/Linux 可用 `python3 -m venv .venv`，然后用 `.venv/bin/python -m pip install -r requirements.txt` 和 `npm --prefix frontend ci` 安装。在两个终端分别运行 `.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000` 与 `npm --prefix frontend run dev`。`start.ps1` 是 Windows 启动脚本。
+
+## 日常协作
+
+- `main` 保留可运行的集成版本；每个人在独立分支开发，通过 Pull Request 合并。
+- 你主要改 `backend/`，队友优先改 `frontend/`；接口格式约定见 `TEAMMATE.md`。
+- 队友需要接受仓库的 Collaborator 邀请后才能推送分支。仓库公开只代表能读取，不代表有写入权限。
+- 依赖目录和密钥不随 Git 同步；每台机器独立安装依赖。日常 `git pull` 后仅在依赖清单变化时重新安装。
+- 如果想把此仓库作为 Codex/Cursor 的后续工作目录，应直接打开实际克隆目录；你当前电脑打开 `D:\HackOHIO_1024`。
 
 ## 文件导航
 

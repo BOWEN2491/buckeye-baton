@@ -17,3 +17,12 @@
 - Launch script now runs Vite through node directly for a clean Windows Ctrl+C shutdown; proxy health verified after the launcher adjustment.
 - Git ignore checks exclude .env, .env.local, venv, node_modules, dist and Streamlit secrets; source scan found no API key patterns.
 - Preparation handoff complete. All rehearsal servers stopped and ports released; remaining account, team and event actions are listed in CHECKLIST.md.
+
+## 2026-10-23
+- User created BOWEN2491/Hacking1024 and requested setup.
+- GitHub metadata confirms an empty public repository with main as default branch and owner push/admin permissions.
+- Existing local main is clean and contains preparation commit 86faf81, with no remote configured.
+- Updated README and teammate instructions with actual clone URL, installation steps, branch/PR workflow and collaborator permission requirements.
+- Verified tracked files contain no API key patterns and exclude local secrets, virtual environment, node_modules and builds.
+- Configured origin, successfully pushed initial main and established upstream tracking; Git terminal write authentication is confirmed.
+- Local environment check passed. Collaborator invitation, teammate clone/install and first PR remain user/team actions.

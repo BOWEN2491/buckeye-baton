@@ -33,25 +33,34 @@ HTTP 200 响应：
 
 > 这是赛前学习项目。请先读 README.md 和 TEAMMATE.md。只修改 frontend 中的页面文案、结果卡片和错误提示，不改后端接口，不添加 API Key、登录或数据库。保留加载和失败状态。先解释请求经过哪些文件，再帮我运行和测试。最后总结改了什么和怎样验证。
 
-## GitHub 第一次连接（由仓库所有者执行）
+## GitHub 连接与首次安装
 
-在 GitHub 网页创建空的私有仓库，**先不添加 README、License 或 .gitignore**，并复制其 HTTPS 地址。以下 `YOUR_REPO` 必须换成你实际创建的仓库名：
+实际仓库为 https://github.com/BOWEN2491/Hacking1024 。拥有者的现有目录为 `D:\HackOHIO_1024`，`origin` 应指向：
 
-```powershell
-cd D:\HackOHIO_1024
-git remote add origin https://github.com/BOWEN2491/YOUR_REPO.git
-git push -u origin main
+```text
+https://github.com/BOWEN2491/Hacking1024.git
 ```
 
-若已有 origin，先运行 `git remote -v` 核对，不要盲目覆盖。推送可能需要 Git Credential Manager 的网页登录，登录后重试。
+拥有者先在 [Settings → Collaborators](https://github.com/BOWEN2491/Hacking1024/settings/access) 中邀请队友并让他接受邀请。仓库当前公开，可以直接克隆；推送分支需要写入权限。
 
-在 GitHub 仓库 Settings → Collaborators 中邀请队友并让他接受邀请，然后由队友执行：
+队友在 PowerShell 中执行（Windows，Python 3.11 + Node.js 22.19.0 + Git）：
 
 ```powershell
-git clone <你复制给他的真实仓库地址>
-cd <仓库目录>
+git clone https://github.com/BOWEN2491/Hacking1024.git
+cd Hacking1024
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+npm.cmd --prefix frontend ci
+.\start.ps1
+```
+
+在浏览器打开 http://127.0.0.1:5173 并测试文字回显。这个练习不需要 API Key。按 `Ctrl+C` 停止，接着开工作分支：
+
+```powershell
 git switch -c teammate/ui-practice
 ```
+
+第一次使用 Git 的队友还需要在自己的仓库内设置提交身份：`git config user.name "自己的名字"`，以及 `git config user.email "自己的GitHub邮箱或noreply邮箱"`。这里填写的是队友自己的身份，不要使用仓库拥有者的身份。
 
 改完后：
 
@@ -61,7 +70,17 @@ git commit -m "Improve practice UI wording"
 git push -u origin teammate/ui-practice
 ```
 
-在网页开 PR，由你检查后合并。不要两个人同时改同一个文件；练习阶段队友只动 frontend，你负责 backend。接口要改时先通知对方，更新本文件再做代码。
+在 [Pull requests](https://github.com/BOWEN2491/Hacking1024/pulls) 开 PR，base 选 `main`，compare 选自己的分支，由你检查后合并。不要两个人同时改同一个文件；练习阶段队友只动 frontend，你负责 backend。接口要改时先通知对方，更新本文件再做代码。
+
+每次开始新的工作，在没有未提交改动的前提下：
+
+```powershell
+git switch main
+git pull --ff-only
+git switch -c teammate/next-task
+```
+
+`teammate/next-task` 要换成这次任务的新分支名。你可以对应使用 `backend/任务名`。如果切换分支或拉取被本地改动阻止，先提交当前工作，不要用 `reset --hard` 丢弃文件。
 
 ## 开赛后先填写的接口约定
 

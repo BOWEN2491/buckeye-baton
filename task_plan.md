@@ -8,11 +8,12 @@ Goal: prepare a local, generic development rehearsal in D:\HackOHIO_1024 and ide
 3. React ↔ FastAPI rehearsal, launch scripts, optional API check and Streamlit fallback — complete.
 4. Build, HTTP and rendered-browser validation — complete.
 5. Chinese handoff, teammate exercise and manual checklist — complete.
+6. Connect user-created BOWEN2491/Hacking1024 repository, update exact setup instructions, push and verify — complete (2026-10-23).
 
 ## Constraints
 - API success already reported by user; no key visible in agent process.
 - Never print, persist or commit real credentials.
-- No paid deployment, account changes, messages or public publishing.
+- No paid deployment, account changes or messages. The user requested setup of their new GitHub repository on 2026-10-23, authorizing upload of the preparation code to BOWEN2491/Hacking1024.
 - Disclose all preparation code as prior work if reused during the event.
 - Use explicit project Python; leave Miniconda base and global PATH alone.
 
