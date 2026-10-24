@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P1 总控与用户产品验收通过，PR #2 已合入 main（3b473de）",
-  "nextUp": "以 main 为共享基线准备 P2；真实 PostgreSQL 与云端仍待验证；现有预览保持运行",
+  "lastCompleted": "P1已合入main；P2单Agent任务、冻结契约及10项验收门槛已准备，功能仍0/10",
+  "nextUp": "转交P2_AGENT_TASK启动提示词；实现Agent安全确认AI凭据，最终READY交总控；P1预览保持运行",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -235,6 +235,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>P2 单Agent入口（待实现）</h3><p><a href="../docs/P2_AGENT_TASK.md">任务书与启动提示词</a>；<a href="../docs/P2_CONTRACT.md">数据/API契约</a>。AI草稿/确认与负载统计尚未实现，不是已运行接口。总控按H1–H10累计，当前0/10。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 验收与新模块</h3><p><a href="../docs/P1_ACCEPTANCE.md">总控独立验收</a>：精确提交、十项门槛与限制。src/server/relay.ts 提供接棒/问题/工作台，src/shared/relay-types.ts 是契约类型；project-questions、relay-links、workbench 组件连接真实 API。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 执行入口</h3><p><a href="../docs/P1_AGENT_TASK.md">单 Agent 全栈任务书</a>：实现、验证与最终 READY 回传；<a href="../docs/P1_CONTRACT.md">冻结契约</a>：数据及接口；<a href="../docs/EXECUTION_ROADMAP.md">总控台账</a>：P0–P4 与十项验收门槛。原 A/B 任务已取代。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>统一入口</h3><p><a href="../docs/PROJECT_OVERVIEW.md">项目总览</a>：定位、状态、已实现与下一轮；<a href="../design/README.md">设计说明</a>：队友原型及未确认差异；<a href="../docs/HANDOFF.md">协作说明</a>：main 共享基线与唯一工作目录。旧实施笔记移入 docs/legacy/planning/。</p></div>
@@ -325,6 +326,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P2 单Agent任务准备</h3><p>按用户要求沿用P1方式，单Agent连续全栈、正常最终只回传一次READY。契约规定保留原文、AI草稿需所有者确认、过时回退，负载复用P1待回复状态。真实AI需授权与独立证据，凭据/模型未确认；未改应用或重启预览。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 产品验收与 PR #2 合并</h3><p>用户手动验收本地 a232252 预览后明确授权合并；PR #2 已合入 main，合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4。本地同步 main；现有预览继续运行，未重启或重置数据，P2尚未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 总控独立验收通过</h3><p>对 61ff34b 在独立目录重跑 typecheck、生产 build/start、后端5/5和浏览器7/7，检查桌面/390px截图；G1–G10本地通过。代码已快进集成 codex/p1-integration；main未合并。真实pg多连接及Neon/AWS未验证，P2未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 改为单 Agent 完整交付</h3><p>按用户最新决定合并前后端任务，正常只在全部实现、自测和推送后汇报一次。P1 功能验收仍为 0/10，本次仅更新交接文档。</p></div>

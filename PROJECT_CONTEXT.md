@@ -14,6 +14,7 @@ Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 
 最近总控独立验证：typecheck、生产 build/start、后端 5/5、浏览器 7/7 通过，含四身份主线与390px。使用临时 PGlite，未操作用户数据。真实 PostgreSQL 多连接、真实认证、Neon/AWS、公网部署未验证。
 
 ## 设计与下一轮
+当前准备P2：单Agent任务书 docs/P2_AGENT_TASK.md，待实现契约 docs/P2_CONTRACT.md。协调分支 codex/p2-integration 从main准备，实现方独立克隆并建 codex/p2-implementation；正常最终回传一次READY，必要凭据决定/阻塞才额外报告。P2功能验收0/10，尚未实现；当前P1预览不重启、不改数据。默认准备OpenAI路径但provider、key复用和模型须在API实现前安全确认，不能把计划当作凭据可用证明。
 实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；单 Agent 全栈任务书：docs/P1_AGENT_TASK.md。任务分支 codex/p1-implementation 已交付；用户手动产品验收通过并授权合并，PR #2 已合入 main（合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4）。P1 本地功能验收 10/10。P2–P4 未开始：AI 简介/标签、Mentor workload、规则推荐、自动限频站内邀请按后续级别实现。deadline 属于具体求助期望回复日期。产品文案英文，待回复显示 Awaiting reply。
 
 队友设计已收进 design/。relay 原型补齐接棒、来源对照、问题—引荐—回复及工作台；不再等待草图。

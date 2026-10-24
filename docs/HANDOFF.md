@@ -1,6 +1,10 @@
 # Buckeye Baton — 协作与目录约定
 
-## 当前进行中的 P1
+## 当前准备P2
+
+唯一实现任务书 P2_AGENT_TASK.md，契约 P2_CONTRACT.md；从 origin/codex/p2-integration 建 codex/p2-implementation，一个Agent全栈交付。正常只转交最终READY短块，详细报告随分支保存为docs/P2_REPORT.md。总控独立验收后再提供产品预览，经用户验收/授权后才合入main。当前只有文档准备，P2功能验收0/10；不影响正在运行的P1服务和数据库。
+
+## 已完成的P1
 
 实现分支 codex/p1-implementation 已交付提交 61ff34b；总控独立验收本地 G1–G10 全部通过，已快进集成到 codex/p1-integration。报告见 P1_ACCEPTANCE.md。用户产品验收通过，PR #2 已合入 main（3b473de）；本地已同步 main，P2 未开始。P1_AGENT_TASK.md 保留为本轮已执行任务记录，不代表需要从头重做。
 

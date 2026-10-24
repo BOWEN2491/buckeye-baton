@@ -6,10 +6,10 @@ Start with docs/PROJECT_OVERVIEW.md for the consolidated scope. Main is the shar
 
 This is the Honda HackOHI/O 2026 competition app: Next.js 15 / TypeScript / Node 22 / Tailwind / PostgreSQL. Source is now at repository root. Historical React/Vite, FastAPI, Streamlit and optional AI rehearsal code was removed at the user’s request; recover it from Git history if needed.
 
-- P1 uses one full-stack Agent owning pages, components, shared types, API, database and tests; follow docs/P1_AGENT_TASK.md and docs/P1_CONTRACT.md. The former Worker A/B split is superseded. Contract and dependency changes remain coordinated with the controller.
+- P1 is accepted and merged. P2 uses one full-stack Agent: follow docs/P2_AGENT_TASK.md and docs/P2_CONTRACT.md; the former Worker A/B split is superseded. Contract and dependency changes remain coordinated with the controller. Report once at final delivery, except necessary credential decisions or genuine blockers.
 - Use separate codex/ branches and worktrees. Do not force-push or overwrite teammate changes.
 - Run npm run typecheck, npm run test:backend, npm run build; npm run test:e2e uses an isolated local SQL database after build.
 - Do not commit .env.local, credentials, local databases, node_modules or build artifacts.
 - Demo identity is deliberately switchable, not production authentication. Use fictional content. Hosted pg requires DATABASE_URL; explicit PGlite mode is a single-process local demo.
 - Update documentation and decision records after meaningful changes. Never claim Neon/AWS/public deployment passed based only on local checks.
-- AI project summaries and AI mentor shortlists remain deferred; Staff makes the final referral decision.
+- P2 schedules owner-reviewed AI browsing introductions/tags and Staff-visible Mentor Awaiting reply counts; this is a pending task, not an implemented feature. Preserve authored summary/tags/reflections. AI mentor shortlists remain deferred; Staff makes the final referral decision. Securely confirm provider/key reuse before API implementation; never expose secrets.

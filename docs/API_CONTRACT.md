@@ -1,5 +1,7 @@
 # Buckeye Baton — API contract
 
+P2 的待实现接口/类型单列在 [P2_CONTRACT.md](P2_CONTRACT.md)，目前尚未提供，不可将其视为下列已运行接口。P2尚未配置或验证AI服务。
+
 > **版本边界（2026-10-24）：v2 第一轮项目浏览与总结编辑之上，codex/p1-implementation 分支实现了 P1 接棒、项目问题、人工引荐、导师回复与工作台（见下文“P1 relay endpoints”）。** P1 已通过总控独立本地验收与用户产品验收，并经 PR #2 合入 main；云端及真实 PostgreSQL 多连接仍未验证。独立 Lesson 页面和采用功能已退出产品。规则依据 P1_CONTRACT.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
 
 ## P1 relay endpoints — accepted and merged into main

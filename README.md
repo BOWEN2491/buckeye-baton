@@ -47,6 +47,7 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 - [P1 shared contract](docs/P1_CONTRACT.md)
 - [P1 single-agent full-stack task](docs/P1_AGENT_TASK.md)
 - [P1 independent acceptance](docs/P1_ACCEPTANCE.md)
+- [P2 single-agent full-stack task](docs/P2_AGENT_TASK.md) / [P2 pending contract](docs/P2_CONTRACT.md)
 
 - [MVP and roles](docs/MVP_SPEC.md)
 - [API contract](docs/API_CONTRACT.md)
