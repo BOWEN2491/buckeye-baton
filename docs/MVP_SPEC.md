@@ -95,7 +95,7 @@ Buckeye Baton 让 OSU 学生留下项目与经验，让下一组接棒，并由 
 技术栈保持 Next.js 15、TypeScript、Node.js 22、Tailwind、pg/PostgreSQL；显式本地 PGlite 用于单进程演示。真实 Neon/AWS 与公网部署另行验证。
 
 1. 第一轮先交付首页、状态详情、经验编辑与状态保存，按 PHASE1_ACCEPTANCE.md 验证。
-2. 队友后续补接棒表单与“问题—引荐—回复”草图；本轮不以草图阻塞现有页面交互。
+2. 队友已交付接棒和问题—引荐—回复原型，参考 design/relay/；新增规则尚未自动批准，差异见 design/README.md。
 3. 下一轮协调项目问题、引荐与接棒关系的共用类型、接口与历史记录映射，再接入真实写操作。
 4. 继续保留旧经验、评论、引荐和采用记录，不静默删除。第一轮只增加 reflection 字段和样例。
 5. 完整功能实现后按 ACCEPTANCE.md 验证主线；第一轮及旧版测试均不能代表完整 v2 已通过。

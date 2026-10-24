@@ -2,6 +2,8 @@
 
 OSU project handoffs and team reflections. A hackathon demo connecting students, industry mentors, and OSU Staff.
 
+Start here: [project overview and current scope](docs/PROJECT_OVERVIEW.md), [collaboration and branch rules](docs/HANDOFF.md), and [teammate design references](design/README.md). The user has authorized PR #1 to become the shared main baseline; redundant frontend/backend preparation branches and checkouts have been removed.
+
 Product update (2026-10-24): v2 phase 1 implements project browsing, three state-specific details, owner reflection editing and validated status changes. Pickup, project questions and mentor connections currently show inline coming-next placeholders. Independent Lesson pages and adoption UI are retired. Existing /lessons/:id links redirect to their source project; historical lessons remain inline. Adoption writes return HTTP 410 and stored records are preserved. See [phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md) for verification status; the [full MVP v2 target](docs/MVP_SPEC.md) is not yet complete.
 
 ## Run locally
@@ -48,7 +50,7 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 - [Parallel chat handoff](docs/HANDOFF.md)
 - Shared TypeScript interfaces and fictional fixtures: `src/shared/`.
 
-Frontend owns components/pages; backend owns `src/server`, API route handlers, database schema, and scripts. Coordinate shared types and dependency changes. Remote repository: `BOWEN2491/buckeye-baton`. Use separate working directories and branches once a baseline commit is reviewed.
+Frontend owns components/pages; backend owns `src/server`, API route handlers, database schema, and scripts. Coordinate shared types and dependency changes. Remote repository: `BOWEN2491/buckeye-baton`. Main is the shared baseline; create short-lived branches for concrete tasks and use extra worktrees only for actual parallel work.
 
 ## Deployment
 

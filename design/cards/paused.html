@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paused Card · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;--green-tint:#F2FCF4;--green-line:#8DDB9E;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;--orange-tint:#FFF8F2;--orange-line:#FFC799;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --on-accent:#FFFFFF;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+.page{max-width:640px;margin:0 auto;padding:32px 16px 48px}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.nav a{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-size:13px}
+.nav a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:24px 24px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.meta-r{font-size:12px;color:var(--muted);text-align:right}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:700}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.ai-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)}
+.section{padding:20px 24px 0;display:flex;flex-direction:column;gap:10px}
+.section h2{margin:0;font-size:16px;font-weight:700}
+.section h2.small{font-size:14px;font-weight:600}
+.row-between{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.hero{margin:20px 24px 0;padding:20px;border-radius:10px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.hero-text{margin:0;font-size:18px;font-weight:600;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{padding:3px 10px;border-radius:6px;font-size:12px;font-weight:500}
+.box{border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.box.soft{background:var(--surface-2)}
+.person{display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--body);flex:none}
+.person strong{display:block;font-size:13px}
+.person span{display:block;font-size:12px;color:var(--muted)}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.apc{display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 12px;font-size:13px}
+.apc dt{color:var(--muted)}.apc dd{margin:0}
+.count{font-size:11px;color:var(--muted);white-space:nowrap}
+.foot{padding:20px 24px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px 'IBM Plex Sans',sans-serif;cursor:pointer}
+.btn.primary{color:var(--on-accent);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:520px){.head,.section,.foot{padding-left:16px;padding-right:16px}.hero{margin-left:16px;margin-right:16px;padding:16px}.grid2{grid-template-columns:1fr}.apc{grid-template-columns:1fr;gap:2px}.apc dd{margin-bottom:6px}}
+/* Paused */
+.s-paused .pill{background:var(--orange-bg);color:var(--orange-ink)}.s-paused .pill .dot{background:var(--orange);border-radius:2px}
+.s-paused .hero{background:var(--orange-tint);border:1px solid var(--orange-line);gap:16px}
+.s-paused .hero h2{margin:0;font-size:17px;font-weight:700}
+.h-why{color:var(--orange-ink)}.h-reuse{color:var(--green-ink)}
+.s-paused .hero .box{background:var(--surface)}
+.tagline{margin:0;font-size:13px;font-weight:500;color:var(--orange-ink)}
+.s-paused .btn.primary{background:var(--orange);border-color:var(--orange)}
+</style>
+</head>
+<body>
+<main class="page">
+<nav class="nav" aria-label="Card states">
+<a href="ongoing.html">Ongoing</a>
+<a href="finished.html">Finished</a>
+<a href="paused.html" aria-current="page">Paused</a>
+</nav>
+
+<article class="card s-paused">
+<header class="head">
+<div class="topline">
+<span class="pill"><span class="dot"></span>Paused</span>
+<span class="meta-r">Adopted by 1 project · 1 worked</span>
+</div>
+<h1>Dining Hall Wait-time Tracker</h1>
+<p class="sub">Jordan T., Wei L. · Course project · Spring 2026</p>
+<p class="prose">Tried to show live wait times at campus dining halls from student check-ins. Built a check-in flow and a campus map; paused before launch. <span class="ai-tag">AI summary · confirmed by team</span></p>
+<p class="tagline">Didn't ship, but the lessons did.</p>
+</header>
+
+<section class="hero" aria-label="Team reflections">
+<div class="eyebrow" style="color:var(--orange-ink)">From the team</div>
+<h2 class="h-why">Why we paused</h2>
+<p class="prose" style="font-size:16px;font-weight:500;color:var(--ink)">Not enough check-ins to be useful. We needed a steady stream every hour at each hall and got only a handful.</p>
+
+<h2>If we did it again</h2>
+<ul class="list">
+<li>Talk to dining services first. They may already have card-swipe counts.</li>
+<li>Pilot one dining hall, not six.</li>
+<li>Check data volume before building the interface.</li>
+</ul>
+
+<h2 class="h-reuse">What you can reuse</h2>
+<div class="grid2">
+<div class="box"><strong style="font-size:13px">Campus map component</strong><a href="#" style="font-size:12px">View code</a></div>
+<div class="box"><strong style="font-size:13px">Check-in flow, tested with 12 users</strong><a href="#" style="font-size:12px">View test notes</a></div>
+</div>
+</section>
+
+<section class="section">
+<h2 class="small">Mentor comment</h2>
+<div class="box soft">
+<div class="person"><span class="avatar" aria-hidden="true">ML</span><div><strong>Marcus Lee · Product Manager</strong><span>Referred by Faculty Prof. Dana Kim</span></div></div>
+<p class="prose">A classic cold-start problem. Before building, look for a data source that already exists, then ask students to fill only the gaps.</p>
+</div>
+</section>
+
+<footer class="foot">
+<span class="sub" style="font-size:12px">Open to a new team</span>
+<button type="button" class="btn primary">Continue this project</button>
+</footer>
+</article>
+</main>
+</body>
+</html>

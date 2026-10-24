@@ -1,25 +1,23 @@
-# Buckeye Baton â€” current project context
+# Buckeye Baton — 当前项目状态
 
-Updated 2026-10-24, America/New_York. Repository: https://github.com/BOWEN2491/buckeye-baton
+更新：2026-10-24。仓库：https://github.com/BOWEN2491/buckeye-baton
 
-## Product
-Approved MVP v2: OSU teams publish projects with embedded reflections. Later teams reproduce, continue or improve a project by creating their own linked Ongoing project. Staff connect project questions with industry Mentors. See docs/MVP_SPEC.md for the five confirmed decisions; independent Lesson adoption is superseded as the target journey.
+## 定位
+面向 OSU 学生的项目交接、接棒与导师连接平台。Project 是核心，经验写在项目内部。Student 留下与推进项目，Staff 针对具体问题引荐 Mentor，Mentor 提供指导。完整总览见 docs/PROJECT_OVERVIEW.md。
 
-## Implementation
-The Next.js app is at repository root. Use Node 22 and npm. V2 phase 1 adds project-only exploration, three-state reflection details, owner editing and validated state changes. ProjectReflection is nullable JSONB; old projects retain null and display existing lessons inline as historical experience. Independent Lesson pages redirect to their source project; historical lessons remain inline. Adoption UI, counts and response fields are removed; old adoption writes return 410. Stored history remains preserved. Pickup, project questions, Staff referral and Mentor guidance are placeholders with no writes; full project relay remains pending. See docs/PHASE1_ACCEPTANCE.md for current scope and verification status.
+## 当前实现
+已实现首页搜索/状态筛选、创建与所有者编辑、Ongoing/Finished/Paused 总结、原子校验后保存状态与持久化、四个演示身份。独立 Lesson UI 和采用流程已移除；旧链接转向项目，旧采用接口返回 410。历史记录保留。
+接棒、项目问题、引荐、Mentor 指导及工作台仍是占位，尚未接通真实项目流程。不可用旧 Lesson 测试证明完整新流程。
 
-Explicit PGlite mode persists locally; hosted pg requires DATABASE_URL. Four demo identities are not authentication. Incremental setup and additive seeds preserve existing records and edits.
+## 技术与验证
+Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 为单进程持久 SQL，托管 pg 需 DATABASE_URL。Project.reflection 为可空 JSONB，增量迁移不重置记录。
+最近应用验证：typecheck、生产 build、后端 3/3、浏览器 5/5 通过。修改文档与分支不代表重新跑过应用测试。真实认证、Neon/AWS、公网部署仍未验证。
 
-## Verification boundary
-After legacy UI cleanup, typecheck, production build, backend integration 3/3 and production browser tests 5/5 passed (10.4 seconds). Browser coverage includes owned state edits and retained history, filters/legacy history/mobile state details, identity reset, non-mutating placeholders, stale Lesson links and absence of adoption controls. Live port 3000 verification confirmed /lessons/lesson-fields#discussion redirects to /projects/project-signup#discussion, with zero old UI matches and zero page errors. Live local migration preserved all four existing projects unchanged and added only two new fixture rows. Earlier Lesson-v1 evidence remains historical; neither it nor phase 1 proves the complete v2 relay. Neon connectivity, AWS credits, public hosting and teammate readiness remain unverified.
+## 设计与下一轮
+队友设计已收进 design/。relay 原型补齐接棒、来源对照、问题—引荐—回复及工作台；不再等待草图。
+design/README.md 列出原型与批准需求的差异。共同所有者、Ongoing 接棒、自动延续 Mentor、选择性带入内容、帖子编辑删除等仍待统一。现有保留历史/单所有者/人工引荐规则继续有效，AI 与 Feed 等新增服务暂缓。
 
-## History and cleanup
-Previously named Pass It On during planning. The user renamed the project Buckeye Baton and authorized removal of obsolete preparation examples. React/Vite echo UI, FastAPI echo, Streamlit fallback, Python API checks and their dependencies are removed from this branch. Historical files remain recoverable through Git; PRIOR_WORK.md records provenance.
-
-## Next
-Teammate reviews phase 1 wording and card interactions, then supplies pickup-form and project question/referral/reply sketches; coordinate project relationship/question contracts and legacy discussion mapping before implementing full relay. AI remains deferred; Neon/AWS need separate setup and verification.
-
-## Review handoff
-Current cleanup: identity changes return to unfiltered Explore projects and reset unsaved page state. Independent lesson pages, publishing, discussions and adoption controls are removed from the product UI. Old lesson links redirect to their source project; workspace links stay project-centered. Historical experience remains readable inside legacy project details.
-
-Open PR (ready for review): https://github.com/BOWEN2491/buckeye-baton/pull/1 . Integration branch codex/buckeye-baton-mvp. Frontend/backend branches and paths are in docs/HANDOFF.md. Main has not been merged.
+## 仓库约定
+用户已授权通过 PR #1 将当前应用合入 main，并以 main 为唯一共享基线。
+唯一开发目录：C:/Users/23678/.codex/workspaces/buckeye-baton。无独立工作的前后端预备分支/工作目录已清理，后续按任务创建短期 codex/ 分支。详见 docs/HANDOFF.md。
+旧规划和验证记录归档到 docs/legacy/；旧练习从 Git 历史恢复，PRIOR_WORK.md 保留来源说明。

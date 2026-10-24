@@ -1,28 +1,17 @@
-# Buckeye Baton — teammate handoff
+# Buckeye Baton — 队友协作入口
 
-Use the repository root, Node 22, and README setup commands. This replaces the earlier Python/Vite environment rehearsal.
+项目定位与当前进度见 docs/PROJECT_OVERVIEW.md，开发和分支约定见 docs/HANDOFF.md。
 
-## Shared source of truth
+## 已收到的设计
+设计已复制到仓库 design/，不再需要继续等待接棒和讨论草图。原始 Downloads 文件保持原样。
+relay/ 用于下一轮交互参考；cards/ 用于状态内容和视觉；feed/ 留作后续方向。design/README.md 标记尚待统一的规则。
 
-- docs/MVP_SPEC.md: complete approved project-centered target and current first-round boundary.
-- docs/API_CONTRACT.md and src/shared/types.ts: implemented reflection shapes and retained history APIs; independent lesson pages redirect to projects and adoption writes are retired (410).
-- docs/PHASE1_ACCEPTANCE.md: current project interactions and verification status.
-- docs/ACCEPTANCE.md: full future relay story, not implemented by this round.
+## 你现在可以做什么
+1. 在本地应用试用首页、创建/编辑、三种状态和刷新保留，记录具体页面、操作及预期。
+2. 与开发一起确认原型新增规则：共同所有者、Ongoing 接棒、原 Mentor 延续、状态覆盖语义、内容带入、帖子编辑删除。
+3. 准备虚构演示素材与三分钟主线：旧项目 → 新团队接棒 → 提问 → Staff 引荐 → Mentor 指导 → 推进成果。
 
-## Your current review
+当前接棒、项目求助和角色按钮仍只显示下一轮提示，不代表功能已完成。不要恢复旧 Lesson、采用计数或 AI 标签。
 
-Try the homepage filters and the three project states against your card designs. As Alex or Mia, create a project, edit progress and team reflections, save Finished/Paused with required fields, return Ongoing and refresh. Note unclear labels, missing empty/success/error states and desktop/mobile problems. Content should be fictional and first-hand; there is no AI summary.
-
-Pickup, project questions, Staff referral and Mentor guidance deliberately show inline coming-next messages. They do not create relationships or send requests. Please do not treat these placeholders as complete features.
-
-## Next design handoff
-
-After the first-round trial, supply a small pickup form (reproduce/continue/improve, new name, objective) and a project question → Staff referral → Mentor response interaction. These sketches are not prerequisites for the current homepage/card work. Avoid expanding independent Lesson/adoption flows.
-
-## Parallel implementation
-
-Use separate codex/ branches and working directories. Frontend owns pages/components/client helpers; backend owns API/server/database/scripts. Coordinate shared types and dependency changes. Real endpoints remain the shared source of business state; do not substitute local-only data.
-
-## Acceptance boundary
-
-Current: browse → owned reflection edit → validated status save → retained history and reload. Full future target: Alex's Paused project → Mia's linked Ongoing project → project question → Kevin's introduction → Sarah's guidance → Mia's updated progress. Local verification does not verify cloud hosting or real authentication.
+## 仓库
+用户已授权合并 PR #1，以 main 作为唯一共享基线。后续协作用仓库 design/，不把 Downloads 当开发仓库；按具体任务开短期分支，不维护永久前端/后端分支。

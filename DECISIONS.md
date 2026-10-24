@@ -1,5 +1,11 @@
 # Decisions
 
+### Consolidate repository around main and one active checkout
+**Date:** 2026-10-24 · **Status:** Accepted; merge explicitly authorized by user
+**Files:** docs/PROJECT_OVERVIEW.md, docs/HANDOFF.md, design/README.md
+
+In the context of the user requesting a project and branch cleanup and authorizing PR #1 to merge into main, facing stale preparation branches, repeated working directories and contradictory design notes, we decided for main as the shared baseline, one active checkout and short-lived task branches, to achieve an unambiguous handoff, accepting that future parallel work needs task-specific branches again. Both preparation branches were clean ancestors of the active MVP with no unique commits or ignored files; their checkouts and local/remote refs were removed. Design originals are copied as references with unresolved rules flagged; old planning notes remain archived.
+
 ### Project-centered relay specification supersedes independent Lesson adoption
 **Date:** 2026-10-24 · **Status:** Accepted for specification; implementation pending
 **Files:** docs/MVP_SPEC.md, docs/ACCEPTANCE.md, docs/API_CONTRACT.md, PROJECT_CONTEXT.md

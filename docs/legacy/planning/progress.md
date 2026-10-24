@@ -1,3 +1,5 @@
+> Historical implementation note, archived 2026-10-24. Current state: ../../PROJECT_OVERVIEW.md and root PROJECT_CONTEXT.md. Do not follow obsolete paths or branch instructions below.
+
 # Progress — 2026-10-24
 
 Implemented project/lesson publishing and discovery, contextual discussions, Staff introductions, assigned Mentor replies, adoption outcomes and bidirectional provenance. Four identities are explicitly a demo.

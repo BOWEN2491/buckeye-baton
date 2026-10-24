@@ -1,3 +1,5 @@
+> Historical implementation note, archived 2026-10-24. Current state: ../../PROJECT_OVERVIEW.md and root PROJECT_CONTEXT.md. Do not follow obsolete paths or branch instructions below.
+
 # Buckeye Baton implementation
 
 - [x] Confirm writable Git workspace and target repository.

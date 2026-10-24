@@ -1,3 +1,5 @@
+> Historical implementation note, archived 2026-10-24. Current state: ../../PROJECT_OVERVIEW.md and root PROJECT_CONTEXT.md. Do not follow obsolete paths or branch instructions below.
+
 # Findings
 
 - Original Documents checkout is empty and rejects new file writes. `.codex/workspaces/pass-it-on` is writable and is the canonical checkout; no remote was provided.

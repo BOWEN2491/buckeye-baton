@@ -1,32 +1,30 @@
-# Buckeye Baton — parallel handoff
+# Buckeye Baton — 协作与目录约定
 
-> **2026-10-24 第一轮：** 首页与三状态项目详情、总结编辑、校验保存已进入当前实现；验证状态见 PHASE1_ACCEPTANCE.md。接棒、项目求助、Staff 引荐与 Mentor 指导仅占位，下一轮再接真实交互。本轮先不需要接棒/讨论草图。独立 Lesson 页面重定向来源项目，采用界面和统计已删除；采用写接口返回 410。数据库历史保留，其他旧接口仅兼容，不作为产品入口。完整目标仍见 MVP_SPEC.md / ACCEPTANCE.md。
+## 从哪里开始
 
-## Baseline
-The application is at the repository root on codex/buckeye-baton-mvp. Old Python/Vite/Streamlit rehearsal code was removed on request; see PRIOR_WORK.md and Git history. The baseline adds phase 1 reflections on top of compatible v1 records; full v2 project relay is not yet implemented. Reuse identity, database, permissions and referral infrastructure.
+先读 PROJECT_CONTEXT.md 和 docs/PROJECT_OVERVIEW.md，再读 MVP_SPEC.md、API_CONTRACT.md、PHASE1_ACCEPTANCE.md。ACCEPTANCE.md 是完整未来目标，不代表当前功能已完成。
 
-Both workstreams use Next.js pages and routes in one app. Each worktree has its own dependencies/build files and local database; do not point two processes at one PGlite directory. Use different local ports if running both at once.
+用户已授权将 PR #1 合入 main，main 作为唯一共享基线。唯一开发目录：
+C:/Users/23678/.codex/workspaces/buckeye-baton
 
-## Frontend chat prompt
-You are continuing Buckeye Baton frontend work. Read AGENTS.md, PROJECT_CONTEXT.md, docs/MVP_SPEC.md, docs/API_CONTRACT.md, docs/ACCEPTANCE.md, and DECISIONS.md. Inspect current Git status. Own src/app pages (excluding api), src/components, src/lib and styles. Keep real API integration and the approved four-identity demo (two students, one Mentor, one Staff). Work with teammate design/content. Coordinate shared types/dependencies before edits. Run typecheck/build and relevant browser tests. Report files, commands, evidence and remaining limits. Do not claim cloud deployment from local tests.
+旧 codex/buckeye-baton-frontend、codex/buckeye-baton-backend 及对应工作目录没有独立内容，已删除。Downloads 设计目录是文件交付，不是另一个开发仓库；设计已纳入本仓库 design/。
 
-## Backend chat prompt
-You are continuing Buckeye Baton backend work. Read the same documents and current Git status. Own src/server, src/app/api, db, scripts and backend tests. Preserve parameterized SQL, ownership checks and atomic Mentor replies. Coordinate v2 project reflections, question ownership, successor relations and preservation of v1 records before changing types/schema. Legacy adoption counts are not v2 requirements. Production uses pg/PostgreSQL; explicit PGlite is a persistent local demo. Run backend tests/typecheck/build and updated UI acceptance. Report evidence and unconfigured services.
+## 今后如何协作
 
-## Integration review
-First verify current phase 1 via PHASE1_ACCEPTANCE.md: project browse/create/edit, state-specific validation, history preservation, inline placeholders, identity reset and 390px layout. Full relay below remains next-round target.
+- 开始任务前更新 main 并检查工作区，再按具体任务建立短期 codex/ 分支；不保留永久前端/后端预备分支。
+- 只有确实同时修改代码时才为任务建立独立工作目录。页面与后端共用类型、接口、迁移必须先协调。
+- 用户主要负责开发，队友负责设计、文案和试用；协调方审查集成与验收。
+- 前端负责 pages/components/client/styles，后端负责 API/server/database/scripts。任务完成通过 PR 合入 main，再清理分支与临时工作目录。
+- 不丢弃未提交内容，不重置用户记录，不提交环境变量、数据库、依赖或构建目录。
 
-Bring both branches back before merging main. Verify Alex's Paused project → Mia's linked Ongoing project → project question → Kevin's referral → Sarah's reply → Mia's progress → Alex's successor-project view. Follow the new acceptance, including denied actions, preserved history, persistence and mobile layout. Passing v1 tests do not verify v2.
+## 当前及下一轮
 
-## Commands
-From each worktree root: npm ci; copy .env.example to .env.local; npm run db:setup; npm run dev -- --port 3001 (or 3002). For acceptance: npm run typecheck; npm run test:backend; npm run build; npm run test:e2e. Install Chromium once with npx playwright install chromium.
+已完成项目浏览、三状态详情与所有者总结编辑。接棒和角色连接仍占位。
+队友的 relay 草图已经交付。下一轮先统一 design/README.md 所列差异，再实现接棒关系、项目问题、Staff 引荐、Mentor 回复和工作台。不要恢复独立 Lesson 或逐条采用 UI。
 
-AWS credits, real Neon/PostgreSQL credentials and public hosting remain separate setup tasks. No paid cloud resource was created. AI Mentor shortlist remains future work with final Staff choice.
+## 运行与验证
 
-## Prepared checkouts
-
-- Integration: `C:/Users/23678/.codex/workspaces/buckeye-baton`, branch `codex/buckeye-baton-mvp`.
-- Frontend: `C:/Users/23678/.codex/workspaces/buckeye-baton-frontend`, branch `codex/buckeye-baton-frontend`.
-- Backend: `C:/Users/23678/.codex/workspaces/buckeye-baton-backend`, branch `codex/buckeye-baton-backend`.
-
-Open each corresponding folder in the new coding chat. Run npm ci and local environment setup per README on first use. Working directories have independent build/database files. Review PR: https://github.com/BOWEN2491/buckeye-baton/pull/1 . No merge to main was performed.
+使用 Node 22，按根 README 安装、配置与启动。当前本地预览为 http://127.0.0.1:3000。
+本地 PGlite 目录只由一个进程使用；测试有独立临时库。并行开发时用不同端口和数据目录。
+应用修改后按范围运行 typecheck、test:backend、build 和 test:e2e。文档/分支清理检查差异与结构，不用重复应用测试冒充新功能证据。
+真实 PostgreSQL、AWS 权益和公网部署另行验证。
