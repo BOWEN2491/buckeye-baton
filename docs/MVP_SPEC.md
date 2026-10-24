@@ -28,7 +28,9 @@ Browse projects, search lessons, read a project and its lessons, publish a proje
 2. Project: overview, external links, lessons, incoming use of its lessons, lessons adopted by this project, project publication/editing.
 3. Lesson: provenance, experience and conditions, discussion, referral history, adoption and results.
 4. Connections: Staff referral creation and Mentor pending questions, leading to the original discussion.
-5. Demo identity switcher: Alex, Mia, Sarah, Kevin; visible demo disclaimer.
+5. Demo identity switcher: Alex, Mia, Sarah, Kevin; visible demo disclaimer. Switching identities returns to Explore projects with search and filters reset. Unsaved page forms reset; persisted records remain.
+
+Projects describe a team's whole effort; lessons capture individual reusable discoveries within that effort. The lesson action explicitly offers saving to an owned project, followed by reporting an outcome after trying it. Saving alone is not evidence of use.
 
 ## Deferred
 Real OSU login, files, full forks, complex network visualizations, a notification center, AI summaries, and AI mentor matching. Future matching may classify questions by tags and shortlist mentors, with Staff making the final selection.

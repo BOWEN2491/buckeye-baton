@@ -32,6 +32,8 @@ test.afterEach(async ({ page }) => {
 async function identity(page: Page, id: string) {
   await page.getByLabel('Exploring as').selectOption(id);
   await expect(page.getByLabel('Exploring as')).toHaveValue(id);
+  await expect(page).toHaveURL('/');
+  await expect(page.getByRole('tab', { name: 'Projects', exact: true })).toHaveAttribute('aria-selected', 'true');
 }
 
 async function createProject(page: Page, title: string) {
@@ -73,17 +75,20 @@ test('students pass a lesson through staff and mentor to a later project', async
   await page.getByRole('button', { name: 'Post contribution', exact: true }).click();
   await expect(page.getByText('Should dietary details remain required for our event?', { exact: true })).toBeVisible();
   await identity(page, 'staff-kevin');
+  await page.goto(lessonPath);
   await page.getByRole('button', { name: 'Connect a mentor' }).click();
   await page.getByRole('combobox', { name: /^Mentor/ }).selectOption('mentor-sarah');
   await page.getByLabel('Why this mentor?').fill('Sarah understands accessible registration design.');
   await page.getByRole('button', { name: 'Send introduction', exact: true }).click();
   await expect(page.getByText('Sarah understands accessible registration design.', { exact: true })).toBeVisible();
   await identity(page, 'mentor-sarah');
+  await page.goto(lessonPath);
   await page.getByLabel('Your guidance').fill('Collect essential participation details and test optional dietary questions.');
   await page.getByRole('button', { name: 'Respond to introduction', exact: true }).click();
   await expect(page.getByText('Mentor responded', { exact: true })).toBeVisible();
 
   await identity(page, 'student-mia');
+  await page.goto(lessonPath);
   await page.getByRole('combobox', { name: /^Your project/ }).selectOption({ label: destinationTitle });
   await page.getByRole('button', { name: 'Add to my project', exact: true }).click();
   await expect(page.locator('.adoption-stats strong')).toHaveText('0');
@@ -104,6 +109,29 @@ test('students pass a lesson through staff and mentor to a later project', async
   await page.goto(sourcePath);
   await expect(page.getByRole('link', { name: destinationTitle, exact: true })).toHaveAttribute('href', destinationPath);
   await expect(page.getByText('We tested the adjustment again and kept the improved form.', { exact: true })).toBeVisible();
+});
+
+test('switching identities returns to unfiltered Explore projects and keeps the selected identity', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('tab', { name: 'Lessons', exact: true }).click();
+  await page.getByLabel('Search projects or lessons').fill('no-match');
+  await identity(page, 'student-alex');
+  await expect(page.getByLabel('Search projects or lessons')).toHaveValue('');
+  await expect(page.getByRole('heading', { name: 'Campus Signup', exact: true })).toBeVisible();
+  for (const [route, id] of [
+    ['/projects/project-signup', 'staff-kevin'],
+    ['/lessons/lesson-fields', 'mentor-sarah'],
+    ['/workspace', 'student-mia'],
+  ]) {
+    await page.goto(route);
+    await identity(page, id);
+  }
+  await page.reload();
+  await expect(page.getByLabel('Exploring as')).toHaveValue('student-mia');
+  await page.goto('/lessons/lesson-fields');
+  await expect(page.getByRole('link', { name: '← Source project: Campus Signup' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Use this lesson in your project' })).toBeVisible();
+  await expect(page.getByText('Saving links this lesson to your project.', { exact: false })).toBeVisible();
 });
 
 test('explore filtering, empty results and mobile layout remain usable', async ({ page }) => {

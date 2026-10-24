@@ -25,7 +25,7 @@ export default function LessonPage({
   return (
     <div>
       <Link href={`/projects/${project.id}`} className="breadcrumb">
-        ← {project.title}
+        ← Source project: {project.title}
       </Link>
       <div className={`lesson-type ${l.type}`}>
         {l.type === "worked"

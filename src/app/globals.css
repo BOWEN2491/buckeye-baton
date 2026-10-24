@@ -620,7 +620,7 @@ nav {
   }
 }
 .breadcrumb {
-  display: inline-block;
+  display: block;
   font-size: 12px;
   color: var(--muted);
   margin-bottom: 25px;
@@ -906,7 +906,7 @@ nav {
   margin-bottom: 20px;
 }
 .outcome-summary span:not(:last-child):after {
-  content: " Ã‚Â·";
+  content: " \00B7";
   margin-left: 6px;
 }
 .saved-note {

@@ -18,4 +18,6 @@ Previously named Pass It On during planning. The user renamed the project Buckey
 Finish automated acceptance, publish a reviewable independent branch, and connect Neon/AWS only when account settings are available. Future AI tags questions and proposes mentor candidates; Staff chooses.
 
 ## Review handoff
+First usability feedback: identity changes return to unfiltered Explore projects and reset unsaved page state. Project/lesson explanations and the save-then-try-then-report instructions are explicit. Reopen a lesson after switching identities, or follow Staff/Mentor workspace links.
+
 Draft PR: https://github.com/BOWEN2491/buckeye-baton/pull/1 . Integration branch codex/buckeye-baton-mvp. Frontend/backend branches and paths are in docs/HANDOFF.md. Main has not been merged.

@@ -131,7 +131,7 @@ export default function ProjectPage({
           <div className="section-heading">
             <div>
               <h2>Lessons from this project</h2>
-              <p>The useful discoveries, the setbacks, and what comes next.</p>
+              <p>Each lesson captures one discovery or setback from this project. Open one to ask a question or use it in your own project.</p>
             </div>
             {mine && (
               <button

@@ -71,8 +71,10 @@ export function AdoptionPanel({
         <span className="accent-icon">
           <Icon name="relay" size={25} />
         </span>
-        <h2>Make it your next step</h2>
-        <p>Try this in your own context. Tell the next team what happened.</p>
+        <h2>{user?.role === "student" ? "Use this lesson in your project" : "How teams used this lesson"}</h2>
+        <p>{user?.role === "student"
+          ? "Save this specific lesson to a project you own. After trying it, return here to share what worked or needed adapting."
+          : "Students can save this lesson to their projects and report what happened after trying it."}</p>
         <div className="adoption-stats">
           <strong>{detail.stats.total}</strong>
           <span>
@@ -104,6 +106,7 @@ export function AdoptionPanel({
                   ))}
                 </select>
               </label>
+              {!adoption && <p className="field-help">Saving links this lesson to your project. It counts as used only after you report a result.</p>}
               {!adoption ? (
                 <button
                   className="button primary full-width"
@@ -119,6 +122,7 @@ export function AdoptionPanel({
                   key={adoption.id}
                 >
                   <div className="saved-note">✓ Saved to this project</div>
+                  <p className="field-help">Try it first, then fill in the result below. You can leave now and return to this lesson later.</p>
                   <label>
                     What happened?
                     <select

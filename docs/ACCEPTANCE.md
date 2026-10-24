@@ -7,8 +7,8 @@ Use Node 22, install dependencies, copy `.env.example` to `.env.local`, run `npm
 
 ## Midpoint check
 1. Select Mia and open `lesson-fields` from Campus Signup. Ask: “Our volunteer event needs dietary details. Which fields should stay required?”
-2. Select Staff Kevin and refer the question to Sarah. Reason: “Sarah has experience designing accessible registration flows.”
-3. Select Sarah and reply: “Keep details essential to participation, explain why you need them, and test optional collection with your event team.”
+2. Select Staff Kevin (returns to Explore projects), reopen the lesson through Explore or My workspace, and refer the question to Sarah. Reason: “Sarah has experience designing accessible registration flows.”
+3. Select Sarah (returns to Explore projects), reopen the referred lesson through My workspace, and reply: “Keep details essential to participation, explain why you need them, and test optional collection with your event team.”
 4. Reload and confirm the question, named introducer/reason, named mentor/reply, and completion remain visible in the original lesson discussion.
 
 ## Full journey

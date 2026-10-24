@@ -36,3 +36,8 @@ Screenshots reviewed:
 
 ## Rename and regression follow-up
 The product is now Buckeye Baton; the concept retains its earlier working title as a historical reference. A real Projects/Lessons cross-type rendering race was fixed by keying resource state by path and identity. The fresh production build and 2/2 browser tests passed after root cleanup and rename.
+
+## First usability feedback
+Identity switching now replaces the route with `/` and remounts page state, restoring the Projects tab and clearing searches, filters and unsaved forms. Persisted records remain intact. Project pages explain their contained lessons; lesson breadcrumbs explicitly identify the source project. The adoption panel now says “Use this lesson in your project” for students and explains saving first, then reporting after trying. Mentor/Staff see an informational heading instead.
+
+Verified on Node 22 against a production build: typecheck, backend integration and all 3 Playwright tests passed. The added regression covers identity switches from a filtered Lessons tab, project detail, lesson detail and workspace, followed by reload and persisted identity. The complete publishing/referral/adoption journey also passed with reopening the lesson after each switch. Desktop 1400×900 and mobile 390×844 layouts were checked. Browser plugin not available; the repository's Playwright workflow was used. No relevant browser console errors or page exceptions were observed. This does not verify cloud hosting or other browsers.

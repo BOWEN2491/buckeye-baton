@@ -28,7 +28,7 @@ export default function Explore() {
       <section>
         <PageHeading
           title="Explore projects"
-          description="Start with what the last team learned."
+          description="Projects tell the whole story. Lessons are specific discoveries you can use in your own project."
           action={
             <Link href="/projects/new" className="button primary">
               <Icon name="plus" />

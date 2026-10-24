@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -67,6 +67,7 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
 }
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: users = [] } = useResource<User[]>("/users");
   const { data: health } = useResource<{ databaseMode: string }>("/health");
   const [userId, setUserId] = useState("student-mia");
@@ -121,6 +122,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 onChange={(e) => {
                   setUserId(e.target.value);
                   localStorage.setItem("buckeye-baton-user", e.target.value);
+                  router.replace("/");
                 }}
               >
                 {users.length ? (
@@ -145,7 +147,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             </p>
           </div>
         </aside>
-        <main className="main-content">{children}</main>
+        <main className="main-content" key={userId}>
+          {children}
+        </main>
       </div>
     </IdentityContext.Provider>
   );
