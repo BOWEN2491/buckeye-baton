@@ -1,11 +1,14 @@
 "use client";
 import Link from "next/link";
-import { use, useState } from "react";
-import type { ProjectDetail, ProjectReflection } from "@/shared/types";
+import { use, useEffect, useState } from "react";
+import type { ProjectReflection } from "@/shared/types";
+import type { RelayProjectDetail } from "@/shared/relay-types";
 import { useResource } from "@/lib/client";
 import { useIdentity } from "@/components/app-shell";
 import { Feedback, Loading, PageHeading, Status, Tags } from "@/components/ui";
 import { ProjectForm } from "@/components/project-form";
+import { ProjectQuestions } from "@/components/project-questions";
+import { flashKey, SourceLine, Successors } from "@/components/relay-links";
 function Text({ value, empty }: { value?: string; empty: string }) {
   return (
     <p className={value ? "reflection-prose" : "subtle-empty"}>
@@ -120,56 +123,41 @@ function Reflections({
     </section>
   );
 }
-function ConnectionPlaceholder({ status }: { status: string }) {
+function RelayActions({ projectId, status }: { projectId: string; status: string }) {
   const { user } = useIdentity();
-  const [message, setMessage] = useState("");
-  const label =
-    user?.role === "staff"
-      ? "Refer a mentor"
-      : user?.role === "mentor"
-        ? "Add guidance"
-        : status === "finished"
-          ? "Pick up the baton"
-          : status === "paused"
-            ? "Continue this project"
-            : "";
+  if (user?.role === "staff" || user?.role === "mentor")
+    return (
+      <section className="panel contextual-panel">
+        <p className="eyebrow">Mentor connections</p>
+        <h3>{user.role === "staff" ? "Bring the right mentor into a question." : "Help a team with a concrete question."}</h3>
+        <p>
+          {user.role === "staff"
+            ? "Questions that ask for a mentor wait in your workbench until you refer one. Each question can be referred once."
+            : "Questions Staff refer to you appear in your workbench. Your replies there are marked as referred mentor replies."}
+        </p>
+        <Link href="/workspace" className="button secondary">
+          Open my workbench
+        </Link>
+      </section>
+    );
+  if (status === "ongoing")
+    return (
+      <section className="panel contextual-panel">
+        <p className="eyebrow">Next connections</p>
+        <h3>Bring the right people into the project.</h3>
+        <p>Ask a specific question below. Ongoing projects can be picked up once they are Finished or Paused.</p>
+      </section>
+    );
   return (
     <section className="panel contextual-panel">
       <p className="eyebrow">Next connections</p>
-      <h3>
-        {status === "paused"
-          ? "A pause can be a starting point."
-          : status === "finished"
-            ? "Leave a place for the next team."
-            : "Bring the right people into the project."}
-      </h3>
-      <p>
-        {user?.role === "staff"
-          ? "Connect a concrete project question with a suitable mentor."
-          : user?.role === "mentor"
-            ? "Help a team work through a concrete project question."
-            : "Reproduce a result, continue unfinished work, or improve one part of a project."}
-      </p>
-      {label && (
-        <button
-          className="button primary"
-          onClick={() =>
-            setMessage(
-              user?.role === "student"
-                ? "Project pickup will open next round. No new project has been created."
-                : "Project questions and mentor connections will open next round. Nothing has been submitted.",
-            )
-          }
-        >
-          {label}
-        </button>
+      <h3>{status === "paused" ? "A pause can be a starting point." : "Leave a place for the next team."}</h3>
+      <p>Reproduce a result, continue unfinished work, or improve one part. You start your own Ongoing project; this one stays as it is.</p>
+      {user?.role === "student" && (
+        <Link href={`/projects/${projectId}/pick-up`} className="button primary">
+          Pick up this project
+        </Link>
       )}
-      {message && (
-        <p className="placeholder-message" role="status">
-          {message}
-        </p>
-      )}
-      <span className="field-help">Coming next round</span>
     </section>
   );
 }
@@ -180,15 +168,24 @@ export default function ProjectPage({
 }) {
   const { id } = use(params);
   const { userId, user, users } = useIdentity();
-  const { data, error, loading, reload } = useResource<ProjectDetail>(
+  const { data, error, loading, reload } = useResource<RelayProjectDetail>(
     `/projects/${id}`,
     userId,
   );
   const [editing, setEditing] = useState(false);
   const [success, setSuccess] = useState("");
+  useEffect(() => {
+    try {
+      const message = sessionStorage.getItem(flashKey);
+      if (message) {
+        sessionStorage.removeItem(flashKey);
+        setSuccess(message);
+      }
+    } catch {}
+  }, []);
   if (loading && !data) return <Loading />;
   if (!data) return <Feedback error={error} />;
-  const { project: p, lessons } = data;
+  const { project: p, lessons, source, successors } = data;
   const owner = users.find((u) => u.id === p.ownerId);
   const mine = user?.role === "student" && p.ownerId === userId;
   return (
@@ -248,6 +245,7 @@ export default function ProjectPage({
         </div>
       </div>
       <Tags tags={p.tags} />
+      {source && <SourceLine source={source} />}
       <Feedback error={error} success={success} />
       {editing ? (
         <div className="project-editor-wrap">
@@ -309,22 +307,11 @@ export default function ProjectPage({
                 ))}
               </section>
             )}
-            <section className="section-block">
-              <h2>Questions &amp; guidance</h2>
-              <p className="subtle-empty">
-                Project questions will open next round.
-              </p>
-              <h3 className="guidance-heading">Mentor guidance</h3>
-              <p className="muted">
-                No project-level mentor guidance yet.
-              </p>
-            </section>
+            <ProjectQuestions projectId={p.id} status={p.status} />
+            <Successors successors={successors} />
           </div>
           <aside>
-            <ConnectionPlaceholder
-              key={`${userId}-${p.status}`}
-              status={p.status}
-            />
+            <RelayActions projectId={p.id} status={p.status} />
             <div className="panel contextual-panel">
               <h3>Your project keeps its history.</h3>
               <p>

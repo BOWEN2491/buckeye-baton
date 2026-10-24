@@ -10,6 +10,7 @@ import {
   PageHeading,
   ProjectCard,
 } from "@/components/ui";
+import { RoleWorkbench } from "@/components/workbench";
 export default function Workspace() {
   const { user, userId } = useIdentity();
   const {
@@ -21,11 +22,19 @@ export default function Workspace() {
   return (
     <div>
       <PageHeading
-        title="My workspace"
+        title={
+          user?.role === "staff"
+            ? "Staff workbench"
+            : user?.role === "mentor"
+              ? "Mentor workbench"
+              : "My workspace"
+        }
         description={
-          user?.role === "student"
-            ? "Your projects, progress, and reflections for the next team."
-            : "Project questions and mentor connections will open next round."
+          user?.role === "staff"
+            ? "Questions that ask for a mentor, and the referrals already made."
+            : user?.role === "mentor"
+              ? "Questions Staff referred to you. Open one to reply on the project page."
+              : "Your projects, progress, and reflections for the next team."
         }
         action={
           user?.role === "student" ? (
@@ -36,7 +45,9 @@ export default function Workspace() {
         }
       />
       <Feedback error={error} />
-      {loading ? (
+      {user?.role === "staff" || user?.role === "mentor" ? (
+        <RoleWorkbench role={user.role} />
+      ) : loading ? (
         <Loading />
       ) : user?.role === "student" ? (
         <>
@@ -56,18 +67,7 @@ export default function Workspace() {
             </Empty>
           )}
         </>
-      ) : (
-        <Empty
-          title={
-            user?.role === "staff"
-              ? "Project introductions are coming next round"
-              : "Project guidance is coming next round"
-          }
-        >
-          For now, explore the teams’ project goals, progress, and reflections.
-          No project tasks have been assigned.
-        </Empty>
-      )}
+      ) : null}
       <div className="workspace-note">
         <strong>Demo workspace</strong>
         <p>

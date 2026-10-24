@@ -150,24 +150,22 @@ test('identity switching resets filters and unsaved edits to the project home', 
   await expect(page.getByLabel('Exploring as')).toHaveValue('mentor-sarah');
 });
 
-test('pickup and role guidance placeholders stay inline without mutations', async ({ page }) => {
+test('role entry points on project pages do not write until an action is submitted', async ({ page }) => {
   await page.goto('/');
   const mutations: string[] = [];
   page.on('request', request => {
     if (request.url().includes('/api/') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method())) mutations.push(`${request.method()} ${request.url()}`);
   });
-  for (const [id, action] of [['project-v2-finished', 'Pick up the baton'], ['project-v2-paused', 'Continue this project']]) {
+  for (const id of ['project-v2-finished', 'project-v2-paused']) {
     await page.goto(`/projects/${id}`);
-    await page.getByRole('button', { name: action, exact: true }).click();
-    await expect(page).toHaveURL(`/projects/${id}`);
-    await expect(page.getByRole('status').filter({ hasText: /next round|coming next|下一轮/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Pick up this project', exact: true })).toHaveAttribute('href', `/projects/${id}/pick-up`);
+    await expect(page.getByRole('heading', { name: 'Questions & guidance', exact: true })).toBeVisible();
   }
-  for (const [id, action] of [['staff-kevin', 'Refer a mentor'], ['mentor-sarah', 'Add guidance']]) {
+  for (const id of ['staff-kevin', 'mentor-sarah']) {
     await identity(page, id);
     await page.goto('/projects/project-events');
-    await page.getByRole('button', { name: action, exact: true }).click();
-    await expect(page).toHaveURL('/projects/project-events');
-    await expect(page.getByRole('status').filter({ hasText: /next round|coming next|下一轮/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open my workbench', exact: true })).toHaveAttribute('href', '/workspace');
+    await expect(page.getByText(/next round/i)).toHaveCount(0);
   }
   expect(mutations).toEqual([]);
 });
