@@ -13,13 +13,13 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P0 已完成；P1 已合并为单 Agent 全栈任务，正常仅最终回传一次；功能验收仍为 0/10",
-  "nextUp": "用户将 P1_AGENT_TASK 启动提示词转交实现 Agent；全部完成后回传 READY，由总控独立核验",
+  "lastCompleted": "P1 独立本地验收 10/10：类型、生产构建、后端5/5、浏览器7/7；已集成临时分支",
+  "nextUp": "通过 PR 审阅/合并 P1；P2–P4 未开始；真实 PostgreSQL 与云端仍待验证",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
   "health": {
-    "featuresDone": 6,
+    "featuresDone": 7,
     "featuresTotal": 8
   }
 }
@@ -171,7 +171,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>v2 第一轮：首页、三状态详情、所有者编辑及状态保存。接棒、项目求助与导师连接仅占位，完整 v2 尚未完成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0 与 P1：三状态项目与总结编辑、接棒关系、项目问题、人工引荐和多轮指导已实现。P1 十项独立本地验收通过，待 PR 合并；云端及 P2–P4 未完成。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -189,7 +189,7 @@
   <section class="panel" id="features">
     <!-- claude:features:start -->
 <div class="card" data-updated="2026-10-24"><h3>v2 第一轮 <span class="badge done">本地通过</span></h3><p>项目搜索和状态筛选、三状态总结、所有者表单编辑、状态校验与历史保留；旧经验以 Historical experience 内联展示。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>完整项目接棒 <span class="badge planned">planned</span></h3><p>项目问题、Staff 引荐、Mentor 回复与关联后续项目尚未接通；本轮按钮只原地说明下一轮开放，不发送写请求。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>项目接棒与导师连接 <span class="badge done">done · local</span></h3><p>三种接棒、来源/后续关系、问题日期、平铺讨论、Staff 引荐、指定 Mentor 多轮回复和工作台已接通真实本地 SQL。独立本地验收10/10，真实 pg 与云端未验证。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>独立 Lesson 页面重定向来源项目；采用界面、数字与响应字段已删除，采用写接口返回 410。旧数据库记录保留，经验只在项目内展示；旧完整旅程不等于新版接棒。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI、真实认证、上传、代码 fork、复杂关系图和通知。</p></div>
 <!-- claude:features:end -->
@@ -231,10 +231,11 @@
 <!-- claude:architecture:stack:end -->
 
     <!-- claude:architecture:overview:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前数据旅程</h3><p>项目浏览 → 状态详情 → 所有者编辑总结 → 合并校验并保存状态与 reflection。后续项目关系与项目问题尚未实现。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前数据旅程</h3><p>项目浏览 → 读取三状态总结 → 接棒创建关联 Ongoing → 提问 → Staff 引荐 → Mentor 回复 → 明确追问与再次回复 → 后续成果。来源与历史保留，工作台按正式回复/追问推导队列。</p></div>
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>P1 验收与新模块</h3><p><a href="../docs/P1_ACCEPTANCE.md">总控独立验收</a>：精确提交、十项门槛与限制。src/server/relay.ts 提供接棒/问题/工作台，src/shared/relay-types.ts 是契约类型；project-questions、relay-links、workbench 组件连接真实 API。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 执行入口</h3><p><a href="../docs/P1_AGENT_TASK.md">单 Agent 全栈任务书</a>：实现、验证与最终 READY 回传；<a href="../docs/P1_CONTRACT.md">冻结契约</a>：数据及接口；<a href="../docs/EXECUTION_ROADMAP.md">总控台账</a>：P0–P4 与十项验收门槛。原 A/B 任务已取代。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>统一入口</h3><p><a href="../docs/PROJECT_OVERVIEW.md">项目总览</a>：定位、状态、已实现与下一轮；<a href="../design/README.md">设计说明</a>：队友原型及未确认差异；<a href="../docs/HANDOFF.md">协作说明</a>：main 共享基线与唯一工作目录。旧实施笔记移入 docs/legacy/planning/。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>v2 规格与旧版边界</h3><p><a href="../docs/MVP_SPEC.md">MVP_SPEC.md</a> 是新版依据；<a href="../docs/ACCEPTANCE.md">ACCEPTANCE.md</a> 是完整目标验收；<a href="../docs/PHASE1_ACCEPTANCE.md">PHASE1_ACCEPTANCE.md</a> 是当前第一轮验收。API_CONTRACT.md 和 src/shared/types.ts 已包含 reflection；docs/legacy/ 保存旧规格。</p></div>
@@ -254,7 +255,7 @@
 <!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
-<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 增加可空 reflection JSONB，使用幂等增量迁移，不重建旧表。Lesson、Comment、Referral、Adoption 数据保留，采用应用逻辑已退役；种子只补缺失 ID，不覆盖用户编辑。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 使用可空 reflection JSONB；P1 新增 project_relations、project_questions、project_posts、project_referrals，增量迁移保留旧表。接棒事务与唯一约束保证去重，引荐每问题一条。历史保留，种子只补缺失 ID；真实 pg 多连接未验证。</p></div>
 <!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
@@ -280,7 +281,7 @@ npm start</pre></div>
 <!-- claude:architecture:decisions:end -->
 
     <!-- claude:architecture:glossary:start -->
-<div class="card" data-updated="2026-10-24"><h3>术语</h3><p>Project：团队负责的一次明确实践；Reflection：项目内的经验与交接内容；Lesson：项目内保留的历史经验；Adoption：仅存储保留、写接口已停用的旧记录；接棒：下一轮将创建有来源关联的新项目。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>术语</h3><p>Project：团队负责的一次明确实践；Reflection：项目内的经验与交接内容；Lesson：项目内保留的历史经验；Adoption：仅存储保留、写接口已停用的旧记录；接棒：创建有来源关联的新 Ongoing 项目，不改来源所有权；正式回复不等于问题已解决。</p></div>
 <!-- claude:architecture:glossary:end -->
 
     <!-- claude:architecture:end -->
@@ -324,6 +325,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P1 总控独立验收通过</h3><p>对 61ff34b 在独立目录重跑 typecheck、生产 build/start、后端5/5和浏览器7/7，检查桌面/390px截图；G1–G10本地通过。代码已快进集成 codex/p1-integration；main未合并。真实pg多连接及Neon/AWS未验证，P2未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 改为单 Agent 完整交付</h3><p>按用户最新决定合并前后端任务，正常只在全部实现、自测和推送后汇报一次。P1 功能验收仍为 0/10，本次仅更新交接文档。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>历史：两 worker 执行准备（已被取代）</h3><p>原路线的契约、十项验收门槛和英文界面约定保留，A/B 分工和中间类型交接已取消。Awaiting reply 表示待回复。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>现阶段整理</h3><p>新增项目总览，设计稿收入 design/，更新协作与队友说明；旧计划、进度和发现记录归档。清理两条本地/远程冗余分支及两个空闲工作目录；本次未修改应用或数据库。</p></div>

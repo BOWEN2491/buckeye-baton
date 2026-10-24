@@ -2,7 +2,7 @@
 
 ## 当前进行中的 P1
 
-本轮总控持有临时集成分支 codex/p1-integration；一个全栈 Agent 从它建立 codex/p1-implementation，连续完成 P1 后一次提交总控验收。不再使用 A/B 任务、类型交接或双分支同步。先读 EXECUTION_ROADMAP.md 与 P1_CONTRACT.md，再按 P1_AGENT_TASK.md 实施。main 继续作为稳定基线；总控核验后才累计进度。
+实现分支 codex/p1-implementation 已交付提交 61ff34b；总控独立验收本地 G1–G10 全部通过，已快进集成到 codex/p1-integration。报告见 P1_ACCEPTANCE.md。main 继续作为稳定基线，须通过 PR 合并；P2 未开始。P1_AGENT_TASK.md 保留为本轮已执行任务记录，不代表需要从头重做。
 
 ## 从哪里开始
 
@@ -23,8 +23,7 @@ C:/Users/23678/.codex/workspaces/buckeye-baton
 
 ## 当前及下一轮
 
-已完成项目浏览、三状态详情与所有者总结编辑。接棒和角色连接仍占位。
-队友的 relay 草图已经交付。下一轮先统一 design/README.md 所列差异，再实现接棒关系、项目问题、Staff 引荐、Mentor 回复和工作台。不要恢复独立 Lesson 或逐条采用 UI。
+已完成项目浏览、三状态详情与所有者总结编辑，以及 P1 接棒关系、项目问题、Staff 引荐、Mentor 多轮回复和角色工作台。下一步是 PR 审阅/合并；P2 的 AI 简介/标签和 Mentor 负载尚未实现。不要恢复独立 Lesson 或逐条采用 UI。
 
 ## 运行与验证
 

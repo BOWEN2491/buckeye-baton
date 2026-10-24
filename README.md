@@ -4,7 +4,7 @@ OSU project handoffs and team reflections. A hackathon demo connecting students,
 
 Start here: [project overview and current scope](docs/PROJECT_OVERVIEW.md), [collaboration and branch rules](docs/HANDOFF.md), and [teammate design references](design/README.md). The user has authorized PR #1 to become the shared main baseline; redundant frontend/backend preparation branches and checkouts have been removed.
 
-Product update (2026-10-24): v2 phase 1 implements project browsing, three state-specific details, owner reflection editing and validated status changes. Pickup, project questions and mentor connections currently show inline coming-next placeholders. Independent Lesson pages and adoption UI are retired. Existing /lessons/:id links redirect to their source project; historical lessons remain inline. Adoption writes return HTTP 410 and stored records are preserved. See [phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md) for verification status; the [full MVP v2 target](docs/MVP_SPEC.md) is not yet complete.
+Product update (2026-10-24): P0 project browsing, three-state reflections and owner editing are joined by P1 pickup links, project questions with optional reply dates, Staff referrals, repeated Mentor replies and role workbenches. P1 passed independent local acceptance on commit 61ff34b; see [coordinator evidence and limits](docs/P1_ACCEPTANCE.md). Real PostgreSQL multi-connection behavior and hosted deployment remain unverified; P2–P4 are pending. Independent Lesson/adoption UI stays retired; legacy links redirect to their project, adoption writes return HTTP 410, and stored history is preserved.
 
 ## Run locally
 
@@ -46,6 +46,7 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 - [P0–P4 roadmap and progress gates](docs/EXECUTION_ROADMAP.md)
 - [P1 shared contract](docs/P1_CONTRACT.md)
 - [P1 single-agent full-stack task](docs/P1_AGENT_TASK.md)
+- [P1 independent acceptance](docs/P1_ACCEPTANCE.md)
 
 - [MVP and roles](docs/MVP_SPEC.md)
 - [API contract](docs/API_CONTRACT.md)
