@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Picked-up Project · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Buckeye Baton — shared styles for the relay / question-flow sketches.
+   Tokens match design/cards/*.html. */
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;--green-tint:#F2FCF4;--green-line:#8DDB9E;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;--orange-tint:#FFF8F2;--orange-line:#FFC799;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-bg:#FBEFFF;
+  --red:#CF222E;--red-ink:#A40E26;--red-bg:#FFEBE9;--red-line:#FFB8B0;
+  --demo:#6E40C9;--demo-bg:#F5F0FF;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none !important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top bar */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:700;font-size:16px;color:var(--ink);text-decoration:none}
+.top .spacer{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.me{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+
+/* Demo controls (not part of the product UI) */
+.demo{background:var(--demo-bg);border-bottom:1px dashed var(--demo)}
+.demo-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px}
+.demo-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--demo);text-transform:uppercase;letter-spacing:.04em}
+.demo label{display:inline-flex;align-items:center;gap:6px}
+.demo select{min-height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:0 6px}
+.demo .steps{display:flex;gap:4px;flex-wrap:wrap}
+.demo .steps button{min-width:32px;min-height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600}
+.demo .steps button[aria-pressed="true"]{background:var(--demo);border-color:var(--demo);color:#fff}
+.demo .caption{flex-basis:100%;color:var(--body)}
+.demo .caption strong{color:var(--demo)}
+.demo-btn{min-height:32px;padding:0 10px;border:1px solid var(--demo);border-radius:6px;background:transparent;color:var(--demo);cursor:pointer;font-weight:500}
+
+/* Page */
+.page{max-width:760px;margin:0 auto;padding:24px 16px 56px;display:flex;flex-direction:column;gap:16px}
+.page.wide{max-width:1080px}
+.crumb{font-size:13px;color:var(--muted)}
+.fiction{font-size:12px;color:var(--muted);text-align:center;padding:8px 0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:24px 24px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.ongoing{background:var(--blue-bg);color:var(--blue-ink)}.pill.ongoing .dot{background:var(--blue)}
+.pill.finished{background:var(--green-bg);color:var(--green-ink)}.pill.finished .dot{background:var(--green)}
+.pill.paused{background:var(--orange-bg);color:var(--orange-ink)}.pill.paused .dot{background:var(--orange);border-radius:2px}
+.meta-r{font-size:12px;color:var(--muted)}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:700}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line-soft);font-size:13px}
+.baton-type{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--purple-bg);color:var(--purple-ink)}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.section{padding:20px 24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line-soft)}
+.section:last-child{border-bottom:0}
+.section h2{margin:0;font-size:16px;font-weight:700}
+.section h2 .count{font-weight:500;color:var(--muted)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--body)}
+.hero{background:var(--orange-tint);border:1px solid var(--orange-line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.hero.blue{background:var(--blue-tint);border-color:var(--blue-line)}
+.hero h3{margin:0;font-size:15px}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.head,.section{padding-left:16px;padding-right:16px}}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+/* Buttons */
+.btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:600}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:var(--on-accent);font-weight:600}
+.btn.green{background:var(--green);border-color:var(--green);color:var(--on-accent);font-weight:600}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.btn.link{border:0;background:none;color:var(--blue-ink);padding:0 4px;min-height:auto;text-decoration:underline}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spinner{animation:none}html{scroll-behavior:auto}}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field legend{font-weight:600;font-size:14px}
+.req{color:var(--red-ink);font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+.input,.textarea{width:100%;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px}
+.textarea{min-height:96px;resize:vertical;line-height:1.5}
+.input:focus,.textarea:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue)}
+.invalid .input,.invalid .textarea,.invalid .choices{border-color:var(--red)}
+.err-msg{font-size:12px;color:var(--red-ink);display:none}
+.invalid .err-msg{display:block}
+fieldset{border:0;margin:0;padding:0}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid transparent;border-radius:10px}
+@media (max-width:640px){.choices{grid-template-columns:1fr}}
+.choice{position:relative;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;background:var(--surface)}
+.choice input{position:absolute;opacity:0}
+.choice:has(input:checked){border:2px solid var(--blue);padding:11px 13px;background:var(--blue-tint)}
+.choice:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.choice strong{font-size:14px}
+.choice span{font-size:12px;color:var(--muted)}
+.counter{font-size:12px;color:var(--muted);text-align:right}
+
+/* Banners */
+.banner{border-radius:10px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.banner.err{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red-ink)}
+.banner.ok{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green-ink)}
+.banner.info{background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+.banner.warn{background:var(--orange-tint);border:1px solid var(--orange-line);color:var(--orange-ink)}
+
+/* Questions */
+.q{border:1px solid var(--line);border-radius:12px;overflow:hidden;scroll-margin-top:16px}
+.q:target{box-shadow:0 0 0 3px var(--blue-line)}
+.q-head{padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+.q-title{margin:0;font-size:16px;font-weight:700;line-height:1.4}
+.qstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px}
+.qstatus.needs{background:var(--orange-bg);color:var(--orange-ink)}
+.qstatus.referred{background:var(--blue-bg);color:var(--blue-ink)}
+.qstatus.replied{background:var(--green-bg);color:var(--green-ink)}
+.thread{display:flex;flex-direction:column}
+.post{padding:14px 16px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:6px}
+.post:first-child{border-top:0}
+.post-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.post-meta strong{color:var(--ink);font-size:13px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--body);flex:none}
+.role{font-size:11px;font-weight:600;padding:0 7px;border-radius:6px;border:1px solid var(--line);color:var(--body)}
+.role.owner{border-color:var(--blue-line);color:var(--blue-ink)}
+.post.official{background:var(--green-tint);border-left:0;box-shadow:inset 0 0 0 1px var(--green-line);border-radius:0}
+.badge-official{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--green);color:var(--on-accent)}
+.event{padding:12px 16px;border-top:1px solid var(--line-soft);background:var(--blue-tint);display:flex;flex-direction:column;gap:4px;font-size:13px}
+.event .reason{color:var(--body)}
+.composer{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.composer .row-between{justify-content:flex-end}
+.q-actions{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* Referral form */
+.panel{border:2px solid var(--blue);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--surface);margin:0 16px 16px}
+.mentors{display:flex;flex-direction:column;gap:8px}
+.mentor{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.mentor:has(input:checked){border:2px solid var(--blue);padding:9px 11px;background:var(--blue-tint)}
+.mentor input{margin-top:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+
+/* Workbench */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:40px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:none;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.task{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line-soft);text-decoration:none;color:inherit;flex-wrap:wrap}
+.task:first-child{border-top:0}
+.task:hover{background:var(--surface-2)}
+.task-title{font-weight:600}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50}
+</style>
+<style>
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.baton{border:2px solid var(--purple);border-radius:12px;background:var(--surface);overflow:hidden}
+.baton-head{padding:16px 18px;background:var(--purple-bg);display:flex;flex-direction:column;gap:4px}
+.baton-head h2{margin:0;font-size:16px;color:var(--purple-ink)}
+.bsec{padding:14px 18px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:10px}
+.bsec h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.item{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.item p{margin:0;font-size:14px;color:var(--body)}
+.item .btn{min-height:32px;font-size:12px;padding:0 10px;flex:none}
+.item.pick{cursor:pointer}
+.item.pick:has(input:checked){border:2px solid var(--purple);padding:9px 11px;background:var(--purple-bg)}
+.from{font-size:11px;font-weight:600;padding:1px 7px;border-radius:6px;background:var(--purple-bg);color:var(--purple-ink);white-space:nowrap}
+.editable{outline:none;border-radius:6px;padding:2px 4px;margin:-2px -4px}
+.editable:hover{background:var(--surface-2)}
+.editable:focus{box-shadow:0 0 0 2px var(--blue-line);background:var(--surface)}
+.linkrow{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;min-width:28px;min-height:28px}
+.focus-chip{display:inline-flex;gap:6px;align-items:center;font-size:12px;padding:2px 9px;border-radius:999px;background:var(--purple-bg);color:var(--purple-ink);font-weight:600}
+.mentor-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.radio-row{display:flex;flex-direction:column;gap:8px}
+.radio-row label{display:flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.radio-row label:has(input:checked){border:2px solid var(--blue);padding:7px 11px;background:var(--blue-tint)}
+</style>
+</head>
+<body>
+
+<div class="demo" role="region" aria-label="Demo controls">
+<div class="demo-in">
+<span class="demo-tag">Demo controls · not part of the UI</span>
+<label>Picked up from
+<select id="src">
+<option value="paused">Study Spot Finder (Paused · no mentor)</option>
+<option value="finished">Club Sign-up Site (Finished · mentor Marcus)</option>
+<option value="ongoing">One-Building Pilot (Ongoing · mentor Sarah)</option>
+</select>
+</label>
+<label>Baton type
+<select id="type">
+<option>Continue</option>
+<option>Reproduce</option>
+<option>Improve</option>
+</select>
+</label>
+<button type="button" class="demo-btn" id="reset">Reset page</button>
+<a href="index.html">Story index</a>
+</div>
+</div>
+
+<header class="top"><div class="top-in">
+<a class="brand" href="index.html">Buckeye Baton</a><span class="spacer"></span>
+<span class="who"><span id="meName">Mia Z.</span><span class="me" id="meAv" aria-hidden="true">MZ</span></span>
+</div></header>
+
+<main class="page wide">
+
+<div class="banner info" id="welcome">
+<span id="welcomeText"></span>
+<button type="button" class="btn" id="dismiss" style="min-height:32px">Got it</button>
+</div>
+
+<article class="card">
+<header class="head">
+<div class="topline">
+<span class="pill ongoing"><span class="dot"></span>Ongoing</span>
+<span class="meta-r">Started just now</span>
+</div>
+<h1 id="title"></h1>
+<p class="sub" id="owners"></p>
+<div class="source" id="sourceLine"></div>
+<span class="small muted" id="credit"></span>
+<div class="mentor-line" id="mentorLine"></div>
+<div><span id="focus"></span></div>
+<div class="owner-actions"><button type="button" class="btn">Edit project</button><button type="button" class="btn">Change status</button></div>
+</header>
+</article>
+
+<div class="layout">
+<div class="col">
+<section class="baton" aria-labelledby="batonTitle">
+<div class="baton-head">
+<h2 id="batonTitle"></h2>
+<span class="small" id="batonSub"></span>
+</div>
+<div id="batonBody"></div>
+<div class="bsec"><span class="small muted">This is their project as it is now. Bringing something in makes a copy in your project; later changes on either side don't affect the other. <a id="srcLink" href="#">Open the original ↗</a></span></div>
+</section>
+</div>
+
+<div class="col">
+<section class="card" aria-label="Your project">
+<div class="section">
+<h2>Description</h2>
+<div id="desc"></div>
+</div>
+<div class="section">
+<h2>Goal</h2>
+<div id="goal"></div>
+</div>
+<div class="section">
+<h2>Links</h2>
+<div class="mine" id="links" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+<div class="section">
+<h2>Progress</h2>
+<p class="prose muted">No progress updates yet.</p>
+</div>
+<div class="section" id="questions">
+<div class="row-between"><h2>Questions <span class="count" id="qcount">(0)</span></h2><button type="button" class="btn" id="askBtn" style="min-height:32px">Ask a question</button></div>
+<div id="askArea"></div>
+<div id="qArea"></div>
+</div>
+</section>
+</div>
+</div>
+
+<p class="fiction">All people, projects and data on this page are fictional demo content.</p>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var SRC={
+    paused:{name:'Study Spot Finder',status:'paused',label:'Paused',team:'Alex R., Jordan T.',lead:'Alex',href:'alex-paused.html',mentor:null,
+      me:['Mia Z.','MZ'],mates:['Leo P.'],
+      title:'Study Spot Finder: One-Building Pilot',
+      goal:'Show which group study rooms in one library building are free in the next two hours, using an official daily export from the library instead of scraping.',
+      desc:'A web page that shows which group study rooms in campus libraries are free right now.',
+      where:'Paused in April 2026. They scraped the library booking page; it changed layout twice and the scraper broke each time.',
+      next:[{label:'If they did it again',text:'Ask the library whether an official data export exists before writing a scraper.'},{label:'If they did it again',text:'Start with one building instead of every library.'},{label:'If they did it again',text:'Show when the data was last updated.'}],
+      built:[{t:'Room list and floor map component',l:'GitHub /web/map'},{t:'Scraper for the booking page (broken)',l:'GitHub /scraper'}],
+      problems:[{p:'Scraper broke when the page layout changed',s:'Not solved; they paused.'}],
+      materials:[{t:'Building and room spreadsheet',l:'Sheet'},{t:'Notes from student interviews',l:'Doc'}]},
+    finished:{name:'Club Sign-up Site',status:'finished',label:'Finished',team:'Alex R., Priya N.',lead:'Alex',href:'../cards/finished.html',mentor:'Marcus Lee',
+      me:['Mia Z.','MZ'],mates:[],
+      title:'Club Sign-up: Shift Scheduling',
+      goal:'Add shift scheduling to the club sign-up site, the feature clubs kept asking for.',
+      desc:'A web form for student clubs to collect event sign-ups.',
+      where:'Finished in Spring 2025.',
+      next:[{label:'Advice for the next team',text:'Clubs kept asking for shift scheduling. Start there.'},{label:'Advice for the next team',text:'Test on phones first.'}],
+      built:[{t:'Sign-up form with 4 required fields',l:'GitHub'},{t:'Mobile-first form component',l:'GitHub'},{t:'Demo walkthrough',l:'Video'}],
+      problems:[{p:'Too many sign-up fields',s:'Kept 4 required; asked the rest after sign-up.'},{p:'Confirmation emails went to spam',s:'Also showed the confirmation on screen.'}],
+      materials:[]},
+    ongoing:{name:'Study Spot Finder: One-Building Pilot',status:'ongoing',label:'Ongoing',team:'Mia Z., Leo P.',lead:'Mia',href:'mia-ongoing.html?step=6&role=student',mentor:'Sarah Chen',
+      me:['Ana K.','AK'],mates:['Ben S.'],
+      title:'One-Building Pilot: Walk-in Rooms',
+      goal:'Find a way to show walk-in rooms, which the library export doesn\'t track.',
+      desc:'Shows which group study rooms in one library building are free in the next two hours.',
+      where:'Still in progress; Mia\'s team keeps working on it. Latest update (Oct 30): added an "as of" time label and a separate walk-in list. Next: show it to five students.',
+      next:[{label:'Their goal',text:'Show which group study rooms in one library building are free in the next two hours, using an official daily export.'},{label:'Mentor advice on their project',text:'Label every room with the data time and keep walk-in rooms in a separate "not tracked" list.'}],
+      built:[{t:'Prototype with "as of" labels and a walk-in list',l:'GitHub'}],
+      problems:[{p:'Data is up to a day old',s:'Labeling every room with the time of the data (in progress).'}],
+      materials:[]}
+  };
+  var S;
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function toast(t){var el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true;},2800);}
+
+  var qs=new URLSearchParams(location.search);
+  if(SRC[qs.get('from')]) $('src').value=qs.get('from');
+  if(['Continue','Reproduce','Improve'].indexOf(qs.get('type'))>-1) $('type').value=qs.get('type');
+
+  function reset(useParams){
+    var s=SRC[$('src').value];
+    S={desc:null,descFrom:false,descEdited:false,
+       goal:(useParams&&qs.get('goal'))||s.goal,goalFrom:false,goalEdited:false,
+       title:(useParams&&qs.get('title'))||s.title,
+       me:(useParams&&qs.get('me'))||s.me[0],
+       mates:useParams&&qs.has('mates')?qs.get('mates').split(',').filter(Boolean):s.mates,
+       links:[],focus:null,dismissed:false,asking:false,typed:{},question:null};
+  }
+  reset(true);
+
+  function useBtn(kind,i,label){
+    var added=kind==='link'?S.links.some(function(l){return l.key===i;}):false;
+    return '<button type="button" class="btn" data-use="'+kind+'" data-i="'+i+'"'+(added?' disabled':'')+'>'+(added?'Added ✓':label)+'</button>';
+  }
+  function fromTag(edited,name){return '<span class="from">'+(edited?'Adapted from ':'From ')+esc(name)+'</span>';}
+
+  function render(){
+    var k=$('src').value, s=SRC[k], type=$('type').value;
+    var initials=S.me.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    $('meName').textContent=S.me; $('meAv').textContent=initials;
+    $('srcLink').href=s.href;
+    $('title').textContent=S.title;
+    $('owners').textContent=[S.me+' (owner)'].concat(S.mates.map(function(m){return m+' (owner)';})).join(', ')+' · Student project · Autumn 2026';
+    $('sourceLine').innerHTML='Picked up from <a href="'+s.href+'"><strong>'+esc(s.name)+'</strong></a> <span class="pill '+s.status+'" style="font-size:11px;padding:1px 8px"><span class="dot"></span>'+s.label+'</span> <span class="muted">by '+s.team+'</span> · <span class="baton-type">'+type+'</span>';
+    $('credit').textContent='Built on work by '+s.team;
+    $('mentorLine').innerHTML=s.mentor?
+      '<span class="role">Mentor</span><strong>'+s.mentor+'</strong><span class="muted">continues from '+esc(s.name)+'. Questions that ask for a mentor go to them directly.</span>':
+      '<span class="role">Mentor</span><span class="muted">None yet. When you ask for a mentor, Staff will refer one.</span>';
+    $('focus').innerHTML=(type==='Improve'&&S.focus)?'<span class="focus-chip">Improving: '+esc(S.focus)+'</span>':'';
+    $('welcomeText').innerHTML={
+      Continue:'You picked up <strong>'+esc(s.name)+'</strong> to <strong>continue</strong> it. On the left is their project as it is now. Bring in whatever helps; anything you bring in stays editable.',
+      Reproduce:'You picked up <strong>'+esc(s.name)+'</strong> to <strong>reproduce</strong> it. Start from what they built on the left.',
+      Improve:'You picked up <strong>'+esc(s.name)+'</strong> to <strong>improve</strong> one part. Pick the part on the left.'
+    }[type]+(s.status==='ongoing'?' Their team keeps working on theirs.':'');
+    $('welcome').hidden=S.dismissed;
+
+    // Left: their project, ordered by baton type
+    $('batonTitle').textContent=s.lead+'\'s project, as you picked it up';
+    $('batonSub').textContent=s.name+' · '+s.label+' · by '+s.team;
+    var desc='<div class="bsec"><h3>Their description</h3><div class="item"><p>'+esc(s.desc)+'</p>'+useBtn('desc',0,'Use as my description')+'</div></div>';
+    var where='<div class="bsec"><h3>'+(s.status==='ongoing'?'Where they are now':s.status==='paused'?'Where they stopped':'Where they ended')+'</h3><p class="prose">'+esc(s.where)+'</p></div>';
+    var next='<div class="bsec"><h3>'+(s.status==='ongoing'?'Their goal and advice':'Their advice for the next team')+'</h3>'+s.next.map(function(n,i){return '<div class="item"><p><span class="small muted">'+esc(n.label)+'</span><br>'+esc(n.text)+'</p>'+useBtn('goal',i,'Use as my goal')+'</div>';}).join('')+'</div>';
+    var built='<div class="bsec"><h3>'+(type==='Improve'?'Pick the part you\'ll improve':'What they built')+'</h3>'+s.built.map(function(b,i){
+      if(type==='Improve') return '<label class="item pick"><p><input type="radio" name="focus" value="'+i+'"'+(S.focus===b.t?' checked':'')+'> '+esc(b.t)+' <span class="small muted">'+b.l+'</span></p></label>';
+      return '<div class="item"><p>'+esc(b.t)+' <a class="small" href="#">'+b.l+' ↗</a></p>'+useBtn('link','b'+i,'Add to my links')+'</div>';}).join('')+
+      (type==='Improve'&&S.focus?'<div class="row-between" style="justify-content:flex-end">'+useBtn('focusgoal',0,'Use "Improve: '+esc(S.focus)+'" as my goal')+'</div>':'')+'</div>';
+    var problems='<div class="bsec"><h3>Problems they hit</h3>'+s.problems.map(function(p){return '<div class="item"><p><strong>'+esc(p.p)+'</strong><br><span class="muted">'+esc(p.s)+'</span></p></div>';}).join('')+'</div>';
+    var mats=s.materials.length?'<div class="bsec"><h3>Reusable materials</h3>'+s.materials.map(function(m,i){return '<div class="item"><p><a href="#">'+esc(m.t)+' ↗</a> <span class="small muted">'+m.l+'</span></p>'+useBtn('link','m'+i,'Add to my links')+'</div>';}).join('')+'</div>':'';
+    $('batonBody').innerHTML=
+      type==='Continue'?where+next+built+problems+mats+desc:
+      type==='Reproduce'?built+problems+mats+desc+where:
+      built+problems+next+mats+desc;
+
+    // Right: your project
+    $('desc').innerHTML=S.desc!==null?
+      '<p class="prose editable" contenteditable="true" data-field="desc">'+esc(S.desc)+'</p><div style="margin-top:6px">'+(S.descFrom?fromTag(S.descEdited,s.name):'')+'</div>':
+      '<p class="prose muted">No description yet. Write your own, or use theirs from the left.</p>';
+    $('goal').innerHTML='<p class="prose editable" contenteditable="true" data-field="goal">'+esc(S.goal)+'</p>'+(S.goalFrom?'<div style="margin-top:6px">'+fromTag(S.goalEdited,s.name)+'</div>':'<span class="hint">From your pick-up form. Click to edit.</span>');
+    $('links').innerHTML=S.links.length?S.links.map(function(l,i){
+      return '<div class="linkrow"><span style="display:flex;flex-direction:column;gap:4px"><a href="#">'+esc(l.t)+' ↗</a>'+fromTag(false,s.name)+'</span><button type="button" class="x" data-rm="'+i+'" aria-label="Remove link">×</button></div>';
+    }).join(''):'<p class="prose muted">No links yet. Add your own repo or demo, or reuse theirs from the left.</p>';
+
+    // Questions
+    $('askArea').innerHTML=S.asking?askForm(s):'';
+    if(S.asking) bindAsk(s);
+    if(!S.question){
+      $('qcount').textContent='(0)';
+      $('qArea').innerHTML='<div class="empty" style="padding:16px"><span>No questions yet.</span><span class="small">'+(s.mentor?'Questions that ask for a mentor go to '+s.mentor+', who mentored '+esc(s.name)+'.':'If you ask for a mentor, Staff will refer one.')+' Questions about their work? <a href="'+s.href+'#questions">Ask the original team</a>.</span></div>';
+    } else {
+      var q=S.question;
+      $('qcount').textContent='(1)';
+      var chip=q.route==='mentor'?'<span class="qstatus referred">Sent to '+s.mentor+' · waiting for reply</span>':
+        q.route==='staff'?'<span class="qstatus needs">Waiting for Staff referral</span>':'<span class="qstatus discussion" style="background:var(--surface);border:1px solid var(--line);color:var(--body)">Open discussion · no mentor requested</span>';
+      $('qArea').innerHTML='<div class="q" id="q-1"><div class="q-head"><div class="row-between">'+chip+'<span class="small muted">Question 1</span></div><h3 class="q-title">'+esc(q.title)+'</h3></div>'+
+        '<div class="thread"><div class="post"><div class="post-meta"><span class="av" aria-hidden="true">'+initials+'</span><strong>'+esc(S.me)+'</strong><span class="role owner">Owner</span><span>· just now</span></div>'+(q.body?'<p class="prose">'+esc(q.body)+'</p>':'')+'</div>'+
+        (q.route==='mentor'?'<div class="event"><div><strong>'+s.mentor+'</strong> <span class="role">Mentor</span> continues from <strong>'+esc(s.name)+'</strong></div><div class="reason">Assigned automatically because they mentored the project you picked up. No Staff referral needed.</div></div>':'')+
+        '</div></div>';
+    }
+  }
+
+  function askForm(s){
+    var r=S.typed.route;
+    var opts=s.mentor?
+      [['mentor','Yes, ask '+s.mentor+' (mentor from '+s.name+')'],['staff','Yes, but ask Staff to find a different mentor'],['no','No, just open discussion']]:
+      [['staff','Yes, ask Staff to refer a mentor'],['no','No, just open discussion']];
+    return '<form class="card" id="askF" novalidate style="padding:16px;display:flex;flex-direction:column;gap:12px;margin-bottom:12px">'+
+      '<div class="field" id="f-qt"><label for="qt">Your question <span class="req">*</span></label><input class="input" id="qt" maxlength="120" value="'+esc(S.typed.qt||'')+'"><span class="err-msg">Write your question.</span></div>'+
+      '<div class="field"><label for="qb">Details</label><span class="hint">Optional.</span><textarea class="textarea" id="qb" maxlength="2000">'+esc(S.typed.qb||'')+'</textarea></div>'+
+      '<fieldset class="field" id="f-route"><legend>Do you want a mentor to answer? <span class="req">*</span></legend><div class="radio-row">'+
+      opts.map(function(o){return '<label><input type="radio" name="route" value="'+o[0]+'"'+(r===o[0]?' checked':'')+'> '+esc(o[1])+'</label>';}).join('')+
+      '</div><span class="err-msg">Choose one.</span></fieldset>'+
+      '<div class="row-between" style="justify-content:flex-end"><button type="button" class="btn" id="askCancel">Cancel</button><button type="submit" class="btn primary" id="askSend">Post question</button></div></form>';
+  }
+  function bindAsk(s){
+    var qt=$('qt'), qb=$('qb');
+    qt.addEventListener('input',function(){S.typed.qt=qt.value;if(qt.value.trim())$('f-qt').classList.remove('invalid');});
+    qb.addEventListener('input',function(){S.typed.qb=qb.value;});
+    document.querySelectorAll('input[name=route]').forEach(function(x){x.addEventListener('change',function(){S.typed.route=x.value;$('f-route').classList.remove('invalid');});});
+    $('askCancel').addEventListener('click',function(){S.asking=false;S.typed={};render();});
+    $('askF').addEventListener('submit',function(e){
+      e.preventDefault(); var ok=true;
+      if(!qt.value.trim()){$('f-qt').classList.add('invalid');ok=false;}
+      if(!S.typed.route){$('f-route').classList.add('invalid');ok=false;}
+      if(!ok) return;
+      S.question={title:qt.value.trim(),body:qb.value.trim(),route:S.typed.route};
+      S.asking=false; S.typed={}; render();
+      toast(S.question.route==='mentor'?'Question sent to '+s.mentor+'. It appears in their "To reply" list.':S.question.route==='staff'?'Question posted. Staff will refer a mentor.':'Question posted as open discussion.');
+    });
+  }
+
+  document.addEventListener('click',function(e){
+    var u=e.target.closest('[data-use]');
+    if(u){
+      var s=SRC[$('src').value], kind=u.getAttribute('data-use'), i=u.getAttribute('data-i');
+      if(kind==='desc'){S.desc=s.desc;S.descFrom=true;S.descEdited=false;toast('Copied into your description. Edit it however you like.');}
+      else if(kind==='goal'||kind==='focusgoal'){
+        if(!S.goalFrom&&!confirm('Replace your current goal with this one?')) return;
+        S.goal=kind==='goal'?s.next[+i].text:'Improve: '+S.focus; S.goalFrom=true; S.goalEdited=false; toast('Copied into your goal. Edit it however you like.');}
+      else if(kind==='link'){var src=i[0]==='b'?s.built[+i.slice(1)]:s.materials[+i.slice(1)];S.links.push({key:i,t:src.t});toast('Added to your links.');}
+      render(); return;
+    }
+    var r=e.target.closest('[data-rm]');
+    if(r){S.links.splice(+r.getAttribute('data-rm'),1);render();}
+  });
+  document.addEventListener('change',function(e){
+    if(e.target.name==='focus'){S.focus=SRC[$('src').value].built[+e.target.value].t;render();}
+  });
+  document.addEventListener('input',function(e){
+    var f=e.target.getAttribute&&e.target.getAttribute('data-field');
+    if(f==='desc'){S.desc=e.target.textContent;if(S.descFrom&&!S.descEdited){S.descEdited=true;var t=$('desc').querySelector('.from');if(t)t.textContent='Adapted from '+SRC[$('src').value].name;}}
+    if(f==='goal'){S.goal=e.target.textContent;if(S.goalFrom&&!S.goalEdited){S.goalEdited=true;var g=$('goal').querySelector('.from');if(g)g.textContent='Adapted from '+SRC[$('src').value].name;}}
+  });
+  $('askBtn').addEventListener('click',function(){S.asking=true;render();$('qt').focus();});
+  $('dismiss').addEventListener('click',function(){S.dismissed=true;render();});
+  $('src').addEventListener('change',function(){reset(false);render();});
+  $('type').addEventListener('change',function(){var g=S;reset(false);S.title=g.title;S.goal=g.goal;S.me=g.me;S.mates=g.mates;render();});
+  $('reset').addEventListener('click',function(){reset(false);render();});
+
+  render();
+  if(qs.get('created')==='1') toast('Project created. You picked up '+SRC[$('src').value].name+' ('+$('type').value+').');
+})();
+</script>
+</body>
+</html>

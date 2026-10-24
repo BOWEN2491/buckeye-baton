@@ -3,22 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hacking1024 — 项目文档</title>
+<title>Buckeye Baton — 项目文档</title>
 
 <!-- claude:meta:start -->
 <script type="application/json" id="meta">
 {
-  "project": "Hacking1024",
-  "tagline": "HackOHI/O 2026 · 两人团队的赛前准备与交接",
-  "url": "https://github.com/BOWEN2491/Hacking1024",
+  "project": "Buckeye Baton",
+  "tagline": "HackOHI/O 2026 · Honda challenge · 项目经验接力",
+  "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
-  "currentFocus": "—",
-  "lastCompleted": "核对队友云端报告；实查 nnyyttg 为 write；Windows 本机和首个 PR 仍待验证",
-  "nextUp": "在队友真实 Windows 电脑完成启动与页面测试，使用其账号推送分支和 PR；确认正式题目",
+  "currentFocus": "",
+  "lastCompleted": "项目目标、实现边界、设计参考及仓库结构已整理；用户授权 PR #1 合入 main",
+  "nextUp": "以 main 共享基线确认设计新增规则，再实现项目接棒与人工引荐",
   "blockers": [
-    "队友云端 Linux 据报告通过，Windows 本机和 Git 推送未验证",
-    "报名、Discord、余额与预算需本人确认",
-    "正式题目和比赛进展尚未确认"
+    "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
   "health": {
     "featuresDone": 6,
@@ -26,12 +24,12 @@
   }
 }
 </script>
-    <!-- claude:meta:end -->
+<!-- claude:meta:end -->
 
 <style>
   :root {
-    --brand-primary: #245b49;
-    --brand-accent:  #3f856d;
+    --brand-primary: #b62338;
+    --brand-accent:  #9e1c2f;
 
     --bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
     --border: #e4e4e7; --text: #18181b; --text-muted: #71717a;
@@ -152,8 +150,8 @@
 <div class="container">
 
   <!-- claude:header:start -->
-<header class="header"><img class="logo" src="assets/logo.svg" alt="Hacking1024 文档标记"><div><h1>Hacking1024</h1><div class="tagline">HackOHI/O 2026 · 项目背景、已验证状态与后续交接</div></div></header>
-    <!-- claude:header:end -->
+<header class="header"><img class="logo" src="assets/logo.svg" alt="Buckeye Baton"><div><h1>Buckeye Baton</h1><div class="tagline">The project ends. The lessons keep helping the next team.</div></div></header>
+<!-- claude:header:end -->
 
   <nav class="tabs" role="tablist">
     <button class="tab active" data-tab="overview">Overview</button>
@@ -169,20 +167,20 @@
     <!-- claude:overview:start -->
 
     <!-- claude:overview:pitch:start -->
-<div class="card" data-updated="2026-10-23"><h3>新对话先了解什么</h3><p>这是两人团队的赛前环境准备仓库。用户承担核心开发；队友技术基础较弱，正在尝试 coding agent 辅助的前端、测试与展示工作。正式 Sponsor Challenge、数据与产品功能尚未确定，现有界面只验证文字回显链路。</p><p>先读 <a href="../AGENTS.md">AGENTS.md</a> 与 <a href="../PROJECT_CONTEXT.md">PROJECT_CONTEXT.md</a>，再按文件地图进入代码。用户当前的任务决定工作范围；此页的待办不是自动执行全部任务的指令。</p></div>
-    <!-- claude:overview:pitch:end -->
+<div class="card" data-updated="2026-10-24"><h3>项目经验接力</h3><p>学生留下项目与经验，让下一组接棒，Staff 将合适的 Mentor 带进具体问题。当前先交付项目浏览和团队总结，连接与接棒属于后续阶段。</p></div>
+<!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前状态</h3><div class="status-grid"><div class="status-item"><div class="label">更新时间</div><div class="value">2026-10-24 · America/New_York</div></div><div class="status-item"><div class="label">阶段</div><div class="value">准备代码就绪；比赛进展待确认</div></div><div class="status-item"><div class="label">上次完成</div><div class="value">队友云端报告核对、write 权限实查</div></div><div class="status-item"><div class="label">下一步</div><div class="value">队友 Windows 本机验证与首个 PR</div></div></div><p class="muted" style="margin-top:12px">拥有者目录 D:\HackOHIO_1024；远程 BOWEN2491/Hacking1024。服务是否运行、分支是否同步应现场检查，不从快照推断。</p></div>
-    <!-- claude:overview:status:end -->
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>v2 第一轮：首页、三状态详情、所有者编辑及状态保存。接棒、项目求助与导师连接仅占位，完整 v2 尚未完成。</p></div>
+<!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-24"><h3>已验证到什么程度</h3><p>准备能力 <strong>6 / 8</strong>；这不是比赛产品完成率。</p><p>2026-10-22：构建、pip check、真实中文 POST、空输入、422、模拟 503 与恢复、桌面/手机布局及 Streamlit 基本交互通过。2026-10-23：Git 真实推送与远程一致性验证通过。</p><p>用户历史 API 测试返回 OK。当前 Key 是否存在、余额是否足够需要重新检查，不能由历史测试推断。</p><p>2026-10-24：队友 agent 报告云端 Linux 安装、浏览器交互和构建通过，尚未连接她的 Windows。本次独立实查 nnyyttg 权限为 write；其本机安装与实际推送尚未验证。</p></div>
-    <!-- claude:overview:health:end -->
+<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>清理后类型检查、后端 3/3、生产构建和浏览器 5/5（10.4 秒）已通过；保留原有四个项目。桌面与 390px 布局已有自动化覆盖，云端与完整接棒仍未验证。</p></div>
+<!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
-<div class="card" data-updated="2026-10-24"><h3>尚未确认</h3><ul><li>队友 Windows 本机安装、start.ps1、页面交互、Git 登录及首个 PR；nnyyttg 已有 write 权限。</li><li>报名、Discord、最新挑战内容与提交表单权限。</li><li>OpenAI 余额、预算、本机 Key 配置；不在文档存储秘密。</li><li>最终选题、数据/API 权限和是否需要公网部署。</li></ul><p class="muted">详细手动清单见 <a href="../CHECKLIST.md">CHECKLIST.md</a>。这些是待确认状态，不代表已发现技术故障。</p></div>
-    <!-- claude:overview:blockers:end -->
+<div class="card" data-updated="2026-10-24"><h3>待配置</h3><p>真实 PostgreSQL/Neon 连接、主办方 AWS 权益和公网部署尚未验证。演示身份不是真实登录。</p></div>
+<!-- claude:overview:blockers:end -->
 
     <!-- claude:overview:end -->
   </section>
@@ -190,8 +188,11 @@
   <!-- ============ FEATURES ============ -->
   <section class="panel" id="features">
     <!-- claude:features:start -->
-<div class="grid grid-2"><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>独立开发环境</h3><span class="badge done">done</span></div><p>D 盘 .venv；Python 3.11.9，Node.js 22.19.0；依赖版本锁定。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>React → FastAPI 联调</h3><span class="badge done">done</span></div><p>POST /api/echo、JSON 展示、加载/错误状态；不调用 AI。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>Streamlit 后备练习</h3><span class="badge done">done</span></div><p>单 Python 界面，有效与空输入验证通过。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>GitHub 协作基础</h3><span class="badge done">done</span></div><p>main 已推送，跟踪 origin/main；写入权限已验证。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>可选 OpenAI 连通性测试</h3><span class="badge done">done</span></div><p>用户历史测试成功；独立脚本可主动重测。余额与当前 Key 状态仍未确认。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>跨对话项目文档</h3><span class="badge done">done</span></div><p>AGENTS、简短摘要、完整项目页、维护协议及赛前披露。</p></article><article class="card" data-status="planned" data-updated="2026-10-24"><div style="display:flex;justify-content:space-between;gap:12px"><h3>队友独立交付</h3><span class="badge planned">planned</span></div><p>nnyyttg 已有 write；云端据报告通过，仍待 Windows 本机测试与实际分支/PR。</p></article><article class="card" data-status="planned" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>比赛 MVP 与发布</h3><span class="badge planned">planned</span></div><p>正式题目确定后再设计和实现；当前没有 Sponsor 专用功能或线上部署。</p></article></div>
-    <!-- claude:features:end -->
+<div class="card" data-updated="2026-10-24"><h3>v2 第一轮 <span class="badge done">本地通过</span></h3><p>项目搜索和状态筛选、三状态总结、所有者表单编辑、状态校验与历史保留；旧经验以 Historical experience 内联展示。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>完整项目接棒 <span class="badge planned">planned</span></h3><p>项目问题、Staff 引荐、Mentor 回复与关联后续项目尚未接通；本轮按钮只原地说明下一轮开放，不发送写请求。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>独立 Lesson 页面重定向来源项目；采用界面、数字与响应字段已删除，采用写接口返回 410。旧数据库记录保留，经验只在项目内展示；旧完整旅程不等于新版接棒。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI、真实认证、上传、代码 fork、复杂关系图和通知。</p></div>
+<!-- claude:features:end -->
   </section>
 
   <!-- ============ DESIGN ============ -->
@@ -199,24 +200,24 @@
     <!-- claude:design:start -->
 
     <!-- claude:design:colors:start -->
-<div class="card" data-updated="2026-10-23"><h3>练习界面的实际颜色</h3><div class="swatches"><div class="swatch"><div class="chip" style="background:#245b49"></div><div class="name">Primary<br>#245b49</div></div><div class="swatch"><div class="chip" style="background:#3f856d"></div><div class="name">Focus<br>#3f856d</div></div><div class="swatch"><div class="chip" style="background:#f3f5f1"></div><div class="name">Background<br>#f3f5f1</div></div><div class="swatch"><div class="chip" style="background:#18332f"></div><div class="name">Text<br>#18332f</div></div><div class="swatch"><div class="chip" style="background:#a22e2e"></div><div class="name">Error<br>#a22e2e</div></div></div><p class="muted">来源：frontend/src/style.css；这是练习界面的配色，不代表已确定比赛产品品牌。</p></div>
-    <!-- claude:design:colors:end -->
+<div class="card" data-updated="2026-10-24"><h3>配色</h3><p>White #ffffff · Slate #17212f · Scarlet #b62338。强调色用于主要操作、导航与经验关联。</p></div>
+<!-- claude:design:colors:end -->
 
     <!-- claude:design:typography:start -->
-<div class="card" data-updated="2026-10-23"><h3>字体</h3><p>应用使用 system-ui、Microsoft YaHei、sans-serif。无外部字体或字体下载服务。</p><p class="muted">标题使用 clamp(26px, 5vw, 36px)；按钮和表单继承系统字体。</p></div>
-    <!-- claude:design:typography:end -->
+<div class="card" data-updated="2026-10-24"><h3>字体</h3><p>Arial / Helvetica / sans-serif；标题、正文、元信息和控件使用统一层级。</p></div>
+<!-- claude:design:typography:end -->
 
     <!-- claude:design:assets:start -->
-<div class="card" data-updated="2026-10-23"><h3>已有素材</h3><div class="asset-grid"><figure class="asset"><div class="thumb" style="background-image:url(assets/logo.svg)"></div><figcaption class="meta"><strong>文档临时标记</strong><div class="name"><a href="assets/logo.svg">assets/logo.svg</a></div><div class="src">仅供文档识别；不是赛事或最终产品的官方 Logo。</div></figcaption></figure></div><p class="muted">应用目前没有独立品牌 Logo、照片或比赛素材。</p></div>
-    <!-- claude:design:assets:end -->
+<div class="card" data-updated="2026-10-24"><h3>标识</h3><p>链式接力图标采用 SVG；产品名称为 Buckeye Baton。概念图保留早期工作名称，仅作为历史视觉参考。</p></div>
+<!-- claude:design:assets:end -->
 
     <!-- claude:design:spacing:start -->
-<div class="card" data-updated="2026-10-23"><h3>练习布局</h3><div class="spacing-grid"><div class="spacing-item"><div class="bar" style="width:6px"></div><div class="label">6px</div></div><div class="spacing-item"><div class="bar" style="width:12px"></div><div class="label">12px</div></div><div class="spacing-item"><div class="bar" style="width:18px"></div><div class="label">18px</div></div><div class="spacing-item"><div class="bar" style="width:24px"></div><div class="label">24px</div></div><div class="spacing-item"><div class="bar" style="width:32px"></div><div class="label">32px</div></div><div class="spacing-item"><div class="bar" style="width:64px"></div><div class="label">64px</div></div></div><p>内容最大宽度 720px，两侧总留白 40px；桌面顶部 64px，520px 以下顶部 32px。表单间距 12px，按钮和输入框圆角 6px。</p><p class="muted">来源：frontend/src/style.css。此文档页自身沿用 project-docs 模板布局。</p></div>
-    <!-- claude:design:spacing:end -->
+<div class="card" data-updated="2026-10-24"><h3>响应式</h3><p>桌面使用侧栏、项目区与辅助指南；390px 手机使用顶栏和单列内容，保持身份切换与主要操作可用。</p></div>
+<!-- claude:design:spacing:end -->
 
     <!-- claude:design:screenshots:start -->
-<div class="card" data-updated="2026-10-23"><h3>实际界面截图</h3><p class="muted">同一个真实路由 / 的三个状态；由 take-screenshots.mjs 采集，日期 2026-10-23。不涉及付费 API。</p><div class="screenshots"><figure class="screenshot"><img src="screenshots/practice-desktop.png" alt="桌面初始状态"><figcaption class="caption">桌面初始状态 · 2026-10-23</figcaption></figure><figure class="screenshot"><img src="screenshots/practice-result.png" alt="桌面成功回显"><figcaption class="caption">桌面成功回显 · 2026-10-23</figcaption></figure><figure class="screenshot"><img src="screenshots/practice-mobile.png" alt="390px 手机成功回显"><figcaption class="caption">390px 手机成功回显 · 2026-10-23</figcaption></figure></div></div>
-    <!-- claude:design:screenshots:end -->
+<div class="card" data-updated="2026-10-24"><h3>当前截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">桌面，更新于 2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">390px 手机，更新于 2026-10-24</p></div></div></div>
+<!-- claude:design:screenshots:end -->
 
     <!-- claude:design:end -->
   </section>
@@ -226,58 +227,60 @@
     <!-- claude:architecture:start -->
 
     <!-- claude:architecture:stack:start -->
-<div class="card" data-updated="2026-10-23"><h3>技术栈</h3><ul><li>React 19.3.1、Vite 8.3.5、JavaScript/JSX、原生 CSS；无 Next.js、Tailwind 或 shadcn。</li><li>Python 3.11.9、FastAPI 0.161.0、Uvicorn 0.54.0。</li><li>OpenAI SDK 3.36.1 与 python-dotenv 1.2.4，仅用于可选检查。</li><li>Streamlit 1.66.1；pandas 3.1.0、requests 2.34.2、plotly 7.1.0 供后续按需使用。</li><li>完整版本依据 requirements-lock.txt 与 frontend/package-lock.json；无数据库、登录或生产托管。</li></ul></div>
-    <!-- claude:architecture:stack:end -->
+<div class="card" data-updated="2026-10-24"><h3>技术基线</h3><p>Next.js 15.5.28 · React · TypeScript · Node 22 · Tailwind · pg / PostgreSQL。显式本地 PGlite 持久化模式用于无云端连接时的演示和测试。</p></div>
+<!-- claude:architecture:stack:end -->
 
     <!-- claude:architecture:overview:start -->
-<div class="card" data-updated="2026-10-23"><h3>当前架构</h3><p>浏览器访问本机 5173 端口，React 表单向相对路径 /api/echo 发出 POST。Vite 将 /api 转发至 8000 端口的 FastAPI，后端校验并去除文字首尾空白后返回回显和字符数；React 更新成功或错误状态。备用 Streamlit 独立运行在 8501 端口。OpenAI 仅由独立命令行检查脚本主动调用，不在默认页面链路中。没有数据库或云端服务；静态前端构建不能代替 Python 后端部署。</p></div>
-    <!-- claude:architecture:overview:end -->
+<div class="card" data-updated="2026-10-24"><h3>当前数据旅程</h3><p>项目浏览 → 状态详情 → 所有者编辑总结 → 合并校验并保存状态与 reflection。后续项目关系与项目问题尚未实现。</p></div>
+<!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
-<div class="card" data-updated="2026-10-23"><h3>文件地图</h3><table><thead><tr><th>概念</th><th>仓库相对路径</th></tr></thead><tbody><tr><td>新 agent 入口</td><td><a href="../AGENTS.md"><code>AGENTS.md</code></a></td></tr><tr><td>新对话简短背景</td><td><a href="../PROJECT_CONTEXT.md"><code>PROJECT_CONTEXT.md</code></a></td></tr><tr><td>安装与启动</td><td><a href="../README.md"><code>README.md</code></a></td></tr><tr><td>队友任务与 PR</td><td><a href="../TEAMMATE.md"><code>TEAMMATE.md</code></a></td></tr><tr><td>手动准备事项</td><td><a href="../CHECKLIST.md"><code>CHECKLIST.md</code></a></td></tr><tr><td>赛前披露</td><td><a href="../PRIOR_WORK.md"><code>PRIOR_WORK.md</code></a></td></tr><tr><td>决策记录</td><td><a href="../DECISIONS.md"><code>DECISIONS.md</code></a></td></tr><tr><td>Windows 启动入口</td><td><a href="../start.ps1"><code>start.ps1</code></a></td></tr><tr><td>API 定义</td><td><a href="../backend/main.py"><code>backend/main.py</code></a></td></tr><tr><td>页面入口</td><td><a href="../frontend/index.html"><code>frontend/index.html</code></a></td></tr><tr><td>表单与请求</td><td><a href="../frontend/src/main.jsx"><code>frontend/src/main.jsx</code></a></td></tr><tr><td>界面样式</td><td><a href="../frontend/src/style.css"><code>frontend/src/style.css</code></a></td></tr><tr><td>开发代理</td><td><a href="../frontend/vite.config.js"><code>frontend/vite.config.js</code></a></td></tr><tr><td>前端命令和依赖</td><td><a href="../frontend/package.json"><code>frontend/package.json</code></a></td></tr><tr><td>前端完整依赖版本</td><td><a href="../frontend/package-lock.json"><code>frontend/package-lock.json</code></a></td></tr><tr><td>Python 完整版本</td><td><a href="../requirements-lock.txt"><code>requirements-lock.txt</code></a></td></tr><tr><td>Python 依赖范围</td><td><a href="../requirements.txt"><code>requirements.txt</code></a></td></tr><tr><td>后备练习</td><td><a href="../fallback/app.py"><code>fallback/app.py</code></a></td></tr><tr><td>环境检查</td><td><a href="../scripts/check_environment.py"><code>scripts/check_environment.py</code></a></td></tr><tr><td>可选 API 检查</td><td><a href="../scripts/check_api.py"><code>scripts/check_api.py</code></a></td></tr><tr><td>环境变量模板</td><td><a href="../.env.example"><code>.env.example</code></a></td></tr><tr><td>历史计划</td><td><a href="../task_plan.md"><code>task_plan.md</code></a></td></tr><tr><td>历史执行记录</td><td><a href="../progress.md"><code>progress.md</code></a></td></tr><tr><td>完整项目页</td><td><a href="../project-docs/index.html"><code>project-docs/index.html</code></a></td></tr><tr><td>文档维护协议</td><td><a href="../project-docs/MAINTENANCE.md"><code>project-docs/MAINTENANCE.md</code></a></td></tr><tr><td>截图工具</td><td><a href="../project-docs/take-screenshots.mjs"><code>project-docs/take-screenshots.mjs</code></a></td></tr></tbody></table></div>
-    <!-- claude:architecture:filemap:end -->
+<div class="card" data-updated="2026-10-24"><h3>统一入口</h3><p><a href="../docs/PROJECT_OVERVIEW.md">项目总览</a>：定位、状态、已实现与下一轮；<a href="../design/README.md">设计说明</a>：队友原型及未确认差异；<a href="../docs/HANDOFF.md">协作说明</a>：main 共享基线与唯一工作目录。旧实施笔记移入 docs/legacy/planning/。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>v2 规格与旧版边界</h3><p><a href="../docs/MVP_SPEC.md">MVP_SPEC.md</a> 是新版依据；<a href="../docs/ACCEPTANCE.md">ACCEPTANCE.md</a> 是完整目标验收；<a href="../docs/PHASE1_ACCEPTANCE.md">PHASE1_ACCEPTANCE.md</a> 是当前第一轮验收。API_CONTRACT.md 和 src/shared/types.ts 已包含 reflection；docs/legacy/ 保存旧规格。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>文件地图</h3><table><tbody><tr><td><code>src/app/</code></td><td>页面与 /api 路由</td></tr><tr><td><code>src/components/</code></td><td>可复用界面</td></tr><tr><td><code>src/lib/client.ts</code></td><td>请求封装与带资源键的加载状态</td></tr><tr><td><code>src/server/</code></td><td>权限、输入校验、SQL 与事务</td></tr><tr><td><code>src/shared/</code></td><td>共用类型和虚构样例</td></tr><tr><td><code>db/schema.sql</code></td><td>数据库结构</td></tr><tr><td><code>scripts/</code></td><td>数据库初始化</td></tr><tr><td><code>tests/</code></td><td>接口与浏览器回归</td></tr><tr><td><code>docs/</code></td><td>范围、契约与验收</td></tr><tr><td><code>README.md</code></td><td>运行入口</td></tr><tr><td><code>AGENTS.md</code></td><td>后续 agent 工作约定</td></tr><tr><td><code>DECISIONS.md</code></td><td>决策与被替代的历史选择</td></tr></tbody></table></div>
+<!-- claude:architecture:filemap:end -->
 
     <!-- claude:architecture:entrypoints:start -->
-<div class="card" data-updated="2026-10-23"><h3>入口与接口</h3><ul><li>Windows：start.ps1；前端：frontend/src/main.jsx；后端：backend.main:app。</li><li>GET /api/health 返回正常状态。</li><li>POST /api/echo 请求字段 text，长度 1–2000 且非全空白；无效返回 422。</li><li>请求 {"text":"Hello"} 返回 {"result":"Hello","characters":5,"mode":"practice"}。</li><li>备用：fallback/app.py。FastAPI 文档路径 /docs。</li></ul></div>
-    <!-- claude:architecture:entrypoints:end -->
+<div class="card" data-updated="2026-10-24"><h3>入口</h3><p>从仓库根目录执行 npm run dev；生产模式为 npm run build 后 npm start。健康检查 GET /api/health。</p></div>
+<!-- claude:architecture:entrypoints:end -->
 
     <!-- claude:architecture:conventions:start -->
-<div class="card" data-updated="2026-10-23"><h3>工作约定</h3><ul><li>先读 AGENTS 与简短背景、本页 meta、相关章节和决策，再改代码。</li><li>main 保持可运行；agent 分支 codex/&lt;task&gt;，队友分支 teammate/&lt;task&gt;；通过 PR 集成。</li><li>环境隔离到 .venv；不向 Conda base/全局环境安装项目包。</li><li>账号/报名/部署须有证据才完成；历史测试需标日期。</li><li>更新状态时同时维护本页相关 marker、meta 与简短摘要；保留赛前工作披露。</li></ul></div>
-    <!-- claude:architecture:conventions:end -->
+<div class="card" data-updated="2026-10-24"><h3>协作</h3><p>前端负责页面与组件，后端负责 SQL、服务端和路由。共用类型与依赖集中协调。独立 codex/ 分支，不覆盖队友工作。</p></div>
+<!-- claude:architecture:conventions:end -->
 
     <!-- claude:architecture:integrations:start -->
-<div class="card" data-updated="2026-10-23"><h3>外部服务</h3><ul><li>GitHub：BOWEN2491/Hacking1024，代码同步；本机推送已验证。</li><li>OpenAI：可选真实连通性测试，使用官方 API；默认练习不调用。</li><li>Vercel：连接曾验证可读，但没有为项目完成部署。</li><li>赛事 Discord/Google Form/Zoom：参与者须确认权限；不自动假设可访问。</li></ul></div>
-    <!-- claude:architecture:integrations:end -->
+<div class="card" data-updated="2026-10-24"><h3>外部服务</h3><p>GitHub：BOWEN2491/buckeye-baton。Neon/PostgreSQL 与 AWS Amplify 为待配置的云端连接，尚无上线结论。当前功能不调用模型 API。</p></div>
+<!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
-<div class="card" data-updated="2026-10-23"><h3>数据库</h3><p>没有数据库、ORM、迁移、用户登录或持久化业务数据。是否引入数据存储应由正式题目决定。</p></div>
-    <!-- claude:architecture:db:end -->
+<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 增加可空 reflection JSONB，使用幂等增量迁移，不重建旧表。Lesson、Comment、Referral、Adoption 数据保留，采用应用逻辑已退役；种子只补缺失 ID，不覆盖用户编辑。</p></div>
+<!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
-<div class="card" data-updated="2026-10-23"><h3>环境变量名称（只列名称）</h3><pre>OPENAI_API_KEY
-OPENAI_MODEL
-SITE_URL
-PLAYWRIGHT_MODULE</pre><p class="muted">前两个来自 .env.example；后两个仅供截图工具使用。真实值和密钥不进入项目文档。</p></div>
-    <!-- claude:architecture:env:end -->
+<div class="card" data-updated="2026-10-24"><h3>环境变量</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>。本地 .env.local 和 .data 被 Git 忽略；不得提交真实连接信息。</p></div>
+<!-- claude:architecture:env:end -->
 
     <!-- claude:architecture:commands:start -->
-<div class="card" data-updated="2026-10-23"><h3>常用命令</h3><pre>.\start.ps1
-.\start.ps1 -Mode check
-.\start.ps1 -Mode fallback
-.\start.ps1 -Mode api   # 仅在明确需要真实 API 测试时执行
-npm.cmd --prefix frontend ci
-npm.cmd --prefix frontend run build
-.\.venv\Scripts\python.exe -m pip check
-node project-docs/take-screenshots.mjs</pre><p>前端 5173，后端 8000，Streamlit 8501；仅监听本机。截图工具需要已有 Playwright 和 Chromium，可通过 PLAYWRIGHT_MODULE 指向现有模块；不是应用启动必需依赖。</p><p>新对话从拥有者的 D:\HackOHIO_1024 打开；其他队员使用自己的克隆目录。</p></div>
-    <!-- claude:architecture:commands:end -->
+<div class="card" data-updated="2026-10-24"><h3>验证命令</h3><pre>npm ci
+npm run db:setup
+npm run typecheck
+npm run test:backend
+npm run build
+npm run test:e2e
+npm start</pre></div>
+<!-- claude:architecture:commands:end -->
 
     <!-- claude:architecture:decisions:start -->
-<div class="card" data-updated="2026-10-23"><h3>决策摘要</h3><ul><li>2026-10-22：代码和独立 .venv 放 D 盘，沿用已验证的 Python 3.11，避免修改 Conda base。</li><li>2026-10-22：赛前只做确定性回显练习，付费 API 检查单独运行。</li><li>2026-10-23：引入仓库内背景摘要与完整文档页，维护双入口，换对话时可查证状态。</li></ul><p>完整原因和代价见 <a href="../DECISIONS.md">DECISIONS.md</a>。</p></div>
-    <!-- claude:architecture:decisions:end -->
+<div class="card" data-updated="2026-10-24"><h3>仓库收敛</h3><p>用户授权 PR #1 合入 main，作为唯一共享基线。无独立修改的前后端预备分支及空闲工作目录已删除；以后按任务开短期分支。设计原型仅作参考，不自动采纳共同所有者、自动延续导师等新增规则。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 旧采用功能退役</h3><p>按用户要求删除独立经验与采用界面，旧链接转到来源项目。采用写接口返回 410，数据库历史保留，避免新旧两种主流程并存。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 分阶段交付</h3><p>先实现真实项目总结与状态交互，接棒与连接使用不写数据的占位。可空 JSONB 与旧经验内联保护历史，完整接棒留待下一轮。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Project 成为核心</h3><p>按用户确认，将经验嵌入项目，以重现、继续、改进创建新团队的关联项目；问题与引荐改归项目。本次只写规格，旧应用与数据未变；迁移需保留历史。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>最新决定</h3><p>用户将 Pass It On 更名为 Buckeye Baton，并授权清理旧环境练习。应用提升到根目录；保留协作约定、先前工作来源说明与 Git 历史。</p></div>
+<!-- claude:architecture:decisions:end -->
 
     <!-- claude:architecture:glossary:start -->
-<div class="card" data-updated="2026-10-23"><h3>术语</h3><dl><dt>赛前练习</dt><dd>测试工具链的通用代码，不是最终参赛功能。</dd><dt>MVP</dt><dd>选题后只实现一条能完整演示、解决明确问题的最小流程。</dd><dt>API Contract</dt><dd>前后端约定的请求字段、响应字段和错误状态。</dd><dt>Prior Work</dt><dd>赛前已完成、复用时需要披露的代码与材料。</dd><dt>已验证 / 待确认</dt><dd>有实际测试或用户确认的事实 / 尚未获得证据的事项。</dd></dl></div>
-    <!-- claude:architecture:glossary:end -->
+<div class="card" data-updated="2026-10-24"><h3>术语</h3><p>Project：团队负责的一次明确实践；Reflection：项目内的经验与交接内容；Lesson：项目内保留的历史经验；Adoption：仅存储保留、写接口已停用的旧记录；接棒：下一轮将创建有来源关联的新项目。</p></div>
+<!-- claude:architecture:glossary:end -->
 
     <!-- claude:architecture:end -->
   </section>
@@ -313,15 +316,23 @@ node project-docs/take-screenshots.mjs</pre><p>前端 5173，后端 8000，Strea
     </div>
 
     <!-- claude:wishlist:start -->
-<div class="grid grid-2" id="wishlist-grid"><article class="card wishlist-item" data-priority="high" data-added="2026-10-23" data-persisted="true"><h3>确认队友独立交付</h3><span class="badge planned">Priority: high</span><p>write 权限已核实；在队友 Windows 本机验证克隆、安装和页面，再完成一次真实 PR。</p><p class="muted">Added: 2026-10-23</p></article><article class="card wishlist-item" data-priority="high" data-added="2026-10-23" data-persisted="true"><h3>核对账号和活动权限</h3><span class="badge planned">Priority: high</span><p>本人确认余额预算、报名、Discord 和最新提交要求；不要把未知状态自动勾选。</p><p class="muted">Added: 2026-10-23</p></article><article class="card wishlist-item" data-priority="medium" data-added="2026-10-23" data-persisted="true"><h3>正式选题后确定 MVP</h3><span class="badge planned">Priority: medium</span><p>根据 Challenge 决定算法、API、数据与是否部署；当前不预设 AI 必需。</p><p class="muted">Added: 2026-10-23</p></article></div>
-    <!-- claude:wishlist:end -->
+<div class="card" data-updated="2026-10-24"><h3>AI 辅助 Mentor 引荐 · 后续功能</h3><p>Added: 2026-10-24 · AI 识别提问并按标签预分类，提供若干 Mentor 候选，由 Staff 最终选择。第一版不实现。</p></div>
+<!-- claude:wishlist:end -->
   </section>
 
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>现阶段整理</h3><p>新增项目总览，设计稿收入 design/，更新协作与队友说明；旧计划、进度和发现记录归档。清理两条本地/远程冗余分支及两个空闲工作目录；本次未修改应用或数据库。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 清理旧经验采用功能</h3><p>移除独立经验/采用界面与项目里的采用数字；旧经验链接跳回来源项目，历史经验内联保留。采用写接口返回 410，不删除旧数据库记录。类型检查、后端 3/3、生产构建与浏览器 5/5 通过；旧链接实测重定向，旧界面匹配及 pageerror 均为 0。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · v2 第一轮</h3><p>实现首页与三状态项目交互、总结表单和增量数据字段；新增第一轮验收，完整接棒与引荐仍未实现。类型检查、后端 2/2、生产构建与浏览器 4/4 通过；旧数据保留。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 新版五项规格</h3><p>写入接棒创建、状态对应经验、角色与讨论、状态切换、贡献展示；同步验收、上下文和交接提示。旧规格归档，旧测试不代表新版已实现。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 首轮试用反馈</h3><p>切换身份后返回 Explore projects 并重置页面筛选与未保存表单。页面说明一个项目包含多条可复用经验，经验保存区明确先保存、实践后再反馈；记录仍保留。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Buckeye Baton</h3><p>用户确认新名称并要求删除旧练习。新的 Next.js 应用成为唯一运行入口，修复标签切换时旧响应类型导致的客户端错误；重新验收已通过。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>Buckeye Baton 比赛应用接入</h3><p>独立 pass-it-on/ 子目录，保留赛前文件；确认 Honda challenge 与 Student/Mentor/Staff。Node 22 构建和浏览器核心旅程通过，完整验收在进行，真实 AWS/Neon 尚未验证。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>更新记录</h3><div class="changelog-entry"><div class="date">2026-10-24</div><div><strong>队友 Setup 证据核对</strong><p class="muted">用户转述的云端 Linux 报告通过；本机 Windows 尚未验证。GitHub API 实查 nnyyttg 为 write，无需重复邀请，实际推送与首个 PR 仍待完成。</p></div></div><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>建立跨对话文档</strong><p class="muted">加入 AGENTS、PROJECT_CONTEXT、完整项目页与维护协议；背景明确区分已验证、历史证据和未知状态。</p></div></div><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>仓库连接完成</strong><p class="muted">42a494a：实际仓库安装与团队协作说明；main 已推送 GitHub。</p></div></div><div class="changelog-entry"><div class="date">2026-10-22</div><div><strong>开发环境准备</strong><p class="muted">86faf81：隔离环境、React/FastAPI 回显、Streamlit 后备、可选 API 检查、测试与披露材料。</p></div></div></div>
-    <!-- claude:changelog:end -->
+
+<!-- claude:changelog:end -->
   </section>
 
   <footer class="muted" style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border); font-size:12px;">
@@ -346,7 +357,7 @@ node project-docs/take-screenshots.mjs</pre><p>前端 5173，后端 8000，Strea
   } catch (e) {}
 
   // ===== Interactive wishlist =====
-  const WL_KEY = 'Hacking1024:project-docs:wishlist:local';
+  const WL_KEY = 'buckeye-baton:project-docs:wishlist:local';
   const wlGrid = document.getElementById('wishlist-grid');
   const wlForm = document.getElementById('wishlist-form');
 

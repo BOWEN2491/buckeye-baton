@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One-Building Pilot · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Buckeye Baton — shared styles for the relay / question-flow sketches.
+   Tokens match design/cards/*.html. */
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;--green-tint:#F2FCF4;--green-line:#8DDB9E;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;--orange-tint:#FFF8F2;--orange-line:#FFC799;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-bg:#FBEFFF;
+  --red:#CF222E;--red-ink:#A40E26;--red-bg:#FFEBE9;--red-line:#FFB8B0;
+  --demo:#6E40C9;--demo-bg:#F5F0FF;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none !important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top bar */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:700;font-size:16px;color:var(--ink);text-decoration:none}
+.top .spacer{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.me{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+
+/* Demo controls (not part of the product UI) */
+.demo{background:var(--demo-bg);border-bottom:1px dashed var(--demo)}
+.demo-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px}
+.demo-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--demo);text-transform:uppercase;letter-spacing:.04em}
+.demo label{display:inline-flex;align-items:center;gap:6px}
+.demo select{min-height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:0 6px}
+.demo .steps{display:flex;gap:4px;flex-wrap:wrap}
+.demo .steps button{min-width:32px;min-height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600}
+.demo .steps button[aria-pressed="true"]{background:var(--demo);border-color:var(--demo);color:#fff}
+.demo .caption{flex-basis:100%;color:var(--body)}
+.demo .caption strong{color:var(--demo)}
+.demo-btn{min-height:32px;padding:0 10px;border:1px solid var(--demo);border-radius:6px;background:transparent;color:var(--demo);cursor:pointer;font-weight:500}
+
+/* Page */
+.page{max-width:760px;margin:0 auto;padding:24px 16px 56px;display:flex;flex-direction:column;gap:16px}
+.page.wide{max-width:1080px}
+.crumb{font-size:13px;color:var(--muted)}
+.fiction{font-size:12px;color:var(--muted);text-align:center;padding:8px 0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:24px 24px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.ongoing{background:var(--blue-bg);color:var(--blue-ink)}.pill.ongoing .dot{background:var(--blue)}
+.pill.finished{background:var(--green-bg);color:var(--green-ink)}.pill.finished .dot{background:var(--green)}
+.pill.paused{background:var(--orange-bg);color:var(--orange-ink)}.pill.paused .dot{background:var(--orange);border-radius:2px}
+.meta-r{font-size:12px;color:var(--muted)}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:700}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line-soft);font-size:13px}
+.baton-type{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--purple-bg);color:var(--purple-ink)}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.section{padding:20px 24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line-soft)}
+.section:last-child{border-bottom:0}
+.section h2{margin:0;font-size:16px;font-weight:700}
+.section h2 .count{font-weight:500;color:var(--muted)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--body)}
+.hero{background:var(--orange-tint);border:1px solid var(--orange-line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.hero.blue{background:var(--blue-tint);border-color:var(--blue-line)}
+.hero h3{margin:0;font-size:15px}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.head,.section{padding-left:16px;padding-right:16px}}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+/* Buttons */
+.btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:600}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:var(--on-accent);font-weight:600}
+.btn.green{background:var(--green);border-color:var(--green);color:var(--on-accent);font-weight:600}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.btn.link{border:0;background:none;color:var(--blue-ink);padding:0 4px;min-height:auto;text-decoration:underline}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spinner{animation:none}html{scroll-behavior:auto}}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field legend{font-weight:600;font-size:14px}
+.req{color:var(--red-ink);font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+.input,.textarea{width:100%;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px}
+.textarea{min-height:96px;resize:vertical;line-height:1.5}
+.input:focus,.textarea:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue)}
+.invalid .input,.invalid .textarea,.invalid .choices{border-color:var(--red)}
+.err-msg{font-size:12px;color:var(--red-ink);display:none}
+.invalid .err-msg{display:block}
+fieldset{border:0;margin:0;padding:0}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid transparent;border-radius:10px}
+@media (max-width:640px){.choices{grid-template-columns:1fr}}
+.choice{position:relative;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;background:var(--surface)}
+.choice input{position:absolute;opacity:0}
+.choice:has(input:checked){border:2px solid var(--blue);padding:11px 13px;background:var(--blue-tint)}
+.choice:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.choice strong{font-size:14px}
+.choice span{font-size:12px;color:var(--muted)}
+.counter{font-size:12px;color:var(--muted);text-align:right}
+
+/* Banners */
+.banner{border-radius:10px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.banner.err{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red-ink)}
+.banner.ok{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green-ink)}
+.banner.info{background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+.banner.warn{background:var(--orange-tint);border:1px solid var(--orange-line);color:var(--orange-ink)}
+
+/* Questions */
+.q{border:1px solid var(--line);border-radius:12px;overflow:hidden;scroll-margin-top:16px}
+.q:target{box-shadow:0 0 0 3px var(--blue-line)}
+.q-head{padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+.q-title{margin:0;font-size:16px;font-weight:700;line-height:1.4}
+.qstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px}
+.qstatus.needs{background:var(--orange-bg);color:var(--orange-ink)}
+.qstatus.referred{background:var(--blue-bg);color:var(--blue-ink)}
+.qstatus.replied{background:var(--green-bg);color:var(--green-ink)}
+.thread{display:flex;flex-direction:column}
+.post{padding:14px 16px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:6px}
+.post:first-child{border-top:0}
+.post-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.post-meta strong{color:var(--ink);font-size:13px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--body);flex:none}
+.role{font-size:11px;font-weight:600;padding:0 7px;border-radius:6px;border:1px solid var(--line);color:var(--body)}
+.role.owner{border-color:var(--blue-line);color:var(--blue-ink)}
+.post.official{background:var(--green-tint);border-left:0;box-shadow:inset 0 0 0 1px var(--green-line);border-radius:0}
+.badge-official{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--green);color:var(--on-accent)}
+.event{padding:12px 16px;border-top:1px solid var(--line-soft);background:var(--blue-tint);display:flex;flex-direction:column;gap:4px;font-size:13px}
+.event .reason{color:var(--body)}
+.composer{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.composer .row-between{justify-content:flex-end}
+.q-actions{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* Referral form */
+.panel{border:2px solid var(--blue);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--surface);margin:0 16px 16px}
+.mentors{display:flex;flex-direction:column;gap:8px}
+.mentor{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.mentor:has(input:checked){border:2px solid var(--blue);padding:9px 11px;background:var(--blue-tint)}
+.mentor input{margin-top:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+
+/* Workbench */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:40px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:none;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.task{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line-soft);text-decoration:none;color:inherit;flex-wrap:wrap}
+.task:first-child{border-top:0}
+.task:hover{background:var(--surface-2)}
+.task-title{font-weight:600}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50}
+</style>
+<style>
+.post-tools{display:flex;gap:4px;margin-left:auto}
+.post-tools .btn.link{font-size:12px}
+.deleted{font-style:italic;color:var(--muted);font-size:13px}
+.qstatus.discussion{background:var(--surface);border:1px solid var(--line);color:var(--body)}
+.status-panel{margin:16px 24px;border:2px solid var(--ink);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px}
+@media (max-width:560px){.status-panel{margin:12px 16px}}
+.radio-row{display:flex;gap:10px;flex-wrap:wrap}
+.radio-row label{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.radio-row label:has(input:checked){border:2px solid var(--blue);padding:7px 11px;background:var(--blue-tint)}
+</style>
+</head>
+<body>
+
+<div class="demo" role="region" aria-label="Demo controls">
+<div class="demo-in">
+<span class="demo-tag">Demo controls · not part of the UI</span>
+<span class="steps" role="group" aria-label="Story step" id="steps"></span>
+<label>Viewing as
+<select id="role">
+<option value="owner">Mia (Student, owner)</option>
+<option value="student">Jordan (another Student)</option>
+<option value="staff">Kevin (Staff)</option>
+<option value="mentor">Sarah (Mentor, referred)</option>
+<option value="mentor2">Marcus (another Mentor)</option>
+</select>
+</label>
+<label>Project status
+<select id="status">
+<option value="ongoing">Ongoing</option>
+<option value="paused">Paused</option>
+<option value="finished">Finished</option>
+</select>
+</label>
+<label>Next submit
+<select id="fail">
+<option value="none">Succeeds</option>
+<option value="network">Fails (network)</option>
+<option value="conflict">Referral already made</option>
+</select>
+</label>
+<label><input type="checkbox" id="noMentorQ"> Question didn't ask for a mentor</label>
+<label><input type="checkbox" id="noMentors"> No mentors in directory</label>
+<button type="button" class="demo-btn" id="fillBtn">Fill sample text</button>
+<a href="index.html">Story index</a>
+<p class="caption" id="caption" aria-live="polite"></p>
+</div>
+</div>
+
+<header class="top"><div class="top-in">
+<a class="brand" href="index.html">Buckeye Baton</a>
+<a class="small" id="wbLink" href="workbench.html" hidden>Workbench</a>
+<span class="spacer"></span>
+<span class="who"><span id="whoName">Mia Z.</span><span class="me" id="whoAv" aria-hidden="true">MZ</span></span>
+</div></header>
+
+<main class="page">
+<article class="card">
+<header class="head">
+<div class="topline">
+<span class="pill ongoing" id="pill"><span class="dot"></span><span id="pillText">Ongoing</span></span>
+<span class="meta-r" id="history">Started Oct 26, 2026</span>
+</div>
+<h1>Study Spot Finder: One-Building Pilot</h1>
+<p class="sub">Mia Z. (owner), Leo P. (owner) · Student project · Autumn 2026</p>
+<div class="source">Picked up from <a href="alex-paused.html?after=1&role=owner"><strong>Study Spot Finder</strong></a> <span class="pill paused" style="font-size:11px;padding:1px 8px"><span class="dot"></span>Paused</span> <span class="muted">by Alex R.</span> · <span class="baton-type" id="batonType">Continue</span></div>
+<div class="links"><a href="#">GitHub repository ↗</a></div>
+<div class="owner-actions" data-for="owner">
+<button type="button" class="btn">Edit project</button>
+<button type="button" class="btn" id="changeStatus">Change status</button>
+</div>
+<div class="row-between" id="ongoingPick" data-for="owner student" style="justify-content:flex-start">
+<a class="btn" style="border-color:var(--blue);color:var(--blue-ink)" href="pickup-ongoing-1.html">Pick up this project</a>
+<span class="small muted">Start your own project from this one. Mia's team keeps working on theirs.</span>
+</div>
+</header>
+
+<div id="statusPanel"></div>
+
+<section class="section" id="statusBlock" hidden></section>
+
+<section class="section" id="goalSec">
+<h2>Goal</h2>
+<p class="prose" id="goalText">Show which group study rooms in one library building are free in the next two hours, using an official daily export from the library instead of scraping.</p>
+</section>
+
+<section class="section" id="progressSec">
+<div class="row-between"><h2>Progress</h2><button type="button" class="btn" data-for="owner">Add update</button></div>
+<div id="progress"></div>
+</section>
+
+<section class="section" id="questions" aria-labelledby="qhead">
+<div class="row-between"><h2 id="qhead">Questions <span class="count" id="qcount">(0)</span></h2><button type="button" class="btn" id="askBtn" data-for="owner student">Ask a question</button></div>
+<div id="statusNote"></div>
+<div id="askForm"></div>
+<div id="qarea"></div>
+</section>
+</article>
+<p class="fiction">All people, projects and data on this page are fictional demo content. No real results are shown.</p>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  var PEOPLE={owner:['Mia Z.','MZ'],student:['Jordan T.','JT'],staff:['Kevin (Staff)','KS'],mentor:['Sarah C. (Mentor)','SC'],mentor2:['Marcus L. (Mentor)','ML']};
+  // Step 0 = project just created (result of the baton form). Steps 1–6 = the question → referral → reply flow.
+  var DEFAULT_ROLE=['owner','owner','staff','staff','owner','mentor','owner'];
+  var CAPTIONS=[
+    '<strong>Step 0 · Project created.</strong> Mia just picked up Study Spot Finder. No questions yet (empty state).',
+    '<strong>Step 1 · Mia posts a question</strong> and chooses "Yes, ask Staff to refer a mentor". It waits for a Staff referral.',
+    '<strong>Step 2 · Waiting for Staff.</strong> A day later the question is still unassigned. Kevin sees it in the Staff workbench and clicks "Refer a mentor".',
+    '<strong>Step 3 · Kevin opens the referral form.</strong> He picks Sarah and writes why. (Use "Next submit" to see the failure and already-referred cases.)',
+    '<strong>Step 4 · Referral shown, waiting for reply.</strong> Everyone sees who referred whom and why. Jordan, a student from the original team, adds a regular comment.',
+    '<strong>Step 5 · Sarah replies.</strong> Her reply is marked as the referred mentor\'s reply.',
+    '<strong>Step 6 · Mia follows up with progress.</strong> The question goes back to Sarah\'s "To reply" list. Alex\'s original project lists Mia\'s project under "Picked up by".'
+  ];
+  var NO_MENTOR_NOTE=' <em>This question didn\'t ask for a mentor, so it never enters the Staff workbench and has no referral.</em>';
+  var LABELS={ongoing:'Ongoing',paused:'Paused',finished:'Finished'};
+  var S={step:0,role:'owner',status:'ongoing',fail:'none',noMentors:false,wantsMentor:true,asking:false,typed:{},
+         edits:{},deleted:{},editing:null,panel:false,fields:null,history:[]};
+
+  var Q_TITLE='How do we show room availability students can trust when the data is up to a day old?';
+  var TEXT={
+    q:'The library can send us a daily export of room bookings (a CSV each morning), but not live updates. Walk-in use isn\'t recorded at all. How should we show availability so students don\'t walk to a room that is actually taken?',
+    jordan:'When we still had the scraper, most students checked rooms 10–15 minutes before going. That might help you decide how fresh the label needs to be.',
+    sarah:'Don\'t present it as live. Label every room with the data time, for example "Booked as of 7:00 AM", and keep walk-in rooms in a separate "not tracked" list. Refresh as soon as the export arrives. Before building more, show the labels to five students and ask what they think "as of 7:00 AM" means.',
+    follow:'Update: we added the "as of" label and a separate list for walk-in rooms to the prototype. This week we\'ll show it to five students as you suggested. One more question: if a booked room is still empty 15 minutes after its start time, should we show it as "possibly free"?'
+  };
+  var AUTHOR={q:'owner',jordan:'student',sarah:'mentor',follow:'owner'};
+  var REASON='Sarah has built dashboards from daily data exports and can advise on showing data that isn\'t live.';
+  var SAMPLE_FIELDS={
+    paused:{a:'[Sample] The library moved the daily export to next semester, so we have no data to show yet.',b:'[Sample] Confirm data access with the library before starting.',c:'[Sample] Prototype with "as of" labels (GitHub)'},
+    finished:{a:'[Sample] A one-building prototype with "as of" labels and a walk-in list (GitHub).',b:'[Sample] Data is a day old → labeled every room with the time of the data.',c:'[Sample] Ask the library early about a more frequent export.'}
+  };
+
+  var $=function(id){return document.getElementById(id);};
+  function toast(t){var el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true;},3200);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  // ---------- URL ----------
+  var qs=new URLSearchParams(location.search);
+  if(qs.has('step')) S.step=Math.max(0,Math.min(6,parseInt(qs.get('step'),10)||0));
+  S.role=qs.get('role')&&PEOPLE[qs.get('role')]?qs.get('role'):DEFAULT_ROLE[S.step];
+  if(qs.get('type')) $('batonType').textContent=qs.get('type');
+  if(['network','conflict'].indexOf(qs.get('fail'))>-1){S.fail=qs.get('fail');$('fail').value=S.fail;}
+  if(['paused','finished'].indexOf(qs.get('status'))>-1){S.status=qs.get('status');$('status').value=S.status;}
+  if(qs.get('noMentors')==='1'){S.noMentors=true;$('noMentors').checked=true;}
+  if(qs.get('noMentorQ')==='1'){S.wantsMentor=false;$('noMentorQ').checked=true;}
+  if(qs.get('created')==='1') setTimeout(function(){toast('Project created. You picked up Study Spot Finder ('+$('batonType').textContent+').');},300);
+
+  for(var i=0;i<=6;i++){(function(n){
+    var b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('aria-label','Step '+n);
+    b.addEventListener('click',function(){go(n,true);});$('steps').appendChild(b);
+  })(i);}
+  function go(step,resetRole){S.step=step;S.asking=false;S.typed={};S.editing=null;if(resetRole){S.role=DEFAULT_ROLE[step];$('role').value=S.role;}render();}
+
+  $('role').addEventListener('change',function(e){S.role=e.target.value;S.editing=null;S.panel=false;render();});
+  $('status').addEventListener('change',function(e){S.status=e.target.value;S.fields=null;S.panel=false;render();});
+  $('fail').addEventListener('change',function(e){S.fail=e.target.value;});
+  $('noMentors').addEventListener('change',function(e){S.noMentors=e.target.checked;render();});
+  $('noMentorQ').addEventListener('change',function(e){S.wantsMentor=!e.target.checked;render();});
+  $('role').value=S.role;
+
+  // ---------- derived ----------
+  function referred(){return S.wantsMentor&&S.step>=4;}
+  function visible(id){
+    if(id==='q') return S.step>=1;
+    if(id==='jordan') return S.step>=4;
+    if(id==='sarah') return S.wantsMentor&&S.step>=5;
+    if(id==='follow') return S.step>=6;
+  }
+  function mentorReplied(){return visible('sarah')&&!S.deleted.sarah;}
+  function questionDeletable(){return !referred()&&!['jordan','sarah','follow'].some(function(id){return visible(id)&&!S.deleted[id];});}
+
+  // ---------- pieces ----------
+  function post(id,o){
+    var mine=AUTHOR[id]===S.role, tools='';
+    if(S.deleted[id]) return '<div class="post"><div class="post-meta"><span class="av" aria-hidden="true">'+o.av+'</span><strong>'+o.name+'</strong><span>· '+o.date+'</span></div><p class="deleted">This post was deleted by its author.</p></div>';
+    if(mine&&S.editing!==id){
+      tools='<span class="post-tools"><button type="button" class="btn link" data-edit="'+id+'">Edit</button>'+
+        ((id!=='q'||questionDeletable())?'<button type="button" class="btn link" data-del="'+id+'">Delete</button>':'')+'</span>';
+    }
+    var body=S.editing===id?
+      '<textarea class="textarea" id="editBox" aria-label="Edit post">'+esc(S.edits[id]||TEXT[id])+'</textarea><div class="row-between" style="justify-content:flex-end"><button type="button" class="btn" data-editcancel>Cancel</button><button type="button" class="btn primary" data-editsave="'+id+'">Save</button></div>':
+      '<p class="prose">'+esc(S.edits[id]||TEXT[id])+'</p>';
+    return '<div class="post'+(o.official?' official':'')+'">'+
+      '<div class="post-meta"><span class="av" aria-hidden="true">'+o.av+'</span><strong>'+o.name+'</strong>'+
+      '<span class="role'+(o.owner?' owner':'')+'">'+o.role+'</span>'+
+      (o.official?'<span class="badge-official">Referred mentor reply</span>':'')+
+      (o.label?'<span class="role">'+o.label+'</span>':'')+
+      '<span>· '+o.date+(S.edits[id]?' · edited':'')+'</span>'+tools+'</div>'+body+'</div>';
+  }
+  function statusChip(){
+    if(!S.wantsMentor) return '<span class="qstatus discussion">Open discussion · no mentor requested</span>';
+    if(S.step<=3) return '<span class="qstatus needs">Waiting for Staff referral'+(S.step>=2?' · 1 day':'')+'</span>';
+    if(!mentorReplied()) return '<span class="qstatus referred">Referred to Sarah Chen · waiting for reply</span>';
+    return '<span class="qstatus replied">Sarah Chen replied</span>';
+  }
+  function composer(kind){
+    var cfg={
+      followup:{label:'Add a follow-up',ph:'Ask a follow-up or share progress',btn:'Post follow-up',note:''},
+      comment:{label:'Add a comment',ph:'Write a comment',btn:'Post comment',
+        note:(S.role==='mentor'||S.role==='mentor2')?'This will show as a regular comment. You haven\'t been referred to this question.':S.role==='staff'?'Shown as a regular comment from Staff.':''},
+      official:{label:'Reply as the referred mentor',ph:'Write your reply to Mia',btn:'Post reply',note:'Kevin referred you to this question. Your reply will be marked "Referred mentor reply".'}
+    }[kind];
+    var v=S.typed.composer||'';
+    return '<form class="composer" data-kind="'+kind+'" novalidate>'+
+      '<label class="field"><span style="font-weight:600">'+cfg.label+'</span>'+(cfg.note?'<span class="hint">'+cfg.note+'</span>':'')+
+      '<textarea class="textarea" name="text" maxlength="2000" placeholder="'+cfg.ph+'"'+(kind==='official'?' style="border-color:var(--green-line)"':'')+'>'+esc(v)+'</textarea></label>'+
+      '<div class="banner err" data-err hidden role="alert"><span>Couldn\'t post. Your text is kept. Try again.</span></div>'+
+      '<span class="err-msg" data-empty style="display:none">Write something before posting.</span>'+
+      '<div class="row-between"><button type="submit" class="btn '+(kind==='official'?'green':'primary')+'">'+cfg.btn+'</button></div></form>';
+  }
+  function mentorOpt(id,name,title,tags){
+    return '<label class="mentor"><input type="radio" name="mentor" value="'+id+'"'+(S.typed.mentor===id?' checked':'')+'><span style="display:flex;flex-direction:column;gap:4px"><strong>'+name+'</strong><span class="small muted">'+title+'</span><span class="tags">'+tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</span></span></label>';
+  }
+  function referralPanel(){
+    var mentors=S.noMentors?'<div class="empty" style="padding:18px"><span>No mentors in the directory yet.</span><span class="small">The question stays in your workbench under "Needs referral". You can refer it once mentors join.</span></div>':
+      '<input class="input" type="search" placeholder="Search mentors by name or expertise" aria-label="Search mentors">'+
+      '<div class="mentors" role="radiogroup" aria-label="Mentors">'+
+      mentorOpt('sarah','Sarah Chen','Data Engineer · Brightline Health',['Data pipelines','Dashboards'])+
+      mentorOpt('marcus','Marcus Lee','Product Manager · Kestrel Logistics',['Scoping','User interviews'])+
+      mentorOpt('tom','Tom Becker','Data Analyst',['Surveys','Statistics'])+'</div>';
+    return '<form class="panel" id="refForm" novalidate aria-labelledby="refTitle">'+
+      '<div class="row-between"><strong id="refTitle" style="font-size:15px">Refer a mentor to this question</strong><span class="small muted">Only Staff see this form</span></div>'+
+      '<div class="banner err" id="refErr" hidden role="alert"></div>'+
+      '<fieldset class="field" id="f-mentor"><legend>Mentor <span class="req">*</span></legend>'+mentors+'<span class="err-msg">Choose a mentor.</span></fieldset>'+
+      '<div class="field" id="f-reason"><label for="reason">Why this mentor? <span class="req">*</span></label>'+
+      '<span class="hint">Shown to everyone under the question, and to the mentor.</span>'+
+      '<textarea class="textarea" id="reason" maxlength="300" style="min-height:72px">'+esc(S.typed.reason||'')+'</textarea>'+
+      '<span class="err-msg">Write why this mentor fits.</span></div>'+
+      '<div class="row-between" style="justify-content:flex-end"><button type="button" class="btn" id="refCancel">Cancel</button>'+
+      '<button type="submit" class="btn primary" id="refSend"'+(S.noMentors?' disabled':'')+'>Send referral</button></div></form>';
+  }
+  function askForm(){
+    var wm=S.typed.wm;
+    return '<form class="card" id="askF" novalidate style="padding:16px;display:flex;flex-direction:column;gap:12px;margin-bottom:12px">'+
+      '<div class="field" id="f-qt"><label for="qt">Your question <span class="req">*</span></label><input class="input" id="qt" maxlength="120" value="'+esc(S.typed.qt||'')+'"><span class="err-msg">Write your question.</span></div>'+
+      '<div class="field"><label for="qb">Details</label><span class="hint">Optional. What have you tried, and what would help?</span><textarea class="textarea" id="qb" maxlength="2000">'+esc(S.typed.qb||'')+'</textarea></div>'+
+      '<fieldset class="field" id="f-wm"><legend>Do you want a mentor to answer? <span class="req">*</span></legend>'+
+      '<div class="radio-row"><label><input type="radio" name="wm" value="yes"'+(wm==='yes'?' checked':'')+'> Yes, ask Staff to refer a mentor</label>'+
+      '<label><input type="radio" name="wm" value="no"'+(wm==='no'?' checked':'')+'> No, just open discussion</label></div>'+
+      '<span class="err-msg">Choose whether you want a mentor.</span></fieldset>'+
+      '<div class="banner err" id="askErr" hidden role="alert"><span>Couldn\'t post your question. Your text is kept. Try again.</span></div>'+
+      '<div class="row-between" style="justify-content:flex-end"><button type="button" class="btn" id="askCancel">Cancel</button><button type="submit" class="btn primary" id="askSend">Post question</button></div></form>';
+  }
+  function statusPanel(){
+    var cur=S.status, opts=['ongoing','paused','finished'].filter(function(x){return x!==cur;});
+    var t=S.typed.target||'';
+    var F={
+      finished:[['a','What we got',true,'Outcomes, with links to code, demo or docs'],['b','Problems and how you solved them',true,''],['c','Advice for the next team',true,'']],
+      paused:[['a','Why are you pausing?',true,''],['b','If you did it again, what would you change?',true,''],['c','What can the next team reuse?',false,'Links to code, data or notes']],
+      ongoing:[['a','Goal',true,'What will your team work toward now?']]
+    };
+    var replaces={ongoing:'goal and progress',paused:'pause reason, changes and reusable materials',finished:'outcomes, problems and advice'}[cur];
+    var h='<form class="status-panel" id="statusF" novalidate aria-labelledby="stTitle">'+
+      '<div class="row-between"><strong id="stTitle" style="font-size:16px">Change status</strong><span class="small muted">Currently '+LABELS[cur]+'</span></div>'+
+      '<fieldset class="field" id="f-target"><legend>New status <span class="req">*</span></legend><div class="radio-row">'+
+      opts.map(function(o){return '<label><input type="radio" name="target" value="'+o+'"'+(t===o?' checked':'')+'> '+(o==='ongoing'?'Ongoing (resume)':LABELS[o])+'</label>';}).join('')+
+      '</div><span class="err-msg">Choose a status.</span></fieldset>';
+    if(t){
+      F[t].forEach(function(f){
+        h+='<div class="field" id="f-st-'+f[0]+'"><label for="st-'+f[0]+'">'+f[1]+(f[2]?' <span class="req">*</span>':'')+'</label>'+(f[3]?'<span class="hint">'+f[3]+'</span>':'')+
+          '<textarea class="textarea" id="st-'+f[0]+'" data-req="'+(f[2]?1:0)+'" maxlength="2000" style="min-height:64px">'+esc(S.typed['st'+f[0]]||'')+'</textarea><span class="err-msg">Required.</span></div>';
+      });
+      h+='<div class="banner warn"><span>This replaces the current '+LABELS[cur]+' content on the project page ('+replaces+'). Questions, replies and the status history stay.</span></div>';
+    }
+    h+='<div class="banner err" id="stErr" hidden role="alert"><span>Couldn\'t change the status. Your answers are kept. Try again.</span></div>'+
+      '<div class="row-between" style="justify-content:flex-end"><button type="button" class="btn" id="stCancel">Cancel</button>'+
+      '<button type="submit" class="btn primary" id="stSend"'+(t?'':' disabled')+'>'+(t?'Mark as '+LABELS[t]:'Choose a status')+'</button></div></form>';
+    return h;
+  }
+
+  // ---------- render ----------
+  function render(){
+    var r=S.role, st=S.step;
+    document.querySelectorAll('#steps button').forEach(function(b,i){b.setAttribute('aria-pressed',i===st?'true':'false');});
+    $('caption').innerHTML=CAPTIONS[st]+(!S.wantsMentor&&st>=1?NO_MENTOR_NOTE:'');
+    $('whoName').textContent=PEOPLE[r][0]; $('whoAv').textContent=PEOPLE[r][1];
+    $('wbLink').hidden=!(r==='staff'||r==='mentor'||r==='mentor2');
+    $('wbLink').href='workbench.html?view='+(r==='staff'?'staff':'mentor')+'&step='+st;
+    document.querySelectorAll('[data-for]').forEach(function(el){el.hidden=el.getAttribute('data-for').split(' ').indexOf(r)<0;});
+
+    // status: current status content replaces the previous one
+    $('pill').className='pill '+S.status; $('pillText').textContent=LABELS[S.status];
+    var hist=['Ongoing Oct 26'].concat(S.history);
+    if(S.status!=='ongoing'&&!S.history.length) hist.push(LABELS[S.status]+' Dec 4');
+    $('history').textContent=hist.length>1?hist.join(' → '):'Started Oct 26, 2026';
+    var on=S.status==='ongoing';
+    if(r==='owner'||r==='student') $('ongoingPick').hidden=!on;
+    $('goalSec').hidden=!on; $('progressSec').hidden=!on;
+    if(on&&S.fields&&S.fields.a) $('goalText').textContent=S.fields.a;
+    var sb=$('statusBlock');
+    if(on){sb.hidden=true;sb.innerHTML='';}
+    else{
+      var f=S.fields||SAMPLE_FIELDS[S.status]; sb.hidden=false;
+      sb.innerHTML=S.status==='paused'?
+        '<div class="hero"><h3 style="color:var(--orange-ink)">Why we paused</h3><p class="prose">'+esc(f.a)+'</p><h3>If we did it again</h3><p class="prose">'+esc(f.b)+'</p>'+(f.c?'<h3>What you can reuse</h3><p class="prose">'+esc(f.c)+'</p>':'')+'</div>'+
+          '<div class="row-between"><span class="small muted">Open to a new team</span><a class="btn orange" href="pickup-paused-1.html">Pick up this project</a></div>':
+        '<div class="hero" style="background:var(--green-tint);border-color:var(--green-line)"><h3 style="color:var(--green-ink)">What we got</h3><p class="prose">'+esc(f.a)+'</p><h3>Problems and how we solved them</h3><p class="prose">'+esc(f.b)+'</p><h3>Advice for the next team</h3><p class="prose">'+esc(f.c)+'</p></div>'+
+          '<div class="row-between"><span class="small muted">Anyone, including the owners, can pick this up.</span><a class="btn green" href="pickup-finished-1.html">Pick up this project</a></div>';
+    }
+    $('statusPanel').innerHTML=(S.panel&&r==='owner')?statusPanel():'';
+    if(S.panel&&r==='owner') bindStatus();
+    $('statusNote').innerHTML=on?'':'<div class="banner info" style="margin-bottom:12px"><span>This project is '+LABELS[S.status]+'. Questions, referrals and replies below are kept as they were, and stay open for discussion.</span></div>';
+
+    $('progress').innerHTML=(st>=6&&!(S.fields&&S.fields.a))?
+      '<div class="box"><span class="small muted">Oct 30, 2026 · Mia Z.</span><p class="prose">Added an "as of" time label and a separate walk-in list to the prototype. Next: show it to five students.</p></div>':
+      '<p class="prose muted">No progress updates yet.</p>';
+
+    $('askForm').innerHTML=S.asking?askForm():''; if(S.asking) bindAsk();
+
+    var area=$('qarea');
+    if(st===0||S.deleted.q){
+      $('qcount').textContent='(0)';
+      area.innerHTML='<div class="empty"><span>No questions yet.</span><span class="small">Stuck on something specific? Ask here. If you want, Staff can refer a mentor to it.</span></div>';
+      return;
+    }
+    $('qcount').textContent='(1)';
+    var h='<div class="q" id="q-1"><div class="q-head"><div class="row-between">'+statusChip()+'<span class="small muted">Question 1</span></div>'+
+      '<h3 class="q-title">'+esc(Q_TITLE)+'</h3></div><div class="thread">';
+    h+=post('q',{av:'MZ',name:'Mia Z.',role:'Owner',owner:true,date:'Oct 27'});
+    if(referred()) h+='<div class="event"><div><strong>Kevin</strong> <span class="role">Staff</span> referred <strong>Sarah Chen</strong> <span class="role">Mentor</span> <span class="muted">· Oct 28</span></div><div class="reason">"'+esc(REASON)+'"</div></div>';
+    if(visible('jordan')) h+=post('jordan',{av:'JT',name:'Jordan T.',role:'Student',date:'Oct 28',label:'Comment'});
+    if(visible('sarah')) h+=post('sarah',{av:'SC',name:'Sarah Chen',role:'Mentor',official:true,date:'Oct 29'});
+    if(visible('follow')) h+=post('follow',{av:'MZ',name:'Mia Z.',role:'Owner',owner:true,date:'Oct 30',label:'Follow-up'});
+    h+='</div>';
+
+    if(r==='staff'){
+      if(!S.wantsMentor) h+='<div class="q-actions"><span class="small muted">The asker didn\'t request a mentor, so this question isn\'t in your workbench.</span></div>'+composer('comment');
+      else if(st<=2) h+='<div class="q-actions"><button type="button" class="btn primary" id="openRef">Refer a mentor</button><span class="small muted">No mentor referred yet</span></div>'+composer('comment');
+      else if(st===3) h+=referralPanel();
+      else h+='<div class="q-actions"><button type="button" class="btn" aria-disabled="true" disabled>Referred</button><span class="small muted">You referred Sarah Chen on Oct 28. Each question can be referred once.</span></div>'+composer('comment');
+    } else if(r==='owner') h+=composer('followup');
+    else if(r==='student'||r==='mentor2') h+=composer('comment');
+    else if(r==='mentor') h+=composer(referred()?'official':'comment');
+    h+='</div>';
+    area.innerHTML=h;
+    bindQuestion();
+    if(location.hash==='#q-1'&&!render.scrolled){render.scrolled=true;setTimeout(function(){var q=$('q-1');if(q)q.scrollIntoView();},50);}
+  }
+
+  // ---------- behaviour ----------
+  function fakeSubmit(btn,busyLabel,done,errEl,conflict){
+    var orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='<span class="spinner" aria-hidden="true"></span>'+busyLabel;
+    setTimeout(function(){
+      btn.disabled=false; btn.innerHTML=orig;
+      if(S.fail==='network'){errEl.hidden=false;return;}
+      if(S.fail==='conflict'&&conflict){conflict();return;}
+      done();
+    },900);
+  }
+  $('askBtn').addEventListener('click',function(){S.asking=true;render();$('qt').focus();});
+  $('changeStatus').addEventListener('click',function(){S.panel=true;S.typed={};render();$('statusF').scrollIntoView({block:'center'});});
+
+  function bindStatus(){
+    var f=$('statusF');
+    f.querySelectorAll('input[name=target]').forEach(function(x){x.addEventListener('change',function(){S.typed.target=x.value;render();});});
+    f.querySelectorAll('textarea').forEach(function(t){t.addEventListener('input',function(){S.typed['st'+t.id.slice(3)]=t.value;if(t.value.trim())t.parentNode.classList.remove('invalid');});});
+    $('stCancel').addEventListener('click',function(){S.panel=false;S.typed={};render();});
+    f.addEventListener('submit',function(e){
+      e.preventDefault(); $('stErr').hidden=true;
+      var t=S.typed.target; if(!t){$('f-target').classList.add('invalid');return;}
+      var ok=true;
+      f.querySelectorAll('textarea[data-req="1"]').forEach(function(x){if(!x.value.trim()){x.parentNode.classList.add('invalid');ok=false;}});
+      if(!ok) return;
+      fakeSubmit($('stSend'),'Saving…',function(){
+        S.history.push(LABELS[t]+' Dec 4');
+        S.fields={a:S.typed.sta||'',b:S.typed.stb||'',c:S.typed.stc||''};
+        S.status=t; $('status').value=t; S.panel=false; S.typed={};
+        render(); toast('Status changed to '+LABELS[t]+'.');
+      },$('stErr'));
+    });
+  }
+  function bindAsk(){
+    var qt=$('qt'), qb=$('qb');
+    qt.addEventListener('input',function(){S.typed.qt=qt.value;if(qt.value.trim())$('f-qt').classList.remove('invalid');});
+    qb.addEventListener('input',function(){S.typed.qb=qb.value;});
+    document.querySelectorAll('input[name=wm]').forEach(function(x){x.addEventListener('change',function(){S.typed.wm=x.value;$('f-wm').classList.remove('invalid');});});
+    $('askCancel').addEventListener('click',function(){S.asking=false;S.typed={};render();});
+    $('askF').addEventListener('submit',function(e){
+      e.preventDefault(); $('askErr').hidden=true;
+      var ok=true;
+      if(!qt.value.trim()){$('f-qt').classList.add('invalid');ok=false;}
+      if(!S.typed.wm){$('f-wm').classList.add('invalid');ok=false;}
+      if(!ok) return;
+      fakeSubmit($('askSend'),'Posting…',function(){
+        var wm=S.typed.wm==='yes'; S.asking=false; S.typed={};
+        if(S.step===0||S.deleted.q){S.deleted={};S.edits={};S.wantsMentor=wm;$('noMentorQ').checked=!wm;go(1,false);toast(wm?'Question posted. Staff will refer a mentor.':'Question posted as open discussion.');}
+        else{render();toast('Demo: a second question would appear below.');}
+      },$('askErr'));
+    });
+  }
+  function bindQuestion(){
+    var open=$('openRef'); if(open) open.addEventListener('click',function(){go(3,false);});
+    document.querySelectorAll('[data-edit]').forEach(function(b){b.addEventListener('click',function(){S.editing=b.getAttribute('data-edit');render();var t=$('editBox');t.focus();});});
+    document.querySelectorAll('[data-editcancel]').forEach(function(b){b.addEventListener('click',function(){S.editing=null;render();});});
+    document.querySelectorAll('[data-editsave]').forEach(function(b){b.addEventListener('click',function(){
+      var id=b.getAttribute('data-editsave'), v=$('editBox').value.trim(); if(!v){$('editBox').focus();return;}
+      S.edits[id]=v; S.editing=null; render(); toast('Saved. The post shows "edited".');});});
+    document.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){
+      var id=b.getAttribute('data-del');
+      if(!confirm(id==='q'?'Delete this question?':'Delete this post? Others will see that it was deleted.')) return;
+      S.deleted[id]=true; render(); toast(id==='q'?'Question deleted.':'Post deleted.');});});
+    var rf=$('refForm');
+    if(rf){
+      var reason=$('reason');
+      reason.addEventListener('input',function(){S.typed.reason=reason.value;if(reason.value.trim())$('f-reason').classList.remove('invalid');});
+      rf.querySelectorAll('input[name=mentor]').forEach(function(x){x.addEventListener('change',function(){S.typed.mentor=x.value;$('f-mentor').classList.remove('invalid');});});
+      $('refCancel').addEventListener('click',function(){S.typed={};go(2,false);});
+      rf.addEventListener('submit',function(e){
+        e.preventDefault(); var err=$('refErr'); err.hidden=true;
+        if(S.noMentors) return;
+        var m=rf.querySelector('input[name=mentor]:checked'), ok=true;
+        if(!m){$('f-mentor').classList.add('invalid');ok=false;}
+        if(!reason.value.trim()){$('f-reason').classList.add('invalid');ok=false;}
+        if(!ok) return;
+        err.innerHTML='<span>Couldn\'t send the referral. Your choices are kept. Try again.</span>';
+        fakeSubmit($('refSend'),'Sending…',function(){S.typed={};go(4,false);toast('Referral sent. Sarah will see this question in her workbench.');},err,function(){
+          err.innerHTML='<span><strong>Already referred.</strong> Another Staff member referred this question a moment ago. Nothing was sent.</span><button type="button" class="btn" id="refRefresh">Refresh question</button>';
+          err.hidden=false; $('refSend').disabled=true;
+          $('refRefresh').addEventListener('click',function(){S.typed={};go(4,false);});
+        });
+      });
+    }
+    var c=document.querySelector('.composer');
+    if(c){
+      var ta=c.querySelector('textarea'), kind=c.getAttribute('data-kind');
+      ta.addEventListener('input',function(){S.typed.composer=ta.value;c.querySelector('[data-empty]').style.display='none';});
+      c.addEventListener('submit',function(e){
+        e.preventDefault(); c.querySelector('[data-err]').hidden=true;
+        if(!ta.value.trim()){c.querySelector('[data-empty]').style.display='block';ta.focus();return;}
+        fakeSubmit(c.querySelector('button[type=submit]'),'Posting…',function(){
+          S.typed={};
+          if(kind==='official'&&S.step===4){go(5,false);toast('Reply posted.');}
+          else if(kind==='followup'&&S.step===5){go(6,false);toast(S.wantsMentor?'Follow-up posted. Sarah will see it in "To reply".':'Follow-up posted.');}
+          else{render();toast('Demo: your post would appear at the end of this thread.');}
+        },c.querySelector('[data-err]'));
+      });
+    }
+  }
+  $('fillBtn').addEventListener('click',function(){
+    if(S.panel){var t=S.typed.target||(S.status==='ongoing'?'paused':'ongoing');S.typed.target=t;
+      var sf=t==='ongoing'?{a:'Show free rooms in one building for the spring semester, once the library export starts.'}:SAMPLE_FIELDS[t];
+      S.typed.sta=sf.a;S.typed.stb=sf.b||'';S.typed.stc=sf.c||'';}
+    else if(S.asking||S.step===0){S.asking=true;S.typed.qt=Q_TITLE;S.typed.qb=TEXT.q;S.typed.wm='yes';}
+    else if(S.step===3){S.typed.mentor='sarah';S.typed.reason=REASON;}
+    else if(S.role==='mentor'&&S.step===4){S.typed.composer=TEXT.sarah;}
+    else if(S.role==='owner'&&S.step===5){S.typed.composer=TEXT.follow;}
+    else if(S.role==='student'){S.typed.composer=TEXT.jordan;}
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

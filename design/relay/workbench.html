@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workbench · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Buckeye Baton — shared styles for the relay / question-flow sketches.
+   Tokens match design/cards/*.html. */
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;--green-tint:#F2FCF4;--green-line:#8DDB9E;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;--orange-tint:#FFF8F2;--orange-line:#FFC799;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-bg:#FBEFFF;
+  --red:#CF222E;--red-ink:#A40E26;--red-bg:#FFEBE9;--red-line:#FFB8B0;
+  --demo:#6E40C9;--demo-bg:#F5F0FF;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none !important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top bar */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:700;font-size:16px;color:var(--ink);text-decoration:none}
+.top .spacer{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.me{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+
+/* Demo controls (not part of the product UI) */
+.demo{background:var(--demo-bg);border-bottom:1px dashed var(--demo)}
+.demo-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px}
+.demo-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--demo);text-transform:uppercase;letter-spacing:.04em}
+.demo label{display:inline-flex;align-items:center;gap:6px}
+.demo select{min-height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:0 6px}
+.demo .steps{display:flex;gap:4px;flex-wrap:wrap}
+.demo .steps button{min-width:32px;min-height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600}
+.demo .steps button[aria-pressed="true"]{background:var(--demo);border-color:var(--demo);color:#fff}
+.demo .caption{flex-basis:100%;color:var(--body)}
+.demo .caption strong{color:var(--demo)}
+.demo-btn{min-height:32px;padding:0 10px;border:1px solid var(--demo);border-radius:6px;background:transparent;color:var(--demo);cursor:pointer;font-weight:500}
+
+/* Page */
+.page{max-width:760px;margin:0 auto;padding:24px 16px 56px;display:flex;flex-direction:column;gap:16px}
+.page.wide{max-width:1080px}
+.crumb{font-size:13px;color:var(--muted)}
+.fiction{font-size:12px;color:var(--muted);text-align:center;padding:8px 0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:24px 24px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.ongoing{background:var(--blue-bg);color:var(--blue-ink)}.pill.ongoing .dot{background:var(--blue)}
+.pill.finished{background:var(--green-bg);color:var(--green-ink)}.pill.finished .dot{background:var(--green)}
+.pill.paused{background:var(--orange-bg);color:var(--orange-ink)}.pill.paused .dot{background:var(--orange);border-radius:2px}
+.meta-r{font-size:12px;color:var(--muted)}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:700}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line-soft);font-size:13px}
+.baton-type{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--purple-bg);color:var(--purple-ink)}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.section{padding:20px 24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line-soft)}
+.section:last-child{border-bottom:0}
+.section h2{margin:0;font-size:16px;font-weight:700}
+.section h2 .count{font-weight:500;color:var(--muted)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--body)}
+.hero{background:var(--orange-tint);border:1px solid var(--orange-line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.hero.blue{background:var(--blue-tint);border-color:var(--blue-line)}
+.hero h3{margin:0;font-size:15px}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.head,.section{padding-left:16px;padding-right:16px}}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+/* Buttons */
+.btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:600}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:var(--on-accent);font-weight:600}
+.btn.green{background:var(--green);border-color:var(--green);color:var(--on-accent);font-weight:600}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.btn.link{border:0;background:none;color:var(--blue-ink);padding:0 4px;min-height:auto;text-decoration:underline}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spinner{animation:none}html{scroll-behavior:auto}}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field legend{font-weight:600;font-size:14px}
+.req{color:var(--red-ink);font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+.input,.textarea{width:100%;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px}
+.textarea{min-height:96px;resize:vertical;line-height:1.5}
+.input:focus,.textarea:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue)}
+.invalid .input,.invalid .textarea,.invalid .choices{border-color:var(--red)}
+.err-msg{font-size:12px;color:var(--red-ink);display:none}
+.invalid .err-msg{display:block}
+fieldset{border:0;margin:0;padding:0}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid transparent;border-radius:10px}
+@media (max-width:640px){.choices{grid-template-columns:1fr}}
+.choice{position:relative;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;background:var(--surface)}
+.choice input{position:absolute;opacity:0}
+.choice:has(input:checked){border:2px solid var(--blue);padding:11px 13px;background:var(--blue-tint)}
+.choice:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.choice strong{font-size:14px}
+.choice span{font-size:12px;color:var(--muted)}
+.counter{font-size:12px;color:var(--muted);text-align:right}
+
+/* Banners */
+.banner{border-radius:10px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.banner.err{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red-ink)}
+.banner.ok{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green-ink)}
+.banner.info{background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+.banner.warn{background:var(--orange-tint);border:1px solid var(--orange-line);color:var(--orange-ink)}
+
+/* Questions */
+.q{border:1px solid var(--line);border-radius:12px;overflow:hidden;scroll-margin-top:16px}
+.q:target{box-shadow:0 0 0 3px var(--blue-line)}
+.q-head{padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+.q-title{margin:0;font-size:16px;font-weight:700;line-height:1.4}
+.qstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px}
+.qstatus.needs{background:var(--orange-bg);color:var(--orange-ink)}
+.qstatus.referred{background:var(--blue-bg);color:var(--blue-ink)}
+.qstatus.replied{background:var(--green-bg);color:var(--green-ink)}
+.thread{display:flex;flex-direction:column}
+.post{padding:14px 16px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:6px}
+.post:first-child{border-top:0}
+.post-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.post-meta strong{color:var(--ink);font-size:13px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--body);flex:none}
+.role{font-size:11px;font-weight:600;padding:0 7px;border-radius:6px;border:1px solid var(--line);color:var(--body)}
+.role.owner{border-color:var(--blue-line);color:var(--blue-ink)}
+.post.official{background:var(--green-tint);border-left:0;box-shadow:inset 0 0 0 1px var(--green-line);border-radius:0}
+.badge-official{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--green);color:var(--on-accent)}
+.event{padding:12px 16px;border-top:1px solid var(--line-soft);background:var(--blue-tint);display:flex;flex-direction:column;gap:4px;font-size:13px}
+.event .reason{color:var(--body)}
+.composer{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.composer .row-between{justify-content:flex-end}
+.q-actions{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* Referral form */
+.panel{border:2px solid var(--blue);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--surface);margin:0 16px 16px}
+.mentors{display:flex;flex-direction:column;gap:8px}
+.mentor{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.mentor:has(input:checked){border:2px solid var(--blue);padding:9px 11px;background:var(--blue-tint)}
+.mentor input{margin-top:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+
+/* Workbench */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:40px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:none;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.task{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line-soft);text-decoration:none;color:inherit;flex-wrap:wrap}
+.task:first-child{border-top:0}
+.task:hover{background:var(--surface-2)}
+.task-title{font-weight:600}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50}
+</style>
+</head>
+<body>
+
+<div class="demo" role="region" aria-label="Demo controls">
+<div class="demo-in">
+<span class="demo-tag">Demo controls · not part of the UI</span>
+<label>Viewing as
+<select id="view">
+<option value="staff">Kevin (Staff)</option>
+<option value="mentor">Sarah (Mentor)</option>
+</select>
+</label>
+<label>Story step
+<select id="step">
+<option value="1">1 · Mia posted a question</option>
+<option value="2">2 · Waiting for Staff</option>
+<option value="4">4 · Kevin referred Sarah</option>
+<option value="5">5 · Sarah replied</option>
+<option value="6">6 · Mia followed up</option>
+</select>
+</label>
+<a href="index.html">Story index</a>
+</div>
+</div>
+
+<header class="top"><div class="top-in">
+<a class="brand" href="index.html">Buckeye Baton</a><span class="spacer"></span>
+<span class="who"><span id="whoName">Kevin (Staff)</span><span class="me" id="whoAv" aria-hidden="true">KS</span></span>
+</div></header>
+
+<main class="page">
+<div>
+<h1 id="title">Staff workbench</h1>
+<p class="sub" id="subtitle">Questions that need a mentor referral.</p>
+</div>
+
+<div class="card">
+<div class="tabs" role="tablist" id="tabs"></div>
+<div id="list" role="tabpanel"></div>
+</div>
+
+<p class="fiction">All people, projects and data on this page are fictional demo content.</p>
+</main>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var qs=new URLSearchParams(location.search);
+  if(qs.get('view')==='mentor') $('view').value='mentor';
+  var st=parseInt(qs.get('step'),10);
+  if(st===3) st=2; if(st===0) st=1;
+  if([1,2,4,5,6].indexOf(st)>-1) $('step').value=String(st);
+  var tab=0;
+
+  var MIA_Q='How do we show room availability students can trust when the data is up to a day old?';
+  function task(href,title,project,meta,right){
+    return '<a class="task" href="'+href+'"><span style="display:flex;flex-direction:column;gap:4px;min-width:0">'+
+      '<span class="task-title">'+title+'</span><span class="small muted">'+project+'</span>'+(meta?'<span class="small">'+meta+'</span>':'')+
+      '</span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'+right+'<span class="small muted">Open question →</span></span></a>';
+  }
+  function empty(t,s){return '<div class="empty" style="margin:16px"><span>'+t+'</span><span class="small">'+s+'</span></div>';}
+
+  function lists(view,step){
+    var link='mia-ongoing.html?step=STEP&role='+view+'#q-1';
+    var mia=function(s){return link.replace('STEP',s);};
+    var other=task('#','Which map library works offline on a phone?','Campus Bike Share Map · Leo P. · Ongoing','Asked Oct 25','<span class="qstatus needs">Needs referral · 3 days</span>');
+    if(view==='staff'){
+      var needs=[], referred=[];
+      // Longest-waiting first.
+      needs.push(other);
+      if(step<=2) needs.push(task(mia(2),MIA_Q,'Study Spot Finder: One-Building Pilot · Mia Z. · Ongoing','Asked Oct 27','<span class="qstatus needs">Needs referral'+(step===2?' · 1 day':'')+'</span>'));
+      if(step>=4) referred.push(task(mia(step),MIA_Q,'Study Spot Finder: One-Building Pilot · Mia Z. · Ongoing','You referred Sarah Chen · Oct 28',
+        step===4?'<span class="qstatus referred">Waiting for Sarah</span>':'<span class="qstatus replied">Sarah replied · Oct 29</span>'));
+      return [
+        {name:'Needs referral',items:needs,empty:empty('Nothing needs a referral right now.','Questions where the asker requested a mentor show up here.')},
+        {name:'Referred',items:referred,empty:empty('No referrals yet.','Questions you refer move here, with the mentor\'s reply status.')}
+      ];
+    }
+    var toReply=[], replied=[];
+    if(step===4) toReply.push(task(mia(4),MIA_Q,'Study Spot Finder: One-Building Pilot · Mia Z. · Ongoing','Referred by Kevin · Oct 28 · "Sarah has built dashboards from daily data exports…"','<span class="qstatus referred">Waiting for your reply</span>'));
+    if(step===5) replied.push(task(mia(5),MIA_Q,'Study Spot Finder: One-Building Pilot · Mia Z. · Ongoing','You replied Oct 29','<span class="qstatus replied">Replied</span>'));
+    if(step===6) toReply.push(task(mia(6),MIA_Q,'Study Spot Finder: One-Building Pilot · Mia Z. · Ongoing','You replied Oct 29 · Mia added a follow-up Oct 30','<span class="qstatus referred">New follow-up</span>'));
+    return [
+      {name:'To reply',items:toReply,empty:empty('No questions waiting for you.','When Staff refer you to a question, it shows up here with their reason.')},
+      {name:'Replied',items:replied,empty:empty('Nothing here yet.','Questions you have replied to.')}
+    ];
+  }
+
+  function render(){
+    var view=$('view').value, step=parseInt($('step').value,10);
+    $('title').textContent=view==='staff'?'Staff workbench':'Mentor workbench';
+    $('subtitle').textContent=view==='staff'?'Questions that need a mentor referral.':'Questions Staff referred to you.';
+    $('whoName').textContent=view==='staff'?'Kevin (Staff)':'Sarah C. (Mentor)';
+    $('whoAv').textContent=view==='staff'?'KS':'SC';
+    var L=lists(view,step);
+    $('tabs').innerHTML=L.map(function(t,i){return '<button type="button" role="tab" aria-selected="'+(i===tab)+'" data-i="'+i+'">'+t.name+' ('+t.items.length+')</button>';}).join('');
+    $('tabs').querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){tab=+b.getAttribute('data-i');render();});});
+    var cur=L[tab];
+    $('list').innerHTML=cur.items.length?cur.items.join(''):cur.empty;
+  }
+  $('view').addEventListener('change',function(){tab=0;render();});
+  $('step').addEventListener('change',render);
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,2 +1,3 @@
-## Project context
-Always read `project-docs/index.html` and `project-docs/MAINTENANCE.md` before planning any task in this repository. They contain the authoritative project state, file map, and editing protocol.
+# Project context
+
+Read AGENTS.md and PROJECT_CONTEXT.md, then the relevant docs/ contract and project-docs/index.html. Buckeye Baton is a Next.js application at the repository root.

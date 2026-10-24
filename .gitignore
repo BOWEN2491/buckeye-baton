@@ -1,22 +1,9 @@
-# Credentials and local settings
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-.streamlit/secrets.toml
-
-# Generated environments and builds
-.venv/
 node_modules/
-dist/
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.cache/
+.next/
+.env*
+!.env.example
+.data/
+*.tsbuildinfo
+test-results/
+playwright-report/
 *.log
-.DS_Store
-
-# Local rehearsal data
-uploads/
-recordings/

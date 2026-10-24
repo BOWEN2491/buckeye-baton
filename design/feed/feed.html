@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feed · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-bg:#FBEFFF;
+  --teal-ink:#0E6A73;--teal-bg:#DFF5F7;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --teal-ink:#5FD3DC;--teal-bg:#0B3236;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --teal-ink:#5FD3DC;--teal-bg:#0B3236;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+button,select,input{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Top bar */
+.top{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.me{width:40px;height:40px;border-radius:50%;background:var(--blue);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;text-decoration:none;flex:none;outline-offset:2px}
+.brand{font-weight:700;font-size:16px;white-space:nowrap}
+.search{flex:1;min-width:0}
+.search input{width:100%;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font-size:14px}
+.role{min-height:40px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px}
+.new{position:relative}
+.new summary{list-style:none;min-height:40px;padding:0 14px;border-radius:8px;background:var(--ink);color:var(--bg);display:inline-flex;align-items:center;font-weight:600;cursor:pointer;white-space:nowrap}
+.new summary::-webkit-details-marker{display:none}
+.menu{position:absolute;right:0;top:46px;width:260px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:flex;flex-direction:column}
+.menu a{padding:10px 12px;border-radius:6px;color:var(--ink);text-decoration:none;display:flex;flex-direction:column}
+.menu a:hover{background:var(--surface-2)}
+.menu small{color:var(--muted);font-size:12px}
+
+/* Layout */
+.wrap{max-width:1200px;margin:0 auto;padding:20px 16px 48px;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;align-items:start}
+.jump{display:none}
+@media (max-width:980px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .jump{display:flex;gap:8px;max-width:1200px;margin:0 auto;padding:12px 16px 0}
+  .jump a{flex:1;text-align:center;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600}
+  .brand{display:none}
+}
+@media (max-width:560px){.role{max-width:96px}}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.rail{position:sticky;top:76px}
+@media (max-width:980px){.rail{position:static}}
+.sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sec-title h2{margin:0;font-size:20px;font-weight:700}
+.sec-title span{font-size:13px;color:var(--muted)}
+
+/* Role visibility */
+body[data-role="student"] .only:not(.student),
+body[data-role="mentor"] .only:not(.mentor),
+body[data-role="faculty"] .only:not(.faculty){display:none}
+
+/* For-you strip */
+.next{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.todo{display:flex;flex-direction:column;gap:8px}
+.todo div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;background:var(--surface-2)}
+
+/* Filters */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:500;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Feed items */
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.item[hidden]{display:none}
+.item-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.kind{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+.kind .dot{width:7px;height:7px;border-radius:50%}
+.k-ongoing{background:var(--blue-bg);color:var(--blue-ink)}.k-ongoing .dot{background:var(--blue)}
+.k-finished{background:var(--green-bg);color:var(--green-ink)}.k-finished .dot{background:var(--green)}
+.k-paused{background:var(--orange-bg);color:var(--orange-ink)}.k-paused .dot{background:var(--orange);border-radius:2px}
+.k-insight{background:var(--purple-bg);color:var(--purple-ink)}
+.k-open{background:var(--ink);color:var(--bg)}
+.k-quick{background:var(--teal-bg);color:var(--teal-ink)}
+.time{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.item h3{margin:0;font-size:17px;line-height:1.35}
+.item h3 a{color:inherit;text-decoration:none}
+.item h3 a:hover{text-decoration:underline}
+.by{font-size:12px;color:var(--muted)}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+.ask{padding:10px 12px;border-radius:8px;background:var(--blue-tint);border:1px solid var(--blue-line);font-size:14px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.facts div{background:var(--surface-2);border-radius:8px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.facts strong{display:block;font-size:13px;color:var(--ink)}
+@media (max-width:560px){.facts{grid-template-columns:1fr}}
+ul.tk{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;color:var(--body)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:600}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.relay{font-size:12px;color:var(--muted)}
+.person{display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--body);flex:none}
+
+/* Office hours */
+.oh{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.oh-head{padding:16px 18px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.oh-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.oh-tabs button{min-height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:12px;font-weight:500;cursor:pointer}
+.oh-tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.slot{padding:14px 18px;border-bottom:1px solid var(--line-soft);display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px}
+.slot[hidden]{display:none}
+.date{text-align:center;border:1px solid var(--line);border-radius:8px;padding:6px 0;height:max-content}
+.date b{display:block;font-size:18px;line-height:1.1}
+.date span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase}
+.slot h3{margin:0;font-size:14px;line-height:1.35}
+.slot .meta{font-size:12px;color:var(--muted)}
+.slot .row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+.tag.talk{background:var(--purple-bg);border-color:transparent;color:var(--purple-ink);font-weight:600}
+.tag.oneone{background:var(--blue-bg);border-color:transparent;color:var(--blue-ink);font-weight:600}
+.seats{font-size:12px;color:var(--muted)}
+.oh-foot{padding:12px 18px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px}
+.note{margin:0;padding:12px 18px;font-size:12px;color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+</style>
+</head>
+<body data-role="student">
+
+<header class="top">
+<div class="top-in">
+<a class="me" id="me" href="#profile" aria-label="Your profile" title="Your profile">MZ</a>
+<span class="brand">Buckeye Baton</span>
+<form class="search" role="search" onsubmit="return false">
+<label class="sr" for="q">Search</label>
+<input id="q" type="search" placeholder="Search projects, lessons, mentors, office hours">
+</form>
+<label class="sr" for="role">Demo role</label>
+<select id="role" class="role" title="Demo: switch role">
+<option value="student">Student · Mia</option>
+<option value="mentor">Mentor · Sarah</option>
+<option value="faculty">Faculty · Prof. Kim</option>
+</select>
+<details class="new">
+<summary>+ New</summary>
+<div class="menu">
+<a class="only student" href="#"><span>Share a project</span><small>Ongoing, finished, or paused</small></a>
+<a class="only student" href="#"><span>Ask for help</span><small>Attach it to your project</small></a>
+<a class="only mentor" href="#"><span>Industry insight</span><small>3 takeaways · ~10 min to write</small></a>
+<a class="only mentor faculty" href="#"><span>Quick task or challenge</span><small>10 min feedback, or a one-day challenge</small></a>
+<a class="only mentor faculty" href="#"><span>Open a project</span><small>4–6 weeks with a company team</small></a>
+<a class="only mentor faculty" href="#"><span>Office hours</span><small>1 hour, 1:1 or small group</small></a>
+<a class="only faculty" href="#"><span>Organize a talk</span><small>Bring students and companies together</small></a>
+</div>
+</details>
+</div>
+</header>
+
+<nav class="jump" aria-label="Sections">
+<a href="#browse">Browse</a>
+<a href="#office-hours">Office Hours</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ BROWSE ============ -->
+<main class="col" id="browse">
+
+<!-- Next step: role-aware -->
+<section class="next only student" aria-label="For you">
+<div class="sec-title"><h2 style="font-size:16px">For you, Mia</h2><span>You helped 2 teams this month</span></div>
+<div class="todo">
+<div><span><strong>Sarah Chen</strong> replied to your help request on Volunteer Scheduler</span><a class="btn" href="../cards/ongoing.html">Read</a></div>
+<div><span>Tue office hours match your request: <strong>User testing clinic</strong></span><a class="btn" href="#office-hours">Book</a></div>
+<div><span>Give feedback on a peer's demo</span><span class="time">10 min</span></div>
+</div>
+</section>
+
+<section class="next only mentor" aria-label="For you">
+<div class="sec-title"><h2 style="font-size:16px">For you, Sarah</h2><span>Your time this week: 1 hr booked</span></div>
+<div class="todo">
+<div><span>3 help requests match <strong>User Research &amp; Validation</strong></span><span class="time">~15 min each</span></div>
+<div><span>Your Oct 21 office hours: post a short recap</span><span class="time">5 min</span></div>
+</div>
+</section>
+
+<section class="next only faculty" aria-label="For you">
+<div class="sec-title"><h2 style="font-size:16px">For you, Prof. Kim</h2><span>Faculty</span></div>
+<div class="todo">
+<div><span>2 help requests are waiting for a mentor referral</span><a class="btn" href="#">Review</a></div>
+<div><span>Oct 28 talk: 42 of 80 seats taken</span><a class="btn" href="#office-hours">View</a></div>
+</div>
+</section>
+
+<div class="sec-title"><h2>Browse</h2><span>Projects, insights, and ways to join</span></div>
+
+<div class="filters" role="group" aria-label="Filter feed">
+<button type="button" data-filter="all" aria-pressed="true">All</button>
+<button type="button" data-filter="project" aria-pressed="false">Student projects</button>
+<button type="button" data-filter="insight" aria-pressed="false">Industry insights</button>
+<button type="button" data-filter="open" aria-pressed="false">Join a project</button>
+<button type="button" data-filter="quick" aria-pressed="false">Quick tasks</button>
+<button type="button" data-filter="help" aria-pressed="false">Needs help</button>
+</div>
+
+<!-- Open project (mentor/faculty) -->
+<article class="item" data-type="open">
+<div class="item-top"><span class="kind k-open">Open project · 2 teams wanted</span><span class="time">4–6 weeks</span></div>
+<h3>Shift scheduling for campus events</h3>
+<div class="by">Posted by Prof. Dana Kim (Faculty) with mentor Sarah Chen · Brightline Health UX team</div>
+<p class="prose">Student orgs keep asking for a simpler way to staff events. Work with a company UX team to design and test a volunteer scheduling flow.</p>
+<div class="facts">
+<div><strong>Team of 3–4</strong>Any major</div>
+<div><strong>Mentor: 1 hr / week</strong>Office hours style</div>
+<div><strong>Starts Nov 9</strong>Join by Nov 2</div>
+</div>
+<div class="relay">Builds on <a href="../cards/finished.html">Club Sign-up Site</a> and <a href="../cards/paused.html">1 paused project</a>: lessons included</div>
+<div class="relay">Joined so far: Ana (Design), Ben (Computer Science) · 2 spots left on team 1</div>
+<div class="actions only student"><a class="btn dark" href="#">Join a team</a><a class="btn" href="#">Save</a></div>
+<div class="actions only mentor"><a class="btn primary" href="#">Help this project</a><a class="btn" href="#">Edit</a><span class="relay">You're the mentor · 1 of 2 teams formed</span></div>
+<div class="actions only faculty"><a class="btn" href="#">Edit</a><a class="btn" href="#">Share</a><span class="relay">1 of 2 teams formed</span></div>
+</article>
+
+<!-- Ongoing project -->
+<article class="item" data-type="project help">
+<div class="item-top"><span class="kind k-ongoing"><span class="dot"></span>Ongoing</span><span class="by">Mentor: Sarah Chen</span></div>
+<h3><a href="../relay/mia-ongoing.html?step=6&amp;role=student">Study Spot Finder: One-Building Pilot</a></h3>
+<div class="ask"><strong style="color:var(--blue-ink)">Asking:</strong> How do we show room availability students can trust when the data is up to a day old?</div>
+<div class="by">Mia Z., Leo P. · Autumn 2026 · picked up from Study Spot Finder</div>
+<div class="actions only student"><a class="btn primary" href="../relay/pickup-ongoing-1.html">Pick up</a></div>
+<div class="actions"><a class="btn only mentor" href="../cards/ongoing.html">I can help</a><a class="btn only faculty" href="#">Refer a mentor</a><a class="btn only faculty" href="#">Share</a><a class="btn only student" href="../relay/mia-ongoing.html?step=6&amp;role=student">View project</a></div>
+</article>
+
+<!-- Industry insight (mentor) -->
+<article class="item" data-type="insight">
+<div class="item-top"><span class="kind k-insight">Industry insight</span><span class="time">3 min read</span></div>
+<div class="person"><span class="av" aria-hidden="true">ML</span><div><strong style="font-size:13px">Marcus Lee</strong><div class="by">Product Manager · Kestrel Logistics</div></div></div>
+<h3>How our team decides what to cut two weeks before launch</h3>
+<ul class="tk">
+<li>List features by "who is blocked without it", not by effort.</li>
+<li>Cut anything you can't test with a real user before launch.</li>
+<li>Write down what you cut: it's the next team's starting point.</li>
+</ul>
+<div class="actions"><span class="relay">Related to 4 student projects · Scope &amp; Teamwork</span><a class="btn only faculty" href="#">Share</a></div>
+</article>
+
+<!-- Quick task -->
+<article class="item" data-type="quick" id="quick-1">
+<div class="item-top"><span class="kind k-quick">Quick task · feedback wanted</span><span class="time">10 min</span></div>
+<h3>Try our 4-field sign-up form on your phone</h3>
+<div class="by">Volunteer Scheduler team · 6 of 8 testers so far</div>
+<p class="prose">Sign up for a fake shift, then answer two questions. Your feedback shows up on your profile as help given.</p>
+<div class="actions only student mentor"><a class="btn primary" href="#">Give feedback</a></div>
+<div class="actions only faculty"><a class="btn" href="#">Share</a></div>
+</article>
+
+<!-- Finished project -->
+<article class="item" data-type="project">
+<div class="item-top"><span class="kind k-finished"><span class="dot"></span>Finished</span><span class="by">Mentor: Marcus Lee</span></div>
+<h3><a href="../cards/finished.html">Club Sign-up Site</a></h3>
+<p class="prose"><strong style="color:var(--green-ink)">Advice for the next team:</strong> Clubs kept asking for shift scheduling. Start there.</p>
+<div class="by">Alex R., Priya N. · Spring 2025</div>
+<div class="actions only student"><a class="btn primary" href="../relay/pickup-finished-1.html">Pick up</a></div>
+</article>
+
+<!-- Office hours recap -> insight -->
+<article class="item" data-type="insight">
+<div class="item-top"><span class="kind k-insight">Office hours recap</span><span class="time">2 min read</span></div>
+<div class="person"><span class="av" aria-hidden="true">SC</span><div><strong style="font-size:13px">Sarah Chen</strong><div class="by">UX Researcher · Brightline Health · from Oct 21 office hours (5 students)</div></div></div>
+<h3>Testing with 8 users in one week: what came up</h3>
+<ul class="tk">
+<li>Test on phones first; most students open links from social apps.</li>
+<li>Split testers into two versions instead of asking which they prefer.</li>
+</ul>
+</article>
+
+<!-- One-day challenge -->
+<article class="item" data-type="quick">
+<div class="item-top"><span class="kind k-quick">One-day challenge</span><span class="time">~3 hrs · due Sat</span></div>
+<h3>Redesign one confusing campus form in a day</h3>
+<div class="by">Set by Marcus Lee (Mentor) with Prof. Dana Kim (Faculty) · 11 students joined · best 3 get written feedback</div>
+<div class="actions only student"><a class="btn" href="#">Join challenge</a></div>
+<div class="actions only mentor"><a class="btn primary" href="#">Give feedback</a><span class="relay">4 submissions waiting</span></div>
+<div class="actions only faculty"><a class="btn" href="#">Edit</a><a class="btn" href="#">Share with a course</a></div>
+</article>
+
+<!-- Paused project -->
+<article class="item" data-type="project">
+<div class="item-top"><span class="kind k-paused"><span class="dot"></span>Paused · open to a new team</span><span class="by">Picked up by 1 project</span></div>
+<h3><a href="../relay/alex-paused.html?role=student">Study Spot Finder</a></h3>
+<p class="prose"><strong style="color:var(--orange-ink)">Why paused:</strong> Scraping the library booking page kept breaking. They suggest asking for an official data export first.</p>
+<div class="by">Alex R., Jordan T. · Spring 2026 · 3 reusable materials</div>
+<div class="actions only student"><a class="btn primary" href="../relay/pickup-paused-1.html">Pick up</a></div>
+</article>
+
+</main>
+
+<!-- ============ OFFICE HOURS ============ -->
+<aside class="col rail" id="office-hours" aria-label="Office Hours">
+<section class="oh">
+<div class="oh-head">
+<div class="sec-title"><h2>Office Hours</h2><span>Next 7 days</span></div>
+<div class="oh-tabs" role="group" aria-label="Filter office hours">
+<button type="button" data-oh="all" aria-pressed="true">All</button>
+<button type="button" data-oh="mentor" aria-pressed="false">With mentors</button>
+<button type="button" data-oh="talk" aria-pressed="false">Talks</button>
+</div>
+</div>
+<p class="note only student">Booking shares your project card and open help request with the mentor, so the hour starts with context.</p>
+<p class="note only mentor">Hosting 1 hour = one small commitment. Afterwards, post a 5-minute recap to Browse.</p>
+<p class="note only faculty">You can host office hours and talks, edit any session, and share them with courses. Keep talks about learning, not recruiting.</p>
+
+<div class="slot" data-oh="mentor">
+<div class="date"><span>Tue</span><b>27</b></div>
+<div>
+<h3>User testing clinic</h3>
+<div class="meta">Sarah Chen · UX Researcher, Brightline Health</div>
+<div class="meta">3:00–4:00 PM · Zoom · small group</div>
+<div class="row"><span class="tag oneone">Mentor</span><span class="tag">User Research</span><span class="seats">3 of 6 left</span></div>
+<div class="row"><a class="btn primary only student" href="#">Book</a><a class="btn only mentor" href="#">Edit</a><a class="btn only faculty" href="#">Edit</a><a class="btn only faculty" href="#">Share</a><span class="tag only student">Matches your request</span></div>
+</div>
+</div>
+
+<div class="slot" data-oh="talk">
+<div class="date"><span>Wed</span><b>28</b></div>
+<div>
+<h3>From class project to real team: 3 company teams on how they work</h3>
+<div class="meta">Organized by Prof. Dana Kim · Faculty</div>
+<div class="meta">5:30–7:00 PM · [Campus room] · in person</div>
+<div class="row"><span class="tag talk">Talk</span><span class="seats">42 of 80 seats</span></div>
+<div class="row"><a class="btn dark only student" href="#">RSVP</a><a class="btn only mentor" href="#">Offer to speak</a><a class="btn only faculty" href="#">Edit</a><a class="btn only faculty" href="#">Share</a></div>
+</div>
+</div>
+
+<div class="slot" data-oh="mentor">
+<div class="date"><span>Thu</span><b>29</b></div>
+<div>
+<h3>Scoping your MVP</h3>
+<div class="meta">Marcus Lee · Product Manager, Kestrel Logistics</div>
+<div class="meta">12:00–12:30 PM · Zoom · 1:1</div>
+<div class="row"><span class="tag oneone">Mentor</span><span class="tag">Scope &amp; Teamwork</span><span class="seats">2 slots left</span></div>
+<div class="row"><a class="btn primary only student" href="#">Book</a><a class="btn only faculty" href="#">Edit</a><a class="btn only faculty" href="#">Share</a></div>
+</div>
+</div>
+
+<div class="slot" data-oh="mentor">
+<div class="date"><span>Fri</span><b>30</b></div>
+<div>
+<h3>Survey design drop-in</h3>
+<div class="meta">Tom Becker · Data Analyst</div>
+<div class="meta">4:00–5:00 PM · Zoom · drop in anytime</div>
+<div class="row"><span class="tag oneone">Mentor</span><span class="tag">User Research</span><span class="seats">Open</span></div>
+<div class="row"><a class="btn only student" href="#">Add to calendar</a><a class="btn only faculty" href="#">Edit</a><a class="btn only faculty" href="#">Share</a></div>
+</div>
+</div>
+
+<div class="oh-foot"><a href="#">See all office hours</a><a href="#">Past recaps (12)</a></div>
+</section>
+</aside>
+
+</div>
+
+<script>
+(function(){
+  var body=document.body, me=document.getElementById('me');
+  var initials={student:'MZ',mentor:'SC',faculty:'DK'};
+  document.getElementById('role').addEventListener('change',function(e){
+    body.setAttribute('data-role',e.target.value);
+    me.textContent=initials[e.target.value];
+  });
+  function group(btnSel, attr, itemSel){
+    var btns=document.querySelectorAll(btnSel);
+    btns.forEach(function(b){
+      b.addEventListener('click',function(){
+        btns.forEach(function(x){x.setAttribute('aria-pressed', x===b?'true':'false');});
+        var f=b.getAttribute(attr);
+        document.querySelectorAll(itemSel).forEach(function(it){
+          var types=(it.getAttribute(attr==='data-filter'?'data-type':'data-oh')||'').split(' ');
+          it.hidden = !(f==='all' || types.indexOf(f)>-1);
+        });
+      });
+    });
+  }
+  group('.filters button','data-filter','.item');
+  group('.oh-tabs button','data-oh','.slot');
+})();
+</script>
+</body>
+</html>

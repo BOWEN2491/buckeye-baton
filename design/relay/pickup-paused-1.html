@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pick Up Study Spot Finder · Buckeye Baton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Buckeye Baton — shared styles for the relay / question-flow sketches.
+   Tokens match design/cards/*.html. */
+:root{
+  --bg:#F6F8FA;--surface:#FFFFFF;--surface-2:#F6F8FA;--ink:#1F2328;--body:#31373D;--muted:#59636E;--line:#D1D9E0;--line-soft:#EAEEF2;--avatar:#EAEEF2;
+  --blue:#0969DA;--blue-ink:#0550AE;--blue-bg:#DDF4FF;--blue-tint:#F1F8FF;--blue-line:#9CD1FF;
+  --green:#1A7F37;--green-ink:#116329;--green-bg:#DAFBE1;--green-tint:#F2FCF4;--green-line:#8DDB9E;
+  --orange:#BC4C00;--orange-ink:#9A4A00;--orange-bg:#FFF1E5;--orange-tint:#FFF8F2;--orange-line:#FFC799;
+  --purple:#8250DF;--purple-ink:#6639BA;--purple-bg:#FBEFFF;
+  --red:#CF222E;--red-ink:#A40E26;--red-bg:#FFEBE9;--red-line:#FFB8B0;
+  --demo:#6E40C9;--demo-bg:#F5F0FF;
+  --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2128;--ink:#E6EDF3;--body:#C9D1D9;--muted:#9198A1;--line:#30363D;--line-soft:#262C33;--avatar:#2D333B;
+  --blue:#2F81F7;--blue-ink:#79B8FF;--blue-bg:#0C2D6B;--blue-tint:#0F1D33;--blue-line:#1F4A8A;
+  --green:#2EA043;--green-ink:#56D364;--green-bg:#0F3D1E;--green-tint:#0F2117;--green-line:#1F6B35;
+  --orange:#DB6D28;--orange-ink:#FFA657;--orange-bg:#4A2205;--orange-tint:#24160B;--orange-line:#7A3A0E;
+  --purple:#A371F7;--purple-ink:#D2A8FF;--purple-bg:#2E1A4F;
+  --red:#F85149;--red-ink:#FF7B72;--red-bg:#3C1618;--red-line:#8E1519;
+  --demo:#B392F0;--demo-bg:#21173A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14px;line-height:1.55}
+a{color:var(--blue-ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none !important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top bar */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:700;font-size:16px;color:var(--ink);text-decoration:none}
+.top .spacer{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.me{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--on-accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+
+/* Demo controls (not part of the product UI) */
+.demo{background:var(--demo-bg);border-bottom:1px dashed var(--demo)}
+.demo-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:13px}
+.demo-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--demo);text-transform:uppercase;letter-spacing:.04em}
+.demo label{display:inline-flex;align-items:center;gap:6px}
+.demo select{min-height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:0 6px}
+.demo .steps{display:flex;gap:4px;flex-wrap:wrap}
+.demo .steps button{min-width:32px;min-height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600}
+.demo .steps button[aria-pressed="true"]{background:var(--demo);border-color:var(--demo);color:#fff}
+.demo .caption{flex-basis:100%;color:var(--body)}
+.demo .caption strong{color:var(--demo)}
+.demo-btn{min-height:32px;padding:0 10px;border:1px solid var(--demo);border-radius:6px;background:transparent;color:var(--demo);cursor:pointer;font-weight:500}
+
+/* Page */
+.page{max-width:760px;margin:0 auto;padding:24px 16px 56px;display:flex;flex-direction:column;gap:16px}
+.page.wide{max-width:1080px}
+.crumb{font-size:13px;color:var(--muted)}
+.fiction{font-size:12px;color:var(--muted);text-align:center;padding:8px 0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.head{padding:24px 24px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.ongoing{background:var(--blue-bg);color:var(--blue-ink)}.pill.ongoing .dot{background:var(--blue)}
+.pill.finished{background:var(--green-bg);color:var(--green-ink)}.pill.finished .dot{background:var(--green)}
+.pill.paused{background:var(--orange-bg);color:var(--orange-ink)}.pill.paused .dot{background:var(--orange);border-radius:2px}
+.meta-r{font-size:12px;color:var(--muted)}
+h1{margin:0;font-size:24px;line-height:1.25;font-weight:700}
+.sub{margin:0;font-size:13px;color:var(--muted)}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:8px;background:var(--surface-2);border:1px solid var(--line-soft);font-size:13px}
+.baton-type{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--purple-bg);color:var(--purple-ink)}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.section{padding:20px 24px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line-soft)}
+.section:last-child{border-bottom:0}
+.section h2{margin:0;font-size:16px;font-weight:700}
+.section h2 .count{font-weight:500;color:var(--muted)}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.prose{margin:0;font-size:14px;line-height:1.6;color:var(--body)}
+ul.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;color:var(--body)}
+.hero{background:var(--orange-tint);border:1px solid var(--orange-line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.hero.blue{background:var(--blue-tint);border-color:var(--blue-line)}
+.hero h3{margin:0;font-size:15px}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.head,.section{padding-left:16px;padding-right:16px}}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+
+/* Buttons */
+.btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on-accent);font-weight:600}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:var(--on-accent);font-weight:600}
+.btn.green{background:var(--green);border-color:var(--green);color:var(--on-accent);font-weight:600}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.btn.link{border:0;background:none;color:var(--blue-ink);padding:0 4px;min-height:auto;text-decoration:underline}
+.spinner{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spinner{animation:none}html{scroll-behavior:auto}}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field legend{font-weight:600;font-size:14px}
+.req{color:var(--red-ink);font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+.input,.textarea{width:100%;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:14px}
+.textarea{min-height:96px;resize:vertical;line-height:1.5}
+.input:focus,.textarea:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue)}
+.invalid .input,.invalid .textarea,.invalid .choices{border-color:var(--red)}
+.err-msg{font-size:12px;color:var(--red-ink);display:none}
+.invalid .err-msg{display:block}
+fieldset{border:0;margin:0;padding:0}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid transparent;border-radius:10px}
+@media (max-width:640px){.choices{grid-template-columns:1fr}}
+.choice{position:relative;border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;background:var(--surface)}
+.choice input{position:absolute;opacity:0}
+.choice:has(input:checked){border:2px solid var(--blue);padding:11px 13px;background:var(--blue-tint)}
+.choice:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.choice strong{font-size:14px}
+.choice span{font-size:12px;color:var(--muted)}
+.counter{font-size:12px;color:var(--muted);text-align:right}
+
+/* Banners */
+.banner{border-radius:10px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.banner.err{background:var(--red-bg);border:1px solid var(--red-line);color:var(--red-ink)}
+.banner.ok{background:var(--green-bg);border:1px solid var(--green-line);color:var(--green-ink)}
+.banner.info{background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+.banner.warn{background:var(--orange-tint);border:1px solid var(--orange-line);color:var(--orange-ink)}
+
+/* Questions */
+.q{border:1px solid var(--line);border-radius:12px;overflow:hidden;scroll-margin-top:16px}
+.q:target{box-shadow:0 0 0 3px var(--blue-line)}
+.q-head{padding:14px 16px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2);border-bottom:1px solid var(--line-soft)}
+.q-title{margin:0;font-size:16px;font-weight:700;line-height:1.4}
+.qstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px}
+.qstatus.needs{background:var(--orange-bg);color:var(--orange-ink)}
+.qstatus.referred{background:var(--blue-bg);color:var(--blue-ink)}
+.qstatus.replied{background:var(--green-bg);color:var(--green-ink)}
+.thread{display:flex;flex-direction:column}
+.post{padding:14px 16px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:6px}
+.post:first-child{border-top:0}
+.post-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.post-meta strong{color:var(--ink);font-size:13px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--avatar);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--body);flex:none}
+.role{font-size:11px;font-weight:600;padding:0 7px;border-radius:6px;border:1px solid var(--line);color:var(--body)}
+.role.owner{border-color:var(--blue-line);color:var(--blue-ink)}
+.post.official{background:var(--green-tint);border-left:0;box-shadow:inset 0 0 0 1px var(--green-line);border-radius:0}
+.badge-official{font-size:11px;font-weight:600;padding:1px 8px;border-radius:6px;background:var(--green);color:var(--on-accent)}
+.event{padding:12px 16px;border-top:1px solid var(--line-soft);background:var(--blue-tint);display:flex;flex-direction:column;gap:4px;font-size:13px}
+.event .reason{color:var(--body)}
+.composer{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.composer .row-between{justify-content:flex-end}
+.q-actions{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surface)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+
+/* Referral form */
+.panel{border:2px solid var(--blue);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;background:var(--surface);margin:0 16px 16px}
+.mentors{display:flex;flex-direction:column;gap:8px}
+.mentor{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.mentor:has(input:checked){border:2px solid var(--blue);padding:9px 11px;background:var(--blue-tint)}
+.mentor input{margin-top:4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--body)}
+
+/* Workbench */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:40px;padding:0 14px;border:0;border-bottom:2px solid transparent;background:none;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.task{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line-soft);text-decoration:none;color:inherit;flex-wrap:wrap}
+.task:first-child{border-top:0}
+.task:hover{background:var(--surface-2)}
+.task-title{font-weight:600}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50}
+</style>
+<style>
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+.ref{position:sticky;top:16px}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.ref{position:static}}
+.form-card{padding:22px 24px;display:flex;flex-direction:column;gap:20px}
+@media (max-width:560px){.form-card{padding:18px 16px}}
+.actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--line-soft);padding-top:16px}
+details.ref-card summary{cursor:pointer;list-style:none;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--line-soft)}
+details.ref-card summary::-webkit-details-marker{display:none}
+.ref-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.ref-body h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="demo" role="region" aria-label="Demo controls" hidden>
+<div class="demo-in">
+<span class="demo-tag">Demo controls · not part of the UI</span>
+<label>Source project
+<select id="srcSel">
+<option value="paused" selected>Study Spot Finder (Paused)</option>
+<option value="finished">Club Sign-up Site (Finished)</option>
+<option value="ongoing">One-Building Pilot (Ongoing)</option>
+</select>
+</label>
+<label>Next submit
+<select id="resultSel">
+<option value="ok">Succeeds</option>
+<option value="fail">Fails (network error)</option>
+</select>
+</label>
+<button type="button" class="demo-btn" id="fillBtn">Fill sample answers</button>
+<a href="index.html">Story index</a>
+</div>
+</div>
+
+<header class="top"><div class="top-in">
+<a class="brand" href="index.html">Buckeye Baton</a><span class="spacer"></span>
+<span class="who"><span id="meName">Mia Z.</span><span class="me" id="meAv" aria-hidden="true">MZ</span></span>
+</div></header>
+
+<main class="page wide">
+<a class="crumb" id="backLink" href="alex-paused.html">← Back to <span class="srcName">Study Spot Finder</span></a>
+
+<div class="layout">
+<form class="card form-card" id="form" novalidate aria-labelledby="formTitle">
+<div style="display:flex;flex-direction:column;gap:6px">
+<h1 id="formTitle">Pick up a project</h1>
+<div class="source">From <a class="srcLink" href="alex-paused.html"><strong class="srcName">Study Spot Finder</strong></a> <span class="pill paused" id="srcPill"><span class="dot"></span>Paused</span> <span class="muted srcOwner">by Alex R.</span></div>
+<p class="sub">You'll start your own Ongoing project linked to this one. The original project is not changed.</p>
+</div>
+
+<div class="banner err" id="failBanner" role="alert" hidden>
+<span><strong>We couldn't create your project.</strong> Check your connection and try again. Everything you entered is still here.</span>
+</div>
+
+<fieldset class="field" id="f-type">
+<legend>How are you picking it up? <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></legend>
+<div class="choices" role="radiogroup" aria-describedby="err-type">
+<label class="choice"><input type="radio" name="type" value="Reproduce"><strong>Reproduce</strong><span>Rebuild what they made, to learn how it works or to check it still works.</span></label>
+<label class="choice"><input type="radio" name="type" value="Continue"><strong>Continue</strong><span>Keep going on the parts they didn't finish.</span></label>
+<label class="choice"><input type="radio" name="type" value="Improve"><strong>Improve</strong><span>Make one feature or method better.</span></label>
+</div>
+<span class="err-msg" id="err-type">Choose how you're picking it up.</span>
+</fieldset>
+
+<div class="field" id="f-name">
+<label for="name">New project name <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label>
+<input class="input" id="name" name="name" maxlength="80" autocomplete="off" placeholder="e.g. Study Spot Finder: One-Building Pilot" aria-describedby="err-name">
+<div class="row-between"><span class="err-msg" id="err-name">Enter a project name.</span><span class="counter" id="c-name">0 / 80</span></div>
+</div>
+
+<div class="field" id="f-goal">
+<label for="goal">What will your team work toward? <span class="req" aria-hidden="true">*</span><span class="sr">(required)</span></label>
+<span class="hint">Be specific: what will exist or be answered when you're done? You can edit this later.</span>
+<textarea class="textarea" id="goal" name="goal" maxlength="500" aria-describedby="err-goal"></textarea>
+<div class="row-between"><span class="err-msg" id="err-goal">Describe your team's goal.</span><span class="counter" id="c-goal">0 / 500</span></div>
+</div>
+
+<div class="field" id="f-team">
+<label for="mate">Teammates <span class="hint" style="font-weight:400">(optional)</span></label>
+<span class="hint">Teammates become co-owners: they can edit the project, change its status and post follow-ups. You can add more later.</span>
+<div style="display:flex;gap:8px"><input class="input" id="mate" placeholder="Name or OSU email" autocomplete="off"><button type="button" class="btn" id="addMate">Add</button></div>
+<div class="tags" id="mates"><span class="tag" id="youChip" style="font-size:12px;padding:3px 9px">Mia Z. (you)</span></div>
+</div>
+
+<div class="banner info"><span>Next, your project opens beside <strong class="srcName">Study Spot Finder</strong>'s content. Bring in whatever helps and edit it as your own. <span class="srcName">Study Spot Finder</span> will list your project under "Picked up by"<span id="ongoingNote" hidden>, and its team keeps working on theirs</span>.</span></div>
+
+<div class="actions">
+<a class="btn" id="cancelBtn" href="alex-paused.html">Cancel</a>
+<button type="submit" class="btn primary" id="submitBtn">Create project</button>
+</div>
+</form>
+
+<aside class="ref" aria-label="Reference from the source project">
+<details class="card ref-card" open>
+<summary><strong>Reference from <span class="srcName">Study Spot Finder</span></strong><span class="small muted">Read only</span></summary>
+
+<div class="ref-body" id="ref-paused">
+<div><h3>Why they paused</h3><p class="prose">Scraping the library's booking page broke twice when its layout changed; the team ran out of time to keep fixing it.</p></div>
+<div><h3>If they did it again</h3><ul class="list">
+<li>Ask the library about an official data export first.</li>
+<li>Start with one building.</li>
+<li>Show when the data was last updated.</li></ul></div>
+<div><h3>Reusable materials</h3><ul class="list">
+<li><a href="#">Room list and floor map component ↗</a></li>
+<li><a href="#">Building and room spreadsheet ↗</a></li>
+<li><a href="#">Notes from student interviews ↗</a></li></ul></div>
+<div><h3>Where to start</h3><p class="prose">Reuse the map component; ignore the <code>/scraper</code> folder.</p></div>
+<div><h3>Mentor</h3><p class="prose">None on this project. If you ask for a mentor, Staff will refer one.</p></div>
+</div>
+
+<div class="ref-body" id="ref-finished" hidden>
+<div><h3>What they got</h3><ul class="list">
+<li>A sign-up form with 4 required fields. <a href="#">GitHub ↗</a></li>
+<li>A mobile-first form component. <a href="#">GitHub ↗</a></li></ul></div>
+<div><h3>Problems and how they solved them</h3><ul class="list">
+<li>Too many fields → kept 4 required, asked the rest after sign-up.</li>
+<li>Confirmation emails went to spam → also showed confirmation on screen.</li></ul></div>
+<div><h3>Advice for the next team</h3><p class="prose">Clubs kept asking for shift scheduling. Start there.</p></div>
+<div><h3>Mentor</h3><p class="prose">Marcus Lee mentored this project and will continue with yours.</p></div>
+</div>
+
+<div class="ref-body" id="ref-ongoing" hidden>
+<div><h3>Their goal</h3><p class="prose">Show which group study rooms in one library building are free in the next two hours, using an official daily export instead of scraping.</p></div>
+<div><h3>Latest progress</h3><p class="prose">Added an "as of" time label and a separate walk-in list to the prototype. Next: show it to five students.</p></div>
+<div><h3>Links</h3><ul class="list"><li><a href="#">GitHub repository ↗</a></li></ul></div>
+<div><h3>Mentor</h3><p class="prose">Sarah Chen mentors this project and will continue with yours.</p></div>
+</div>
+</details>
+</aside>
+</div>
+
+<p class="fiction">All people, projects and data on this page are fictional demo content.</p>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  var SRC={
+    paused:{name:'Study Spot Finder',owner:'by Alex R.',href:'alex-paused.html',pill:'paused',label:'Paused'},
+    finished:{name:'Club Sign-up Site',owner:'by Alex R., Priya N.',href:'../cards/finished.html',pill:'finished',label:'Finished'},
+    ongoing:{name:'One-Building Pilot',owner:'by Mia Z., Leo P.',href:'mia-ongoing.html?step=6&role=student',pill:'ongoing',label:'Ongoing'}
+  };
+  var form=document.getElementById('form'), btn=document.getElementById('submitBtn');
+  var name=document.getElementById('name'), goal=document.getElementById('goal');
+  var srcSel=document.getElementById('srcSel'), resultSel=document.getElementById('resultSel');
+  var busy=false, dirty=false;
+  // One id per form session, reused on retry, so the server can ignore a duplicate create.
+  var requestId='req-'+Math.random().toString(36).slice(2,10);
+
+  var qs=new URLSearchParams(location.search);
+  if(SRC[qs.get('from')]) srcSel.value=qs.get('from');
+
+  function applySource(){
+    var s=SRC[srcSel.value];
+    document.querySelectorAll('.srcName').forEach(function(e){e.textContent=s.name;});
+    document.querySelectorAll('.srcOwner').forEach(function(e){e.textContent=s.owner;});
+    document.querySelectorAll('.srcLink').forEach(function(e){e.href=s.href;});
+    document.getElementById('backLink').href=s.href;
+    document.getElementById('cancelBtn').href=s.href;
+    var pill=document.getElementById('srcPill'); pill.className='pill '+s.pill; pill.lastChild.textContent=s.label;
+    document.getElementById('ref-paused').hidden=srcSel.value!=='paused';
+    document.getElementById('ref-finished').hidden=srcSel.value!=='finished';
+    document.getElementById('ref-ongoing').hidden=srcSel.value!=='ongoing';
+    document.getElementById('ongoingNote').hidden=srcSel.value!=='ongoing';
+    var me=srcSel.value==='ongoing'?['Ana K.','AK']:['Mia Z.','MZ'];
+    document.getElementById('meName').textContent=me[0]; document.getElementById('meAv').textContent=me[1];
+    document.getElementById('youChip').textContent=me[0]+' (you)';
+  }
+  srcSel.addEventListener('change',applySource); applySource();
+
+  function count(el,out,max){document.getElementById(out).textContent=el.value.length+' / '+max;}
+  name.addEventListener('input',function(){dirty=true;count(name,'c-name',80);if(name.value.trim())setValid('f-name',true);});
+  goal.addEventListener('input',function(){dirty=true;count(goal,'c-goal',500);if(goal.value.trim())setValid('f-goal',true);});
+  form.querySelectorAll('input[name=type]').forEach(function(r){r.addEventListener('change',function(){dirty=true;setValid('f-type',true);});});
+
+  function setValid(id,ok){
+    var f=document.getElementById(id); f.classList.toggle('invalid',!ok);
+    var ctl=f.querySelector('.input,.textarea,.choices'); if(ctl) ctl.setAttribute('aria-invalid',ok?'false':'true');
+  }
+  function validate(){
+    var t=!!form.querySelector('input[name=type]:checked'), n=!!name.value.trim(), g=!!goal.value.trim();
+    setValid('f-type',t); setValid('f-name',n); setValid('f-goal',g);
+    if(!t) form.querySelector('input[name=type]').focus(); else if(!n) name.focus(); else if(!g) goal.focus();
+    return t&&n&&g;
+  }
+  function setBusy(on){
+    busy=on; btn.disabled=on;
+    btn.innerHTML=on?'<span class="spinner" aria-hidden="true"></span>Creating project…':'Create project';
+    form.querySelectorAll('input,textarea').forEach(function(e){e.readOnly=on; if(e.type==='radio') e.disabled=on;});
+    document.getElementById('cancelBtn').setAttribute('aria-disabled',on?'true':'false');
+  }
+
+  document.getElementById('cancelBtn').addEventListener('click',function(e){
+    if(busy){e.preventDefault();return;}
+    if(dirty && !confirm('Discard what you entered?')) e.preventDefault();
+  });
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(busy) return;
+    document.getElementById('failBanner').hidden=true;
+    if(!validate()) return;
+    setBusy(true);
+    // Demo stand-in for POST /projects {source_project_id, baton_type, title, goal, request_id}
+    setTimeout(function(){
+      if(resultSel.value==='fail'){
+        setBusy(false);
+        var b=document.getElementById('failBanner'); b.hidden=false; b.scrollIntoView({block:'center'});
+        return;
+      }
+      dirty=false;
+      var type=form.querySelector('input[name=type]:checked').value;
+      var mateNames=[].slice.call(mates.children,1).map(function(c){return c.firstChild.textContent.trim();});
+      location.href='pickup-paused-2.html?created=1&from='+srcSel.value+'&type='+encodeURIComponent(type)+
+        '&title='+encodeURIComponent(name.value.trim())+'&goal='+encodeURIComponent(goal.value.trim())+'&mates='+encodeURIComponent(mateNames.join(','))+'&me='+encodeURIComponent(document.getElementById('meName').textContent);
+    },1200);
+  });
+
+  var mateIn=document.getElementById('mate'), mates=document.getElementById('mates');
+  function addMate(){
+    var v=mateIn.value.trim(); if(!v||busy) return;
+    var chip=document.createElement('span'); chip.className='tag'; chip.style.cssText='font-size:12px;padding:3px 9px;display:inline-flex;gap:6px;align-items:center';
+    chip.textContent=v+' ';
+    var x=document.createElement('button'); x.type='button'; x.textContent='×'; x.setAttribute('aria-label','Remove '+v);
+    x.style.cssText='border:0;background:none;cursor:pointer;color:inherit;padding:0';
+    x.addEventListener('click',function(){chip.remove();});
+    chip.appendChild(x); mates.appendChild(chip); mateIn.value=''; dirty=true; mateIn.focus();
+  }
+  document.getElementById('addMate').addEventListener('click',addMate);
+  mateIn.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addMate();}});
+
+  document.getElementById('fillBtn').addEventListener('click',function(){
+    var SAMPLE={
+      paused:['Continue','Study Spot Finder: One-Building Pilot','Show which group study rooms in one library building are free in the next two hours, using an official daily export from the library instead of scraping.'],
+      finished:['Continue','Club Sign-up: Shift Scheduling','Add shift scheduling to the club sign-up site, the feature clubs kept asking for.'],
+      ongoing:['Improve','One-Building Pilot: Walk-in Rooms','Find a way to show walk-in rooms, which the library export doesn\'t track.']
+    }[srcSel.value];
+    form.querySelector('input[value='+SAMPLE[0]+']').checked=true;
+    name.value=SAMPLE[1]; goal.value=SAMPLE[2];
+    count(name,'c-name',80); count(goal,'c-goal',500); dirty=true;
+    if(mates.children.length<2){mateIn.value=srcSel.value==='ongoing'?'Ben S.':'Leo P.';addMate();}
+    ['f-type','f-name','f-goal'].forEach(function(id){setValid(id,true);});
+  });
+  document.getElementById('fillBtn').click(); dirty=false; if(document.activeElement) document.activeElement.blur();
+})();
+</script>
+</body>
+</html>
