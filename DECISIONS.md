@@ -1,5 +1,11 @@
 # Decisions
 
+### Coordinate two external workers with a contract-first P1
+**Date:** 2026-10-24 · **Status:** Accepted execution coordination
+**Files:** docs/EXECUTION_ROADMAP.md, docs/P1_CONTRACT.md, docs/workers/
+
+In the context of the user preparing two external agents and asking this chat to coordinate implementation and progress, facing contract divergence and unverified percentage reports, we decided for backend/frontend ownership on short-lived task branches, a first shared-types handoff and ten independently verified P1 gates, to achieve parallel implementation with measurable integration progress, accepting a small initial synchronization step and user-relayed status from external workers. Product labels remain English; the user clarified question-level reply deadlines and automatic rate-limited in-app invitations for later phases. No new feature is claimed complete by these coordination documents.
+
 ### Consolidate repository around main and one active checkout
 **Date:** 2026-10-24 · **Status:** Accepted; merge explicitly authorized by user
 **Files:** docs/PROJECT_OVERVIEW.md, docs/HANDOFF.md, design/README.md

@@ -43,6 +43,10 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 
 ## Handoff
 
+- [P0–P4 roadmap and progress gates](docs/EXECUTION_ROADMAP.md)
+- [P1 shared contract](docs/P1_CONTRACT.md)
+- [Worker A: backend](docs/workers/WORKER_A.md) / [Worker B: frontend](docs/workers/WORKER_B.md)
+
 - [MVP and roles](docs/MVP_SPEC.md)
 - [API contract](docs/API_CONTRACT.md)
 - [Current phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md)

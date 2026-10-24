@@ -14,6 +14,8 @@ Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 
 最近应用验证：typecheck、生产 build、后端 3/3、浏览器 5/5 通过。修改文档与分支不代表重新跑过应用测试。真实认证、Neon/AWS、公网部署仍未验证。
 
 ## 设计与下一轮
+实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；两个外部 worker 的任务书在 docs/workers/。当前只是分工和接口准备，P1 功能验收 0/10。P0–P4 分级纳入已有功能与新要求；AI 简介/标签、Mentor workload、规则推荐、自动限频站内邀请分别按后续级别实现。deadline 已确认属于具体求助期望回复日期。所有产品文案英文，待回复显示 Awaiting reply。
+
 队友设计已收进 design/。relay 原型补齐接棒、来源对照、问题—引荐—回复及工作台；不再等待草图。
 design/README.md 列出原型与批准需求的差异。共同所有者、Ongoing 接棒、自动延续 Mentor、选择性带入内容、帖子编辑删除等仍待统一。现有保留历史/单所有者/人工引荐规则继续有效，AI 与 Feed 等新增服务暂缓。
 

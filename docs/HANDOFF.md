@@ -1,5 +1,9 @@
 # Buckeye Baton — 协作与目录约定
 
+## 当前进行中的 P1
+
+本轮临时集成分支 codex/p1-integration；两个实际 worker 各建短期 codex/p1-api 和 codex/p1-ui，结束后清理，不恢复永久前后端分支。先读 EXECUTION_ROADMAP.md 与 P1_CONTRACT.md，再转交 workers/WORKER_A.md、workers/WORKER_B.md。类型提交先同步，其他实现并行；总控核验后才累计进度，main 继续作为稳定基线。
+
 ## 从哪里开始
 
 先读 PROJECT_CONTEXT.md 和 docs/PROJECT_OVERVIEW.md，再读 MVP_SPEC.md、API_CONTRACT.md、PHASE1_ACCEPTANCE.md。ACCEPTANCE.md 是完整未来目标，不代表当前功能已完成。
