@@ -18,3 +18,11 @@ Bring both branches back to the coordinating chat before merging main. Verify th
 From each worktree root: npm ci; copy .env.example to .env.local; npm run db:setup; npm run dev -- --port 3001 (or 3002). For acceptance: npm run typecheck; npm run test:backend; npm run build; npm run test:e2e. Install Chromium once with npx playwright install chromium.
 
 AWS credits, real Neon/PostgreSQL credentials and public hosting remain separate setup tasks. No paid cloud resource was created. AI Mentor shortlist remains future work with final Staff choice.
+
+## Prepared checkouts
+
+- Integration: `C:/Users/23678/.codex/workspaces/buckeye-baton`, branch `codex/buckeye-baton-mvp`.
+- Frontend: `C:/Users/23678/.codex/workspaces/buckeye-baton-frontend`, branch `codex/buckeye-baton-frontend`.
+- Backend: `C:/Users/23678/.codex/workspaces/buckeye-baton-backend`, branch `codex/buckeye-baton-backend`.
+
+Open each corresponding folder in the new coding chat. Run npm ci and local environment setup per README on first use. Working directories have independent build/database files. Review PR: https://github.com/BOWEN2491/buckeye-baton/pull/1 . No merge to main was performed.

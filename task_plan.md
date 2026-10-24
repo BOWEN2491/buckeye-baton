@@ -6,5 +6,5 @@
 - [x] Rename to Buckeye Baton; remove superseded preparation runtime.
 - [x] Run Node 22 type checks, backend tests, production build and two browser acceptance tests.
 - [x] Prepare independent implementation branch and parallel handoff guide.
-- [ ] Publish review branch/PR (publication recorded in the chat).
+- [x] Publish independent review branch and draft PR #1; prepare frontend/backend worktrees.
 - [ ] Connect hosted PostgreSQL and AWS after account information is available.
