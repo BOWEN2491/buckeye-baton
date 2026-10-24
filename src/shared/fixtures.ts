@@ -1,4 +1,5 @@
 import type { User, Project, Lesson } from './types';
+import type { ProjectQuestion } from './relay-types';
 const timestamp = '2026-10-24T12:00:00.000Z';
 /** Fictional demo content; no measured impact claims. */
 export const demoUsers: User[] = [
@@ -17,4 +18,9 @@ export const demoLessons: Lesson[] = [
   { id: 'lesson-fields', projectId: 'project-signup', authorId: 'student-alex', type: 'pitfall', title: 'Ask only for information you need now', assumed: 'We expected students to complete all registration fields in one visit.', happened: 'In our fictional demo scenario, students found a long mobile form difficult to finish.', change: 'We moved optional questions after registration and explained why required details were needed.', conditions: 'Useful for low-risk student event registration. Check which details are necessary for your event before removing them.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
   { id: 'lesson-confirmation', projectId: 'project-signup', authorId: 'student-alex', type: 'worked', title: 'Show the next step after registration', assumed: 'A success message would be enough.', happened: 'People still wanted to know when and where to arrive.', change: 'We added event time, location, and contact details to confirmation.', conditions: 'Best for events with clear logistical information; keep details current.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
   { id: 'lesson-accessibility', projectId: 'project-signup', authorId: 'student-alex', type: 'next_team', title: 'Test keyboard navigation before adding more features', assumed: 'Visual checks would catch the main usability problems.', happened: 'Keyboard-only usage revealed unclear focus and labels.', change: 'The next team can test the full flow with a keyboard and review labels with a mentor.', conditions: 'Relevant to web forms; combine this with testing with actual users.', artifacts: [], createdAt: timestamp, updatedAt: timestamp },
+];
+/** Fictional project questions: one asks for a mentor, one is an open discussion. */
+export const demoQuestions: ProjectQuestion[] = [
+  { id: 'question-events-shifts', projectId: 'project-events', authorId: 'student-mia', title: 'How can we confirm volunteer shifts without asking for extra personal details?', body: 'Fictional demo: our signup currently asks for a phone number only to send a reminder. We want a confirmation step that still works if volunteers skip optional fields.', wantsMentor: true, dueAt: null, createdAt: timestamp },
+  { id: 'question-checkin-reuse', projectId: 'project-v2-finished', authorId: 'student-mia', title: 'Which parts of the check-in flow are easiest to reuse for a volunteer event?', body: 'Fictional demo: an open discussion for anyone who has looked at the prototype.', wantsMentor: false, dueAt: null, createdAt: timestamp },
 ];

@@ -1,22 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import type { Sql } from './db';
 import { database } from './db';
-import { z } from 'zod';
 import * as v from './validation';
-import type { User } from '../shared/types';
-export class ApiFailure extends Error { constructor(public status: number, public code: string, message: string) { super(message); } }
-const fail = (status: number, code: string, message: string): never => { throw new ApiFailure(status,code,message); };
-const json = (data: unknown, status = 200) => Response.json({data}, {status});
-async function rows(sql: Sql, query: string, params: unknown[] = []) { return (await sql.query(query, params)).rows as Record<string, any>[]; }
-async function one(sql: Sql, table: string, id: string) { const row = (await rows(sql, `SELECT * FROM ${table} WHERE id=$1`,[id]))[0]; return row ?? fail(404,'NOT_FOUND','Record not found'); }
-async function actor(req: Request, sql: Sql): Promise<User> { const id = req.headers.get('x-demo-user-id'); if (!id) fail(401,'UNAUTHENTICATED','Choose a demo identity'); const user = (await rows(sql,'SELECT * FROM users WHERE id=$1',[id]))[0]; return user as User ?? fail(401,'UNAUTHENTICATED','Unknown demo identity'); }
-function role(user: User, expected: string) { if (user.role !== expected) fail(403,'FORBIDDEN',`This action requires ${expected} role`); }
-async function ownProject(sql: Sql, id: string, user: User) { const p = await one(sql,'projects',id); role(user,'student'); if(p.ownerId !== user.id) fail(403,'FORBIDDEN','Only the project owner can edit this project'); return p; }
-async function parse(req: Request, schema: z.ZodType) { let body; try {body = await req.json();} catch {fail(400,'INVALID_INPUT','Malformed JSON body');} const parsed=schema.safeParse(body); if(!parsed.success) fail(400,'INVALID_INPUT',parsed.error.issues[0]?.message ?? 'Invalid input'); return parsed.data as Record<string, any>; }
-const parameter = (value: unknown) => value !== null && typeof value === 'object' ? JSON.stringify(value) : value;
-function validateProject(data: Record<string, unknown>) { const parsed = v.completeProject.safeParse(data); if (!parsed.success) return fail(400,'INVALID_INPUT',parsed.error.issues[0]?.message ?? 'Invalid project'); return parsed.data; }
-async function insert(sql: Sql, table: string, data: Record<string, any>, conflict = '') { const entries=Object.entries(data); const keys=entries.map(([key])=>`"${key}"`).join(','); const args=entries.map(([,value]) => parameter(value)); return (await rows(sql,`INSERT INTO ${table} (${keys}) VALUES (${args.map((_,i)=>`$${i+1}`).join(',')}) ${conflict} RETURNING *`,args))[0]; }
-async function update(sql: Sql, table: string, id: string, data: Record<string,any>) { const entries=Object.entries(data); if(!entries.length) fail(400,'INVALID_INPUT','Provide at least one field'); return (await rows(sql,`UPDATE ${table} SET ${entries.map(([k],i)=>`"${k}"=$${i+1}`).join(',')}, "updatedAt"=now() WHERE id=$${entries.length+1} RETURNING *`,[...entries.map(([,val])=>parameter(val)),id]))[0]; }
+import { ApiFailure, fail, json, rows, one, actor, role, ownProject, parse, validateProject, insert, update } from './http';
+import * as relay from './relay';
+export { ApiFailure };
 export async function handle(req: Request, resource: string, id?: string): Promise<Response> {
  try {
   if(resource==='adoptions'||resource==='adoption') fail(410,'FEATURE_RETIRED','Lesson adoption has been retired. Experience is now part of the project.');
@@ -27,9 +14,8 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    const q=search.get('q')??''; const status=search.get('status'); if(status&&!['ongoing','finished','paused'].includes(status)) fail(400,'INVALID_INPUT','Invalid project status');
    return json(await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC',[`%${q}%`,status]));
   }
-  if(resource==='project'&&method==='GET') {
-   return json({project:await one(db,'projects',id!),lessons:await rows(db,'SELECT * FROM lessons WHERE "projectId"=$1 ORDER BY "createdAt"',[id])});
-  }
+  if(resource==='project'&&method==='GET') return json(await relay.projectDetail(db,id!));
+  if(resource==='projectQuestions'&&method==='GET') return await relay.listQuestions(db,id!);
   if(resource==='lessons'&&method==='GET') {const q=`%${search.get('q')??''}%`;return json(await rows(db,'SELECT * FROM lessons WHERE title ILIKE $1 OR assumed ILIKE $1 OR happened ILIKE $1 OR change ILIKE $1 OR conditions ILIKE $1 ORDER BY "createdAt" DESC',[q]));}
   if(resource==='lesson'&&method==='GET') {
    const lesson=await one(db,'lessons',id!);
@@ -40,6 +26,11 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    return json({comments:await Promise.all(comments.map(async c=>({...c,author:await one(db,'users',c.authorId)}))),referrals:await Promise.all(referrals.map(async r=>({...r,mentor:await one(db,'users',r.mentorId),staff:await one(db,'users',r.staffId)})))});
   }
   const user=await actor(req,db);
+  if(resource==='pickups'&&method==='POST') return await relay.pickup(req,db,user,id!);
+  if(resource==='projectQuestions'&&method==='POST') return await relay.askQuestion(req,db,user,id!);
+  if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
+  if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
+  if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user);
   if(resource==='projects'&&method==='POST') {
    role(user,'student'); const input=await parse(req,v.projectInput);
    const data=validateProject({codeUrl:null,demoUrl:null,...input,status:input.status??'ongoing',reflection:{...v.emptyReflection(),...input.reflection}});

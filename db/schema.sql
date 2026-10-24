@@ -8,3 +8,11 @@ CREATE TABLE IF NOT EXISTS adoptions (id text PRIMARY KEY, "lessonId" text NOT N
 CREATE INDEX IF NOT EXISTS lessons_project_idx ON lessons("projectId");
 CREATE INDEX IF NOT EXISTS comments_lesson_idx ON comments("lessonId");
 CREATE INDEX IF NOT EXISTS adoptions_project_idx ON adoptions("adoptingProjectId");
+CREATE TABLE IF NOT EXISTS project_relations (id text PRIMARY KEY, "sourceProjectId" text NOT NULL REFERENCES projects(id), "projectId" text NOT NULL UNIQUE REFERENCES projects(id), "ownerId" text NOT NULL REFERENCES users(id), "requestId" text NOT NULL, "pickupType" text NOT NULL CHECK("pickupType" IN ('reproduce','continue','improve')), title text NOT NULL, goal text NOT NULL, "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp(), UNIQUE("ownerId","requestId"), CHECK("sourceProjectId" <> "projectId"));
+CREATE INDEX IF NOT EXISTS project_relations_source_idx ON project_relations("sourceProjectId");
+CREATE TABLE IF NOT EXISTS project_questions (id text PRIMARY KEY, "projectId" text NOT NULL REFERENCES projects(id), "authorId" text NOT NULL REFERENCES users(id), title text NOT NULL, body text NOT NULL DEFAULT '', "wantsMentor" boolean NOT NULL, "dueAt" timestamptz, "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE INDEX IF NOT EXISTS project_questions_project_idx ON project_questions("projectId");
+CREATE TABLE IF NOT EXISTS project_posts (id text PRIMARY KEY, "questionId" text NOT NULL REFERENCES project_questions(id), "authorId" text NOT NULL REFERENCES users(id), body text NOT NULL, kind text NOT NULL CHECK(kind IN ('comment','follow_up','mentor_reply')), "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE INDEX IF NOT EXISTS project_posts_question_idx ON project_posts("questionId");
+CREATE TABLE IF NOT EXISTS project_referrals (id text PRIMARY KEY, "questionId" text NOT NULL UNIQUE REFERENCES project_questions(id), "staffId" text NOT NULL REFERENCES users(id), "mentorId" text NOT NULL REFERENCES users(id), reason text NOT NULL, "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE INDEX IF NOT EXISTS project_referrals_mentor_idx ON project_referrals("mentorId");

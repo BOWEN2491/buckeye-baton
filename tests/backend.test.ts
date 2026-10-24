@@ -10,6 +10,7 @@ import { GET as projectGET } from '../src/app/api/projects/[id]/route';
 import { GET as usersGET } from '../src/app/api/users/route';
 import { POST as retiredAdoptionPOST } from '../src/app/api/lessons/[id]/adoptions/route';
 import { PATCH as retiredAdoptionPATCH } from '../src/app/api/adoptions/[id]/route';
+import './relay.test';
 
 async function request(resource: string, id?: string, method='GET', user?: string, body?: unknown, query='') {
  const req = new Request(`http://localhost/api/${resource}${query}`, {method,headers:{...(user?{'x-demo-user-id':user}:{}),'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -50,7 +51,7 @@ test('legacy discussion storage, retired adoption endpoints and project persiste
   assert.equal((await request('adoption','missing','PATCH','student-mia',{result:'worked',note:'Retired'})).status,410);
   assert.equal((await request('adoptions','missing','POST')).status,410);
   const projectDetail=(await request('project',created.data.id)).data;
-  assert.deepEqual(Object.keys(projectDetail).sort(),['lessons','project']);
+  assert.deepEqual(Object.keys(projectDetail).sort(),['lessons','project','source','successors']);
   assert.equal(projectDetail.lessons[0].id,lesson.data.id);
   assert.deepEqual(Object.keys((await request('lesson',lesson.data.id)).data).sort(),['lesson','project']);
   const storage=await database();

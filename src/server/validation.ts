@@ -21,3 +21,11 @@ export const lessonInput = z.object({ type: z.enum(['worked','pitfall','next_tea
 export const commentInput = z.object({body: text, kind: z.enum(['question','comment','reply']), parentId: text.nullable().optional()}).strict();
 export const referralInput = z.object({questionCommentId: text, mentorId: text, reason: text}).strict();
 export const replyInput = z.object({body: text}).strict();
+// P1 relay inputs (docs/P1_CONTRACT.md).
+const title = z.string({ error: 'Enter a title' }).trim().min(1, 'Enter a title').max(160, 'Titles can be at most 160 characters');
+const body = (message: string) => z.string({ error: message }).trim().min(1, message).max(10000, 'Text can be at most 10000 characters');
+export const pickupInput = z.object({ requestId: z.uuid('requestId must be a UUID'), pickupType: z.enum(['reproduce','continue','improve'], { error: 'Choose reproduce, continue or improve' }), title, goal: body("Describe your team's goal") }).strict();
+export const dueAt = z.iso.datetime({ message: 'Use an ISO UTC date and time for the reply date' }).refine(value => Date.parse(value) > Date.now(), 'The reply date must be in the future').nullable();
+export const questionInput = z.object({ title, body: z.string({ error: 'Question details must be text' }).trim().max(10000, 'Text can be at most 10000 characters'), wantsMentor: z.boolean({ error: 'Choose whether you want a mentor to answer' }), dueAt }).strict();
+export const postInput = z.object({ body: body('Write something before posting'), kind: z.enum(['comment','follow_up','mentor_reply'], { error: 'Choose comment, follow_up or mentor_reply' }) }).strict();
+export const projectReferralInput = z.object({ mentorId: z.string({ error: 'Choose a mentor' }).trim().min(1, 'Choose a mentor'), reason: z.string({ error: 'Write why this mentor fits' }).trim().min(1, 'Write why this mentor fits').max(300, 'Referral reasons can be at most 300 characters') }).strict();
