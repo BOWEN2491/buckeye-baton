@@ -1,5 +1,18 @@
 # Buckeye Baton — API contract
 
+> **版本边界（2026-10-24）：本文记录当前已实现的 Lesson v1 接口。** `MVP_SPEC.md` 和 `ACCEPTANCE.md` 已更新为确认后的项目接棒 v2，尚未实现。以下旧接口不是 v2 的最终契约；`src/shared/types.ts` 也仍为 v1。开始并行开发前先统一新版类型、接口及数据迁移，旧测试不能代表 v2 已通过。
+
+## V2 required changes — pending implementation
+
+- 项目包含状态对应的总结、进展与经验，不再以独立 Lesson 为主要操作对象。
+- 接棒提交 `reproduce|continue|improve`、新名称及目标，创建属于当前学生的 Ongoing 项目；读取返回来源与后续项目摘要。
+- 问题归项目，平铺回复归具体问题；Staff 引荐指向问题，指定 Mentor 回复与完成状态保持原子一致。
+- 状态与对应总结一起校验；历史内容、未解决问题、待回复引荐和接棒关系保留。
+- Staff 工作台展示社区问题，Mentor 展示待办；关系数量不等于成功数量，v2 不要求旧采用统计。
+- 新版端点、字段、旧数据映射在实现前集中确定。本次不迁移或删除数据。
+
+## Implemented v1 contract (reference)
+
 Canonical fields and TypeScript interfaces: `src/shared/types.ts`. JSON fields are camelCase; IDs are strings; dates are ISO timestamps. Nullable response fields are always present as `null`. Optional request fields may be omitted; URL fields may be null. Inputs never accept client-selected owner, role, author, or creation date.
 
 ## Identity and errors

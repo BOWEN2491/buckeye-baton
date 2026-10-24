@@ -1,39 +1,93 @@
-# Buckeye Baton — MVP specification
+# Buckeye Baton — MVP v2：项目交接与接棒
 
-The project ends. The lessons keep helping the next team.
+更新：2026-10-24。状态：**产品方向已确认，应用尚未按 v2 改造**。
 
-## Goal and ownership
-Connect OSU student teams across semesters through reusable project lessons and contextual industry mentor advice. A project contains lessons; project status and lesson type are separate concepts. All demonstration content is fictional.
+本文件是下一轮实现依据，取代以独立 Lesson 与采用反馈为中心的旧规格。当前应用、共用类型和接口仍为 v1。旧规格保存在 legacy/MVP_SPEC_LESSON_V1.md，旧验收在 legacy/ACCEPTANCE_LESSON_V1.md。本轮只更新文档，不修改应用、数据库或现有数据。
 
-The frontend owner implements pages and interactions. The backend owner implements persistence, endpoints, validation, and role checks. Shared types, dependencies, and API changes must be coordinated through this contract and `src/shared/types.ts` before either side diverges. The coordinating chat verifies actual code and behavior.
+## 产品定义与边界
 
-## Roles
-- Student: publish and edit owned projects and lessons, ask questions, join lessons to owned projects, record results.
-- Mentor: contribute discussion and answer questions referred to them.
-- OSU Staff: connect a specific student question with an industry mentor and provide a reason.
+Buckeye Baton 让 OSU 学生留下项目与经验，让下一组接棒，并由 Staff 将合适的 Mentor 带进具体问题。
 
-All four demo identities can discuss lessons. Demo identities are freely selectable and are explicitly not real authentication.
+**Project 是一个团队负责的一次有明确目标的实践。** 可以独立创建，也可以源自前人的项目。经验是项目内的交接内容，不再要求独立发布 Lesson、打开 Lesson 页面或执行 Add lesson to project。
 
-## Required experience
-Browse projects, search lessons, read a project and its lessons, publish a project and lesson, ask a question, refer that question, reply as the chosen mentor, adopt the lesson into another owned project, and report the result. The result appears at the source lesson and the adopting project. Refreshes retain all saved data.
+平台负责项目发现、经验交接、接棒关系和围绕问题的人际连接。代码、代码修改与 GitHub PR 留在外部仓库，平台提供链接。所有演示人物和材料均标为虚构，不把样例数字描述成真实验证结果。
 
-## Content and state
-- Project states: `ongoing`, `finished`, `paused`. Display a consistent page structure, emphasizing current needs, outcomes, or reusable unfinished work respectively. Changing state preserves lessons, discussions, referrals, and adoptions.
-- Lesson types: `worked`, `pitfall`, `next_team`. Each lesson includes what was assumed, what happened, the change or proposed next step, applicability conditions, and optional artifact links.
-- An adoption initially has `result: null` and an empty note. It represents intention only. Reporting `worked`, `partial`, or `failed` requires a meaningful note and may include an evidence link. Only reported results count as usage. Updating an existing record does not increase the count.
-- No automatic Verified label. Display concrete reported outcomes. No claim that feedback proves general validity.
+## 一、接棒创建什么
 
-## Page responsibilities
-1. Explore: project cards with title, summary, owner, affiliation, term, tags, state; keyword and state filtering; lesson search.
-2. Project: overview, external links, lessons, incoming use of its lessons, lessons adopted by this project, project publication/editing.
-3. Lesson: provenance, experience and conditions, discussion, referral history, adoption and results.
-4. Connections: Staff referral creation and Mentor pending questions, leading to the original discussion.
-5. Demo identity switcher: Alex, Mia, Sarah, Kevin; visible demo disclaimer. Switching identities returns to Explore projects with search and filters reset. Unsaved page forms reset; persisted records remain.
+- Finished 与 Paused 项目提供接棒入口；Ongoing 主要提供求助和讨论入口。
+- 三种方式共用表单和流程：reproduce（重现）、continue（继续）、improve（改进）。
+- 表单填写方式、新项目名称和本组准备推进的具体目标；其他必要项目资料沿用普通发布表单。
+- 提交创建属于当前学生的 **新 Ongoing 项目**，保存来源项目、接棒方式及推进目标。
+- 原项目显示后续项目链接；新项目显示来源链接与推进目标。新项目有一个直接来源，来源项目可以有多个后续项目。
+- 原项目的所有者、内容和状态不变；新团队不能直接修改原项目。
+- 原经验和可复用资料通过来源链接供阅读，不自动复制成新团队撰写的成果，不执行代码 fork、下载或修改。
+- 单纯阅读或借鉴经验无需接棒，也不强制创建项目或提交反馈。
 
-Projects describe a team's whole effort; lessons capture individual reusable discoveries within that effort. The lesson action explicitly offers saving to an owned project, followed by reporting an outcome after trying it. Saving alone is not evidence of use.
+## 二、项目内填写哪些经验
 
-## Deferred
-Real OSU login, files, full forks, complex network visualizations, a notification center, AI summaries, and AI mentor matching. Future matching may classify questions by tags and shortlist mentors, with Staff making the final selection.
+共同资料：标题、简介、课程或社团、学期、主题标签、可选代码与演示链接。一个项目可以有多个经验条目，但始终在项目内展示和编辑，不独立采用、计数或拥有讨论页。
 
-## Collaboration sequence
-Freeze contracts and seed content; develop frontend with shared fixtures while backend implements endpoints; integrate question → referral → reply first, then publication/search/adoption. Final acceptance follows `ACCEPTANCE.md`. Deploy only after account eligibility is known; no remote repository or cloud resource is assumed to exist.
+| 状态 | 页面重点 | 团队填写内容 |
+|---|---|---|
+| Ongoing | 当前求助；无问题时展示目标与进展 | 项目目标、当前进展，按需发布求助 |
+| Finished | 团队成果与经验 | What we got；Problems we encountered（We assumed / What happened / We changed）；For the next team |
+| Paused | 暂停原因与可复用内容 | Why we paused；If we did it again；What you can reuse（名称与可选链接） |
+
+- Finished 至少填写一项成果和给下一组的建议；问题条目按实际情况填写，不要求每个项目都声明失败。
+- Paused 必填暂停原因及至少一项重新开始时的调整建议；可复用材料可为空，显示明确空状态。
+- Ongoing 不强迫学生为了发布项目而编造求助。
+- 简介、经验与总结由学生撰写；AI 不进入本轮。
+- 首页使用简短项目卡，显示标题、状态、简介和关键困难或成果摘要；队友的三个完整状态原型用于项目详情布局。
+
+## 三、如何组织求助与角色动作
+
+一个项目允许多个具体问题；每个问题有自己的平铺回复与引荐记录，不做多层嵌套。三种状态都可以提问。
+
+| 角色 | 项目页动作 | My workspace |
+|---|---|---|
+| Student | 创建、编辑自己的项目与经验；提问、回复；接棒；更新进展 | 自己的项目与来源关系 |
+| Staff | 普通讨论；针对具体问题选 Mentor 并填写引荐理由 | 社区问题及引荐情况 |
+| Mentor | 普通评论；正式回复被引荐的问题；补充成果或暂停原因的建议 | 指派给自己的待回复引荐 |
+
+- 所有演示身份可以普通讨论；只有 Staff 可以引荐，只有指定 Mentor 可以完成对应引荐。
+- 记录问题、Staff、Mentor、理由与待回复/已回复状态；正式回复与完成状态须一致保存。
+- Ongoing 可以把当前求助置顶；Finished/Paused 先展示团队总结，再展示 Questions & guidance。
+- 有导师参与才显示实际建议；没有导师使用空状态。导师参与不是发布、完成、暂停或接棒的门槛。
+- 新团队的新困难主要发在自己的后续项目；原项目讨论用于澄清原始材料。
+- 第一版通过工作台查看待办，不做真实通知投递。按角色显示按钮，服务端仍检查权限。
+- 沿用 Alex、Mia、Mentor Sarah、Staff Kevin 四个演示身份，并标注非真实登录。切换身份返回未筛选的 Explore projects，清空未提交表单，保留已保存记录。
+
+## 四、状态切换规则
+
+- 只有项目所有者可以编辑资料、经验与状态。
+- 新项目默认为 Ongoing；进入 Finished 或 Paused 前，填写第二节对应必要总结。
+- 状态和对应必填内容一起校验；失败时保留表单，项目状态不改变。
+- 所有者可以返回 Ongoing，再补齐内容后切换其他状态。
+- 切换保留全部已保存内容：过去状态的总结、问题、回复、引荐、接棒关系；只调整展示重点，不删除历史。
+- 未解决问题、待回复引荐不会自动关闭，导师仍可回应。
+- 接棒创建新项目，**不是**把原项目改回 Ongoing。
+
+## 五、如何体现帮助与贡献
+
+- 来源项目展示后续项目名称、接棒方式、推进目标、负责人和当前状态，链接到对应页面。
+- 后续项目展示来源项目、原团队和本组目标，保留清楚归属。
+- 后续团队通过进展、成果和最终状态说明做了什么；原作者沿链接查看。
+- 接棒数量只表示建立的关系，不表示成功数量或经验有效性。
+- 移除逐条经验采用、worked / partial / failed 反馈、独立采用统计和自动 Verified 判定。
+- 后续项目创建后即可显示为 Ongoing，不需要等成功后才展示。
+
+## 范围、交接与完成标准
+
+正式页面：Explore projects、创建/编辑项目、按状态展示的项目详情（经验与讨论）、接棒表单、按角色展示的 My workspace。
+
+暂缓：独立 Lesson 浏览/详情/搜索、逐条采用反馈、完整 fork、网页内编辑代码、复杂接力图、真实登录、上传、通知和 AI。保留项目搜索与状态筛选。
+
+技术栈保持 Next.js 15、TypeScript、Node.js 22、Tailwind、pg/PostgreSQL；显式本地 PGlite 用于单进程演示。真实 Neon/AWS 与公网部署另行验证。
+
+1. 队友补齐接棒表单与“问题—引荐—回复”草图。沿用三个状态原型，去掉 AI 标签与逐条采用数。
+2. 协调方先统一新版共用类型、接口与旧记录映射，页面和后端不能各自设计模型。API_CONTRACT.md 当前记录旧版运行接口，不代表 v2 已支持。
+3. 先实现项目内经验与讨论，再接通 Staff 引荐、Mentor 回复，最后完成接棒关系与状态表单。
+4. 后续改造先明确旧经验、评论、引荐和采用记录的迁移或归档策略，不静默删除已有内容。本次不执行迁移。
+5. 按 ACCEPTANCE.md 验证新版主线、权限、历史保留、持久化、异常提示及手机布局。旧版测试通过不能代表 v2 已通过。
+
+固定演示：Alex 留下 Paused 项目与交接材料 → Mia 接棒创建 Ongoing 项目 → Mia 提问 → Kevin 引荐 Sarah → Sarah 回复 → Mia 更新进展 → Alex 看见后续团队的贡献。

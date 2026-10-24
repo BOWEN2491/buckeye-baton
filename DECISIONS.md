@@ -1,5 +1,12 @@
 # Decisions
 
+### Project-centered relay specification supersedes independent Lesson adoption
+**Date:** 2026-10-24 · **Status:** Accepted for specification; implementation pending
+**Files:** docs/MVP_SPEC.md, docs/ACCEPTANCE.md, docs/API_CONTRACT.md, PROJECT_CONTEXT.md
+**Supersedes:** Lesson-centered requirements in docs/legacy/MVP_SPEC_LESSON_V1.md (historical snapshot).
+
+In the context of the user approving the teammate's three project-state designs and five scope decisions, facing unclear independent Lesson adoption and excessive MVP complexity, we decided for embedded project reflections, project questions with Staff/Mentor referrals, and linked successor projects for reproduce/continue/improve, to achieve one understandable handoff journey, accepting a future contract/data migration and removal of per-lesson outcome tracking from the target UI. This documents the approved direction on codex/buckeye-baton-mvp; code and records remain v1 until coordinated implementation preserves historical data.
+
 ### Keep source and dependencies on D: with explicit project Python
 **Date:** 2026-10-22 Â· **Status:** Accepted
 **Files:** `.venv/`, `start.ps1`, `.vscode/settings.json`

@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "身份切换回 Explore projects；明确项目与经验关系及保存后实践再反馈的流程",
-  "nextUp": "通过 PR 审查并行设计改进；配置真实 Neon/AWS 后单独验证上线",
+  "lastCompleted": "确认项目中心 MVP v2 五项规格与目标验收；应用代码仍为 Lesson v1",
+  "nextUp": "补接棒表单与讨论交互草图；统一 v2 类型、接口及旧数据迁移映射后实现",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -188,6 +188,7 @@
   <!-- ============ FEATURES ============ -->
   <section class="panel" id="features">
     <!-- claude:features:start -->
+<div class="card" data-updated="2026-10-24"><h3>MVP v2 项目接棒 <span class="badge">planned</span></h3><p>已确认：项目内经验、三种接棒方式、项目问题与引荐、保留历史的状态切换、来源与后续贡献链接。下列现有功能属于 Lesson v1；新版尚未实现，不以逐条采用统计作为验收。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>试用反馈改进</h3><p>身份切换返回 Explore projects 并清空筛选；项目与经验的层级说明、来源链接和保存后反馈指引已更新。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>核心功能</h3><p>项目和经验发布、搜索、Student/Mentor/Staff 工作台、针对问题的引荐、导师回复、保存经验、采用结果与来源追溯。</p></div><div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI 简介、AI 导师推荐、真实认证、上传、完整 fork、复杂接力图和通知中心。</p></div>
 <!-- claude:features:end -->
@@ -233,6 +234,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>v2 规格与旧版边界</h3><p><a href="../docs/MVP_SPEC.md">MVP_SPEC.md</a> 是新版依据；<a href="../docs/ACCEPTANCE.md">ACCEPTANCE.md</a> 是目标验收；API_CONTRACT.md 标明运行接口与待协调变更。docs/legacy/ 保存旧规格与剧本；src/shared/types.ts 仍为旧版。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>文件地图</h3><table><tbody><tr><td><code>src/app/</code></td><td>页面与 /api 路由</td></tr><tr><td><code>src/components/</code></td><td>可复用界面</td></tr><tr><td><code>src/lib/client.ts</code></td><td>请求封装与带资源键的加载状态</td></tr><tr><td><code>src/server/</code></td><td>权限、输入校验、SQL 与事务</td></tr><tr><td><code>src/shared/</code></td><td>共用类型和虚构样例</td></tr><tr><td><code>db/schema.sql</code></td><td>数据库结构</td></tr><tr><td><code>scripts/</code></td><td>数据库初始化</td></tr><tr><td><code>tests/</code></td><td>接口与浏览器回归</td></tr><tr><td><code>docs/</code></td><td>范围、契约与验收</td></tr><tr><td><code>README.md</code></td><td>运行入口</td></tr><tr><td><code>AGENTS.md</code></td><td>后续 agent 工作约定</td></tr><tr><td><code>DECISIONS.md</code></td><td>决策与被替代的历史选择</td></tr></tbody></table></div>
 <!-- claude:architecture:filemap:end -->
 
@@ -267,6 +269,7 @@ npm start</pre></div>
 <!-- claude:architecture:commands:end -->
 
     <!-- claude:architecture:decisions:start -->
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Project 成为核心</h3><p>按用户确认，将经验嵌入项目，以重现、继续、改进创建新团队的关联项目；问题与引荐改归项目。本次只写规格，旧应用与数据未变；迁移需保留历史。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>最新决定</h3><p>用户将 Pass It On 更名为 Buckeye Baton，并授权清理旧环境练习。应用提升到根目录；保留协作约定、先前工作来源说明与 Git 历史。</p></div>
 <!-- claude:architecture:decisions:end -->
 
@@ -315,6 +318,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 新版五项规格</h3><p>写入接棒创建、状态对应经验、角色与讨论、状态切换、贡献展示；同步验收、上下文和交接提示。旧规格归档，旧测试不代表新版已实现。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 首轮试用反馈</h3><p>切换身份后返回 Explore projects 并重置页面筛选与未保存表单。页面说明一个项目包含多条可复用经验，经验保存区明确先保存、实践后再反馈；记录仍保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Buckeye Baton</h3><p>用户确认新名称并要求删除旧练习。新的 Next.js 应用成为唯一运行入口，修复标签切换时旧响应类型导致的客户端错误；重新验收已通过。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>Buckeye Baton 比赛应用接入</h3><p>独立 pass-it-on/ 子目录，保留赛前文件；确认 Honda challenge 与 Student/Mentor/Staff。Node 22 构建和浏览器核心旅程通过，完整验收在进行，真实 AWS/Neon 尚未验证。</p></div>

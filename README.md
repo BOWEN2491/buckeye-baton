@@ -2,6 +2,8 @@
 
 Student project lessons that help the next team. A hackathon demo connecting students, industry mentors, and OSU Staff.
 
+Product update (2026-10-24): [MVP v2 specification](docs/MVP_SPEC.md) defines project-centered handoffs and successor projects. The running application still implements the earlier Lesson workflow. V2 is specified, not implemented; the [API contract](docs/API_CONTRACT.md) distinguishes current interfaces from pending changes.
+
 ## Run locally
 
 Requires Node.js 22 and npm.
