@@ -1,8 +1,8 @@
 # Buckeye Baton — API contract
 
-> **版本边界（2026-10-24）：v2 第一轮项目浏览与总结编辑之上，codex/p1-implementation 分支实现了 P1 接棒、项目问题、人工引荐、导师回复与工作台（见下文“P1 relay endpoints”）。** P1 尚待总控独立验收，未合并 main。独立 Lesson 页面和采用功能已退出产品。规则依据 P1_CONTRACT.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
+> **版本边界（2026-10-24）：v2 第一轮项目浏览与总结编辑之上，codex/p1-implementation 分支实现了 P1 接棒、项目问题、人工引荐、导师回复与工作台（见下文“P1 relay endpoints”）。** P1 已通过总控独立本地验收与用户产品验收，并经 PR #2 合入 main；云端及真实 PostgreSQL 多连接仍未验证。独立 Lesson 页面和采用功能已退出产品。规则依据 P1_CONTRACT.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
 
-## P1 relay endpoints — implemented on codex/p1-implementation, pending acceptance
+## P1 relay endpoints — accepted and merged into main
 
 Types: `src/shared/relay-types.ts` (PickupInput, RelayLink, RelayProjectDetail, ProjectQuestion, ProjectPost, ProjectReferral, QuestionThread, Workbench, QuestionInput, PostInput, ProjectReferralInput). Handlers: `src/server/relay.ts`; shared request helpers: `src/server/http.ts`.
 
@@ -52,7 +52,7 @@ interface ProjectReflection {
 
 ## Full v2 required changes — P1 portion implemented above, remainder pending
 
-- 项目状态总结已纳入第一轮；后续仍需接通项目讨论和接棒。
+- 项目状态总结已纳入第一轮；项目讨论和接棒已由 P1 接通。
 - 接棒提交 `reproduce|continue|improve`、新名称及目标，创建属于当前学生的 Ongoing 项目；读取返回来源与后续项目摘要。
 - 问题归项目，平铺回复归具体问题；Staff 引荐指向问题，指定 Mentor 回复与完成状态保持原子一致。
 - 状态与对应总结一起校验；历史内容、未解决问题、待回复引荐和接棒关系保留。

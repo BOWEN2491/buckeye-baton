@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P1 独立本地验收 10/10：类型、生产构建、后端5/5、浏览器7/7；已集成临时分支",
-  "nextUp": "通过 PR 审阅/合并 P1；P2–P4 未开始；真实 PostgreSQL 与云端仍待验证",
+  "lastCompleted": "P1 总控与用户产品验收通过，PR #2 已合入 main（3b473de）",
+  "nextUp": "以 main 为共享基线准备 P2；真实 PostgreSQL 与云端仍待验证；现有预览保持运行",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -171,7 +171,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0 与 P1：三状态项目与总结编辑、接棒关系、项目问题、人工引荐和多轮指导已实现。P1 十项独立本地验收通过，待 PR 合并；云端及 P2–P4 未完成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0 与 P1：三状态项目与总结编辑、接棒关系、项目问题、人工引荐和多轮指导已实现。P1 十项独立本地验收及用户产品验收通过，PR #2 已合入 main；云端及 P2–P4 未完成。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -325,6 +325,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P1 产品验收与 PR #2 合并</h3><p>用户手动验收本地 a232252 预览后明确授权合并；PR #2 已合入 main，合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4。本地同步 main；现有预览继续运行，未重启或重置数据，P2尚未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 总控独立验收通过</h3><p>对 61ff34b 在独立目录重跑 typecheck、生产 build/start、后端5/5和浏览器7/7，检查桌面/390px截图；G1–G10本地通过。代码已快进集成 codex/p1-integration；main未合并。真实pg多连接及Neon/AWS未验证，P2未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 改为单 Agent 完整交付</h3><p>按用户最新决定合并前后端任务，正常只在全部实现、自测和推送后汇报一次。P1 功能验收仍为 0/10，本次仅更新交接文档。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>历史：两 worker 执行准备（已被取代）</h3><p>原路线的契约、十项验收门槛和英文界面约定保留，A/B 分工和中间类型交接已取消。Awaiting reply 表示待回复。</p></div>
