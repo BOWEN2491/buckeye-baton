@@ -1,6 +1,25 @@
 # Buckeye Baton — API contract
 
-P2 的待实现接口/类型单列在 [P2_CONTRACT.md](P2_CONTRACT.md)，目前尚未提供，不可将其视为下列已运行接口。P2尚未配置或验证AI服务。
+## P2 endpoints — implemented on codex/p2-implementation, pending coordinator acceptance
+
+Rules: [P2_CONTRACT.md](P2_CONTRACT.md). Types `src/shared/p2-types.ts`; shared Zod `src/shared/p2-validation.ts` (model output, confirmation and client editor); handlers `src/server/introductions.ts`, `src/server/ai.ts`, `mentorWorkload` in `src/server/relay.ts`.
+
+| Method and path | Identity | Input | Success |
+|---|---|---|---|
+| GET `/api/projects` | public | `q`, `status` | 200 `BrowseProject[]` (Project + `introduction: {sentences,tags,reviewedAt,stale} \| null`) |
+| GET `/api/projects/:id/introduction` | owning Student | — | 200 `IntroductionEditor` |
+| POST `/api/projects/:id/introduction/generate` | owning Student | `{}` only | 200 `IntroductionEditor` with new draft |
+| PATCH `/api/projects/:id/introduction` | owning Student | `PublishIntroductionInput` | 200 `IntroductionEditor` with confirmed version |
+| GET `/api/mentors/workload` | Staff | header only | 200 `MentorWorkloadResult` |
+
+- Order of checks: identity (401) → project exists (404) → owner Student (403) → input (400) → in-progress lock (409 `GENERATION_IN_PROGRESS`) → configuration (503 `AI_UNAVAILABLE`). Bad input never reaches the model.
+- `sourceHash` = SHA-256 of sorted-key JSON of title, summary, courseOrClub, term, tags, status, reflection (null kept as null). Generation re-checks it in a short transaction after the model returns (409 `INTRODUCTION_STALE`, nothing written). Confirmation locks project + introduction rows: other draft id → 409 `DRAFT_CONFLICT`; hash changed → 409 `INTRODUCTION_STALE`.
+- Validation: 1–3 sentences, each one English sentence by `Intl.Segmenter`, ≤280 chars, ≤600 total; tags trimmed, lowercased, 1–32 chars, no line breaks, deduplicated to 1–6; no extra fields.
+- Upstream: missing config or HTTP/network failure 503 `AI_UNAVAILABLE`; 30 s abort 504 `AI_TIMEOUT`; refusal, `status` ≠ `completed`, bad JSON or failed validation 502 `AI_INVALID_OUTPUT`. One request per click, no retries. Upstream bodies, keys and stacks are not returned.
+- Browsing: a published introduction whose hash no longer matches is returned with `stale: true`, and cards then show the authored summary/tags. GET never calls the model or writes. Public responses exclude drafts, draft ids, model names and reviewer ids.
+- Storage: `project_introductions("projectId" PK/FK, draft jsonb, published jsonb, "updatedAt")`, added with `CREATE TABLE IF NOT EXISTS`; latest draft and latest confirmed version only.
+- Provider: OpenAI Responses API `POST {OPENAI_BASE_URL or https://api.openai.com/v1}/responses` via native fetch with `text.format = {type:'json_schema', strict:true}`, `store:false`. Env: `OPENAI_API_KEY`, `OPENAI_PROJECT_INTRO_MODEL`, optional `OPENAI_BASE_URL` (Playwright points it at a local mock).
+- Workload: every `role='mentor'` user, sorted by name then id, with the number of distinct referred questions whose P1 thread state is `awaiting_reply` (same `threads()`/`threadState` as the Mentor workbench). Student/Mentor 403, no header 401. `asOf` is server time.
 
 > **版本边界（2026-10-24）：v2 第一轮项目浏览与总结编辑之上，codex/p1-implementation 分支实现了 P1 接棒、项目问题、人工引荐、导师回复与工作台（见下文“P1 relay endpoints”）。** P1 已通过总控独立本地验收与用户产品验收，并经 PR #2 合入 main；云端及真实 PostgreSQL 多连接仍未验证。独立 Lesson 页面和采用功能已退出产品。规则依据 P1_CONTRACT.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
 
