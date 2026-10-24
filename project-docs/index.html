@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hacking1024 — 项目文档</title>
+
+<!-- claude:meta:start -->
+<script type="application/json" id="meta">
+{
+  "project": "Hacking1024",
+  "tagline": "HackOHI/O 2026 · 两人团队的赛前准备与交接",
+  "url": "https://github.com/BOWEN2491/Hacking1024",
+  "lastUpdated": "2026-10-23",
+  "currentFocus": "—",
+  "lastCompleted": "建立新对话背景、agent 入口与完整项目文档",
+  "nextUp": "确认队友邀请与首个 PR、API 预算及活动权限；正式选题后定义 MVP",
+  "blockers": [
+    "队友安装和首个 PR 未确认",
+    "报名、Discord、余额与预算需本人确认",
+    "正式题目和部署需求尚未确定"
+  ],
+  "health": {
+    "featuresDone": 6,
+    "featuresTotal": 8
+  }
+}
+</script>
+    <!-- claude:meta:end -->
+
+<style>
+  :root {
+    --brand-primary: #245b49;
+    --brand-accent:  #3f856d;
+
+    --bg: #fafafa; --surface: #ffffff; --surface-2: #f4f4f5;
+    --border: #e4e4e7; --text: #18181b; --text-muted: #71717a;
+    --success: #16a34a; --warning: #ea580c; --danger: #dc2626; --info: #0284c7;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.03);
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #09090b; --surface: #18181b; --surface-2: #27272a;
+      --border: #3f3f46; --text: #fafafa; --text-muted: #a1a1aa;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  .header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .header img.logo { width: 56px; height: 56px; border-radius: var(--radius); object-fit: cover; }
+  .header h1 { font-size: 24px; font-weight: 700; }
+  .header .tagline { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 24px; overflow-x: auto; }
+  .tab { background: none; border: none; padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--brand-primary); border-bottom-color: var(--brand-primary); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade .2s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  p  { color: var(--text); margin-bottom: 12px; }
+  .muted { color: var(--text-muted); font-size: 14px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: var(--surface-2); }
+  .badge.done       { background: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
+  .badge.wip        { background: color-mix(in srgb, var(--warning) 15%, transparent); color: var(--warning); }
+  .badge.planned    { background: color-mix(in srgb, var(--info) 15%, transparent);    color: var(--info); }
+  .badge.deprecated { background: var(--surface-2); color: var(--text-muted); text-decoration: line-through; }
+
+  .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .status-item { padding: 12px 16px; background: var(--surface-2); border-radius: var(--radius); }
+  .status-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: 4px; }
+  .status-item .value { font-size: 14px; font-weight: 500; }
+
+  .swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+  .swatch { width: 100px; }
+  .swatch .chip { height: 80px; border-radius: var(--radius); border: 1px solid var(--border); }
+  .swatch .name { font-size: 12px; margin-top: 6px; font-family: var(--font-mono); color: var(--text-muted); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  td code { font-family: var(--font-mono); font-size: 12px; background: var(--surface-2); padding: 2px 6px; border-radius: 4px; }
+
+  .screenshots { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .screenshot img { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); display: block; }
+  .screenshot .caption { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+
+  .changelog-entry { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .changelog-entry .date { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); min-width: 90px; }
+  .changelog-entry:last-child { border-bottom: none; }
+
+  pre { background: var(--surface-2); padding: 14px; border-radius: var(--radius); overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.5; }
+  dl dt { font-weight: 600; margin-top: 8px; }
+  dl dd { color: var(--text-muted); font-size: 14px; margin-left: 0; }
+
+  /* Forms */
+  form.bo-form { display: grid; gap: 10px; }
+  form.bo-form label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+  form.bo-form input, form.bo-form textarea, form.bo-form select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); color: var(--text); font: inherit; font-size: 14px;
+  }
+  form.bo-form textarea { min-height: 70px; resize: vertical; }
+  form.bo-form input:focus, form.bo-form textarea:focus, form.bo-form select:focus { outline: 2px solid var(--brand-primary); outline-offset: -1px; border-color: var(--brand-primary); }
+  form.bo-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; cursor: pointer; }
+  .btn:hover { background: var(--surface-2); }
+  .btn.primary { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+  .btn.primary:hover { filter: brightness(.95); }
+  .btn.ghost { background: transparent; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+  /* Assets grid */
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .asset { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); display: flex; flex-direction: column; }
+  .asset .thumb { aspect-ratio: 4/3; background: var(--surface-2) center/contain no-repeat; }
+  .asset .meta { padding: 10px 12px; font-size: 12px; }
+  .asset .meta .name { font-family: var(--font-mono); font-size: 11px; word-break: break-all; }
+  .asset .meta .src { color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; margin-top: 4px; }
+  .asset a { color: var(--brand-primary); text-decoration: none; }
+  .asset a:hover { text-decoration: underline; }
+
+  /* Spacing tokens */
+  .spacing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+  .spacing-item { padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); text-align: center; }
+  .spacing-item .bar { background: var(--brand-primary); height: 6px; margin: 6px auto; border-radius: 3px; }
+  .spacing-item .label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+  /* Wishlist item with remove */
+  .wishlist-item { position: relative; }
+  .wishlist-item .remove { position: absolute; top: 8px; right: 8px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 4px; }
+  .wishlist-item .remove:hover { color: var(--danger); }
+  .toast { position: fixed; bottom: 20px; right: 20px; background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 13px; opacity: 0; transform: translateY(8px); transition: all .25s ease; pointer-events: none; z-index: 999; }
+  .toast.show { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- claude:header:start -->
+<header class="header"><img class="logo" src="assets/logo.svg" alt="Hacking1024 文档标记"><div><h1>Hacking1024</h1><div class="tagline">HackOHI/O 2026 · 项目背景、已验证状态与后续交接</div></div></header>
+    <!-- claude:header:end -->
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="features">Features</button>
+    <button class="tab" data-tab="design">Design</button>
+    <button class="tab" data-tab="architecture">Architecture</button>
+    <button class="tab" data-tab="wishlist">Wishlist</button>
+    <button class="tab" data-tab="changelog">Changelog</button>
+  </nav>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section class="panel active" id="overview">
+    <!-- claude:overview:start -->
+
+    <!-- claude:overview:pitch:start -->
+<div class="card" data-updated="2026-10-23"><h3>新对话先了解什么</h3><p>这是两人团队的赛前环境准备仓库。用户承担核心开发；队友技术基础较弱，正在尝试 coding agent 辅助的前端、测试与展示工作。正式 Sponsor Challenge、数据与产品功能尚未确定，现有界面只验证文字回显链路。</p><p>先读 <a href="../AGENTS.md">AGENTS.md</a> 与 <a href="../PROJECT_CONTEXT.md">PROJECT_CONTEXT.md</a>，再按文件地图进入代码。用户当前的任务决定工作范围；此页的待办不是自动执行全部任务的指令。</p></div>
+    <!-- claude:overview:pitch:end -->
+
+    <!-- claude:overview:status:start -->
+<div class="card" data-updated="2026-10-23"><h3>当前状态</h3><div class="status-grid"><div class="status-item"><div class="label">更新时间</div><div class="value">2026-10-23 · America/New_York</div></div><div class="status-item"><div class="label">阶段</div><div class="value">赛前准备，非已完成的比赛产品</div></div><div class="status-item"><div class="label">上次完成</div><div class="value">环境联调、GitHub 同步、新对话文档</div></div><div class="status-item"><div class="label">下一步</div><div class="value">队友首个 PR；确认题目和权限</div></div></div><p class="muted" style="margin-top:12px">拥有者目录 D:\HackOHIO_1024；远程 BOWEN2491/Hacking1024。服务是否运行、分支是否同步应现场检查，不从快照推断。</p></div>
+    <!-- claude:overview:status:end -->
+
+    <!-- claude:overview:health:start -->
+<div class="card" data-updated="2026-10-23"><h3>已验证到什么程度</h3><p>准备能力 <strong>6 / 8</strong>；这不是比赛产品完成率。</p><p>2026-10-22：构建、pip check、真实中文 POST、空输入、422、模拟 503 与恢复、桌面/手机布局及 Streamlit 基本交互通过。2026-10-23：Git 真实推送与远程一致性验证通过。</p><p>用户历史 API 测试返回 OK。当前 Key 是否存在、余额是否足够需要重新检查，不能由历史测试推断。</p></div>
+    <!-- claude:overview:health:end -->
+
+    <!-- claude:overview:blockers:start -->
+<div class="card" data-updated="2026-10-23"><h3>尚未确认</h3><ul><li>队友是否接受邀请、完成安装和第一个 PR。</li><li>报名、Discord、最新挑战内容与提交表单权限。</li><li>OpenAI 余额、预算、本机 Key 配置；不在文档存储秘密。</li><li>最终选题、数据/API 权限和是否需要公网部署。</li></ul><p class="muted">详细手动清单见 <a href="../CHECKLIST.md">CHECKLIST.md</a>。这些是待确认状态，不代表已发现技术故障。</p></div>
+    <!-- claude:overview:blockers:end -->
+
+    <!-- claude:overview:end -->
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="panel" id="features">
+    <!-- claude:features:start -->
+<div class="grid grid-2"><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>独立开发环境</h3><span class="badge done">done</span></div><p>D 盘 .venv；Python 3.11.9，Node.js 22.19.0；依赖版本锁定。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>React → FastAPI 联调</h3><span class="badge done">done</span></div><p>POST /api/echo、JSON 展示、加载/错误状态；不调用 AI。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>Streamlit 后备练习</h3><span class="badge done">done</span></div><p>单 Python 界面，有效与空输入验证通过。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>GitHub 协作基础</h3><span class="badge done">done</span></div><p>main 已推送，跟踪 origin/main；写入权限已验证。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>可选 OpenAI 连通性测试</h3><span class="badge done">done</span></div><p>用户历史测试成功；独立脚本可主动重测。余额与当前 Key 状态仍未确认。</p></article><article class="card" data-status="done" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>跨对话项目文档</h3><span class="badge done">done</span></div><p>AGENTS、简短摘要、完整项目页、维护协议及赛前披露。</p></article><article class="card" data-status="planned" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>队友独立交付</h3><span class="badge planned">planned</span></div><p>等待邀请接受、安装成功、独立 UI 小任务与首个 PR。</p></article><article class="card" data-status="planned" data-updated="2026-10-23"><div style="display:flex;justify-content:space-between;gap:12px"><h3>比赛 MVP 与发布</h3><span class="badge planned">planned</span></div><p>正式题目确定后再设计和实现；当前没有 Sponsor 专用功能或线上部署。</p></article></div>
+    <!-- claude:features:end -->
+  </section>
+
+  <!-- ============ DESIGN ============ -->
+  <section class="panel" id="design">
+    <!-- claude:design:start -->
+
+    <!-- claude:design:colors:start -->
+<div class="card" data-updated="2026-10-23"><h3>练习界面的实际颜色</h3><div class="swatches"><div class="swatch"><div class="chip" style="background:#245b49"></div><div class="name">Primary<br>#245b49</div></div><div class="swatch"><div class="chip" style="background:#3f856d"></div><div class="name">Focus<br>#3f856d</div></div><div class="swatch"><div class="chip" style="background:#f3f5f1"></div><div class="name">Background<br>#f3f5f1</div></div><div class="swatch"><div class="chip" style="background:#18332f"></div><div class="name">Text<br>#18332f</div></div><div class="swatch"><div class="chip" style="background:#a22e2e"></div><div class="name">Error<br>#a22e2e</div></div></div><p class="muted">来源：frontend/src/style.css；这是练习界面的配色，不代表已确定比赛产品品牌。</p></div>
+    <!-- claude:design:colors:end -->
+
+    <!-- claude:design:typography:start -->
+<div class="card" data-updated="2026-10-23"><h3>字体</h3><p>应用使用 system-ui、Microsoft YaHei、sans-serif。无外部字体或字体下载服务。</p><p class="muted">标题使用 clamp(26px, 5vw, 36px)；按钮和表单继承系统字体。</p></div>
+    <!-- claude:design:typography:end -->
+
+    <!-- claude:design:assets:start -->
+<div class="card" data-updated="2026-10-23"><h3>已有素材</h3><div class="asset-grid"><figure class="asset"><div class="thumb" style="background-image:url(assets/logo.svg)"></div><figcaption class="meta"><strong>文档临时标记</strong><div class="name"><a href="assets/logo.svg">assets/logo.svg</a></div><div class="src">仅供文档识别；不是赛事或最终产品的官方 Logo。</div></figcaption></figure></div><p class="muted">应用目前没有独立品牌 Logo、照片或比赛素材。</p></div>
+    <!-- claude:design:assets:end -->
+
+    <!-- claude:design:spacing:start -->
+<div class="card" data-updated="2026-10-23"><h3>练习布局</h3><div class="spacing-grid"><div class="spacing-item"><div class="bar" style="width:6px"></div><div class="label">6px</div></div><div class="spacing-item"><div class="bar" style="width:12px"></div><div class="label">12px</div></div><div class="spacing-item"><div class="bar" style="width:18px"></div><div class="label">18px</div></div><div class="spacing-item"><div class="bar" style="width:24px"></div><div class="label">24px</div></div><div class="spacing-item"><div class="bar" style="width:32px"></div><div class="label">32px</div></div><div class="spacing-item"><div class="bar" style="width:64px"></div><div class="label">64px</div></div></div><p>内容最大宽度 720px，两侧总留白 40px；桌面顶部 64px，520px 以下顶部 32px。表单间距 12px，按钮和输入框圆角 6px。</p><p class="muted">来源：frontend/src/style.css。此文档页自身沿用 project-docs 模板布局。</p></div>
+    <!-- claude:design:spacing:end -->
+
+    <!-- claude:design:screenshots:start -->
+<div class="card" data-updated="2026-10-23"><h3>实际界面截图</h3><p class="muted">同一个真实路由 / 的三个状态；由 take-screenshots.mjs 采集，日期 2026-10-23。不涉及付费 API。</p><div class="screenshots"><figure class="screenshot"><img src="screenshots/practice-desktop.png" alt="桌面初始状态"><figcaption class="caption">桌面初始状态 · 2026-10-23</figcaption></figure><figure class="screenshot"><img src="screenshots/practice-result.png" alt="桌面成功回显"><figcaption class="caption">桌面成功回显 · 2026-10-23</figcaption></figure><figure class="screenshot"><img src="screenshots/practice-mobile.png" alt="390px 手机成功回显"><figcaption class="caption">390px 手机成功回显 · 2026-10-23</figcaption></figure></div></div>
+    <!-- claude:design:screenshots:end -->
+
+    <!-- claude:design:end -->
+  </section>
+
+  <!-- ============ ARCHITECTURE ============ -->
+  <section class="panel" id="architecture">
+    <!-- claude:architecture:start -->
+
+    <!-- claude:architecture:stack:start -->
+<div class="card" data-updated="2026-10-23"><h3>技术栈</h3><ul><li>React 19.3.1、Vite 8.3.5、JavaScript/JSX、原生 CSS；无 Next.js、Tailwind 或 shadcn。</li><li>Python 3.11.9、FastAPI 0.161.0、Uvicorn 0.54.0。</li><li>OpenAI SDK 3.36.1 与 python-dotenv 1.2.4，仅用于可选检查。</li><li>Streamlit 1.66.1；pandas 3.1.0、requests 2.34.2、plotly 7.1.0 供后续按需使用。</li><li>完整版本依据 requirements-lock.txt 与 frontend/package-lock.json；无数据库、登录或生产托管。</li></ul></div>
+    <!-- claude:architecture:stack:end -->
+
+    <!-- claude:architecture:overview:start -->
+<div class="card" data-updated="2026-10-23"><h3>当前架构</h3><p>浏览器访问本机 5173 端口，React 表单向相对路径 /api/echo 发出 POST。Vite 将 /api 转发至 8000 端口的 FastAPI，后端校验并去除文字首尾空白后返回回显和字符数；React 更新成功或错误状态。备用 Streamlit 独立运行在 8501 端口。OpenAI 仅由独立命令行检查脚本主动调用，不在默认页面链路中。没有数据库或云端服务；静态前端构建不能代替 Python 后端部署。</p></div>
+    <!-- claude:architecture:overview:end -->
+
+    <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-23"><h3>文件地图</h3><table><thead><tr><th>概念</th><th>仓库相对路径</th></tr></thead><tbody><tr><td>新 agent 入口</td><td><a href="../AGENTS.md"><code>AGENTS.md</code></a></td></tr><tr><td>新对话简短背景</td><td><a href="../PROJECT_CONTEXT.md"><code>PROJECT_CONTEXT.md</code></a></td></tr><tr><td>安装与启动</td><td><a href="../README.md"><code>README.md</code></a></td></tr><tr><td>队友任务与 PR</td><td><a href="../TEAMMATE.md"><code>TEAMMATE.md</code></a></td></tr><tr><td>手动准备事项</td><td><a href="../CHECKLIST.md"><code>CHECKLIST.md</code></a></td></tr><tr><td>赛前披露</td><td><a href="../PRIOR_WORK.md"><code>PRIOR_WORK.md</code></a></td></tr><tr><td>决策记录</td><td><a href="../DECISIONS.md"><code>DECISIONS.md</code></a></td></tr><tr><td>Windows 启动入口</td><td><a href="../start.ps1"><code>start.ps1</code></a></td></tr><tr><td>API 定义</td><td><a href="../backend/main.py"><code>backend/main.py</code></a></td></tr><tr><td>页面入口</td><td><a href="../frontend/index.html"><code>frontend/index.html</code></a></td></tr><tr><td>表单与请求</td><td><a href="../frontend/src/main.jsx"><code>frontend/src/main.jsx</code></a></td></tr><tr><td>界面样式</td><td><a href="../frontend/src/style.css"><code>frontend/src/style.css</code></a></td></tr><tr><td>开发代理</td><td><a href="../frontend/vite.config.js"><code>frontend/vite.config.js</code></a></td></tr><tr><td>前端命令和依赖</td><td><a href="../frontend/package.json"><code>frontend/package.json</code></a></td></tr><tr><td>前端完整依赖版本</td><td><a href="../frontend/package-lock.json"><code>frontend/package-lock.json</code></a></td></tr><tr><td>Python 完整版本</td><td><a href="../requirements-lock.txt"><code>requirements-lock.txt</code></a></td></tr><tr><td>Python 依赖范围</td><td><a href="../requirements.txt"><code>requirements.txt</code></a></td></tr><tr><td>后备练习</td><td><a href="../fallback/app.py"><code>fallback/app.py</code></a></td></tr><tr><td>环境检查</td><td><a href="../scripts/check_environment.py"><code>scripts/check_environment.py</code></a></td></tr><tr><td>可选 API 检查</td><td><a href="../scripts/check_api.py"><code>scripts/check_api.py</code></a></td></tr><tr><td>环境变量模板</td><td><a href="../.env.example"><code>.env.example</code></a></td></tr><tr><td>历史计划</td><td><a href="../task_plan.md"><code>task_plan.md</code></a></td></tr><tr><td>历史执行记录</td><td><a href="../progress.md"><code>progress.md</code></a></td></tr><tr><td>完整项目页</td><td><a href="../project-docs/index.html"><code>project-docs/index.html</code></a></td></tr><tr><td>文档维护协议</td><td><a href="../project-docs/MAINTENANCE.md"><code>project-docs/MAINTENANCE.md</code></a></td></tr><tr><td>截图工具</td><td><a href="../project-docs/take-screenshots.mjs"><code>project-docs/take-screenshots.mjs</code></a></td></tr></tbody></table></div>
+    <!-- claude:architecture:filemap:end -->
+
+    <!-- claude:architecture:entrypoints:start -->
+<div class="card" data-updated="2026-10-23"><h3>入口与接口</h3><ul><li>Windows：start.ps1；前端：frontend/src/main.jsx；后端：backend.main:app。</li><li>GET /api/health 返回正常状态。</li><li>POST /api/echo 请求字段 text，长度 1–2000 且非全空白；无效返回 422。</li><li>请求 {"text":"Hello"} 返回 {"result":"Hello","characters":5,"mode":"practice"}。</li><li>备用：fallback/app.py。FastAPI 文档路径 /docs。</li></ul></div>
+    <!-- claude:architecture:entrypoints:end -->
+
+    <!-- claude:architecture:conventions:start -->
+<div class="card" data-updated="2026-10-23"><h3>工作约定</h3><ul><li>先读 AGENTS 与简短背景、本页 meta、相关章节和决策，再改代码。</li><li>main 保持可运行；agent 分支 codex/&lt;task&gt;，队友分支 teammate/&lt;task&gt;；通过 PR 集成。</li><li>环境隔离到 .venv；不向 Conda base/全局环境安装项目包。</li><li>账号/报名/部署须有证据才完成；历史测试需标日期。</li><li>更新状态时同时维护本页相关 marker、meta 与简短摘要；保留赛前工作披露。</li></ul></div>
+    <!-- claude:architecture:conventions:end -->
+
+    <!-- claude:architecture:integrations:start -->
+<div class="card" data-updated="2026-10-23"><h3>外部服务</h3><ul><li>GitHub：BOWEN2491/Hacking1024，代码同步；本机推送已验证。</li><li>OpenAI：可选真实连通性测试，使用官方 API；默认练习不调用。</li><li>Vercel：连接曾验证可读，但没有为项目完成部署。</li><li>赛事 Discord/Google Form/Zoom：参与者须确认权限；不自动假设可访问。</li></ul></div>
+    <!-- claude:architecture:integrations:end -->
+
+    <!-- claude:architecture:db:start -->
+<div class="card" data-updated="2026-10-23"><h3>数据库</h3><p>没有数据库、ORM、迁移、用户登录或持久化业务数据。是否引入数据存储应由正式题目决定。</p></div>
+    <!-- claude:architecture:db:end -->
+
+    <!-- claude:architecture:env:start -->
+<div class="card" data-updated="2026-10-23"><h3>环境变量名称（只列名称）</h3><pre>OPENAI_API_KEY
+OPENAI_MODEL
+SITE_URL
+PLAYWRIGHT_MODULE</pre><p class="muted">前两个来自 .env.example；后两个仅供截图工具使用。真实值和密钥不进入项目文档。</p></div>
+    <!-- claude:architecture:env:end -->
+
+    <!-- claude:architecture:commands:start -->
+<div class="card" data-updated="2026-10-23"><h3>常用命令</h3><pre>.\start.ps1
+.\start.ps1 -Mode check
+.\start.ps1 -Mode fallback
+.\start.ps1 -Mode api   # 仅在明确需要真实 API 测试时执行
+npm.cmd --prefix frontend ci
+npm.cmd --prefix frontend run build
+.\.venv\Scripts\python.exe -m pip check
+node project-docs/take-screenshots.mjs</pre><p>前端 5173，后端 8000，Streamlit 8501；仅监听本机。截图工具需要已有 Playwright 和 Chromium，可通过 PLAYWRIGHT_MODULE 指向现有模块；不是应用启动必需依赖。</p><p>新对话从拥有者的 D:\HackOHIO_1024 打开；其他队员使用自己的克隆目录。</p></div>
+    <!-- claude:architecture:commands:end -->
+
+    <!-- claude:architecture:decisions:start -->
+<div class="card" data-updated="2026-10-23"><h3>决策摘要</h3><ul><li>2026-10-22：代码和独立 .venv 放 D 盘，沿用已验证的 Python 3.11，避免修改 Conda base。</li><li>2026-10-22：赛前只做确定性回显练习，付费 API 检查单独运行。</li><li>2026-10-23：引入仓库内背景摘要与完整文档页，维护双入口，换对话时可查证状态。</li></ul><p>完整原因和代价见 <a href="../DECISIONS.md">DECISIONS.md</a>。</p></div>
+    <!-- claude:architecture:decisions:end -->
+
+    <!-- claude:architecture:glossary:start -->
+<div class="card" data-updated="2026-10-23"><h3>术语</h3><dl><dt>赛前练习</dt><dd>测试工具链的通用代码，不是最终参赛功能。</dd><dt>MVP</dt><dd>选题后只实现一条能完整演示、解决明确问题的最小流程。</dd><dt>API Contract</dt><dd>前后端约定的请求字段、响应字段和错误状态。</dd><dt>Prior Work</dt><dd>赛前已完成、复用时需要披露的代码与材料。</dd><dt>已验证 / 待确认</dt><dd>有实际测试或用户确认的事实 / 尚未获得证据的事项。</dd></dl></div>
+    <!-- claude:architecture:glossary:end -->
+
+    <!-- claude:architecture:end -->
+  </section>
+
+  <!-- ============ WISHLIST ============ -->
+  <section class="panel" id="wishlist">
+    <div class="card">
+      <h3>记录新想法</h3>
+      <p class="muted">想法只保存在本机浏览器 localStorage，不会自动修改仓库。通过“复制 HTML”取得片段，写入 <code>project-docs/index.html</code> 中的 <code>claude:wishlist:start</code> 和 <code>claude:wishlist:end</code> 之间，再提交才会同步给队友。</p>
+      <form class="bo-form" id="wishlist-form">
+        <label for="wl-title">标题</label>
+        <input id="wl-title" name="title" placeholder="例如：确认本次 Challenge 的输入与输出" required>
+        <label for="wl-desc">描述</label>
+        <textarea id="wl-desc" name="desc" placeholder="Was soll passieren 和 warum?"></textarea>
+        <div class="row">
+          <div>
+            <label for="wl-prio">优先级</label>
+            <select id="wl-prio" name="prio">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div style="align-self:end;">
+            <button class="btn primary" type="submit">+ 添加想法</button>
+          </div>
+        </div>
+      </form>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn" id="wl-copy-all" type="button">复制本地想法 HTML</button>
+        <button class="btn ghost" id="wl-clear-local" type="button">清除仅保存在本机的想法</button>
+      </div>
+    </div>
+
+    <!-- claude:wishlist:start -->
+<div class="grid grid-2" id="wishlist-grid"><article class="card wishlist-item" data-priority="high" data-added="2026-10-23" data-persisted="true"><h3>确认队友独立交付</h3><span class="badge planned">Priority: high</span><p>接受邀请、克隆安装、完成一次基础前端 PR。</p><p class="muted">Added: 2026-10-23</p></article><article class="card wishlist-item" data-priority="high" data-added="2026-10-23" data-persisted="true"><h3>核对账号和活动权限</h3><span class="badge planned">Priority: high</span><p>本人确认余额预算、报名、Discord 和最新提交要求；不要把未知状态自动勾选。</p><p class="muted">Added: 2026-10-23</p></article><article class="card wishlist-item" data-priority="medium" data-added="2026-10-23" data-persisted="true"><h3>正式选题后确定 MVP</h3><span class="badge planned">Priority: medium</span><p>根据 Challenge 决定算法、API、数据与是否部署；当前不预设 AI 必需。</p><p class="muted">Added: 2026-10-23</p></article></div>
+    <!-- claude:wishlist:end -->
+  </section>
+
+  <!-- ============ CHANGELOG ============ -->
+  <section class="panel" id="changelog">
+    <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-23"><h3>更新记录</h3><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>建立跨对话文档</strong><p class="muted">加入 AGENTS、PROJECT_CONTEXT、完整项目页与维护协议；背景明确区分已验证、历史证据和未知状态。</p></div></div><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>仓库连接完成</strong><p class="muted">42a494a：实际仓库安装与团队协作说明；main 已推送 GitHub。</p></div></div><div class="changelog-entry"><div class="date">2026-10-22</div><div><strong>开发环境准备</strong><p class="muted">86faf81：隔离环境、React/FastAPI 回显、Streamlit 后备、可选 API 检查、测试与披露材料。</p></div></div></div>
+    <!-- claude:changelog:end -->
+  </section>
+
+  <footer class="muted" style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border); font-size:12px;">
+    project-docs · 由项目维护者与 coding agent 共同维护 · 更新日期： <span id="footer-date"></span>
+  </footer>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === target));
+      history.replaceState(null, '', '#' + target);
+    });
+  });
+  const hash = location.hash.slice(1);
+  if (hash) document.querySelector(`.tab[data-tab="${hash}"]`)?.click();
+  try {
+    const meta = JSON.parse(document.getElementById('meta').textContent);
+    document.getElementById('footer-date').textContent = meta.lastUpdated || '';
+  } catch (e) {}
+
+  // ===== Interactive wishlist =====
+  const WL_KEY = 'Hacking1024:project-docs:wishlist:local';
+  const wlGrid = document.getElementById('wishlist-grid');
+  const wlForm = document.getElementById('wishlist-form');
+
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function renderItem(item, local=false) {
+    const a = document.createElement('article');
+    a.className = 'card wishlist-item';
+    a.dataset.priority = item.priority;
+    a.dataset.added = item.added;
+    a.dataset.persisted = local ? 'false' : 'true';
+    a.dataset.id = item.id;
+    a.innerHTML = `
+      ${local ? '<button class="remove" title="Lokal entfernen" type="button">×</button>' : ''}
+      <div style="display:flex; justify-content:space-between; align-items:start; gap:12px;">
+        <h3>${escapeHtml(item.title)}</h3>
+        <span class="badge planned">Priority: ${escapeHtml(item.priority)}</span>
+      </div>
+      ${item.desc ? `<p>${escapeHtml(item.desc)}</p>` : ''}
+      <p class="muted">Added: ${escapeHtml(item.added)}${local ? ' · <em>lokal, noch nicht im Repo</em>' : ''}</p>
+    `;
+    if (local) {
+      a.querySelector('.remove').addEventListener('click', () => {
+        const items = loadLocal().filter(x => x.id !== item.id);
+        saveLocal(items);
+        a.remove();
+      });
+    }
+    return a;
+  }
+
+  function loadLocal() { try { return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); } catch (e) { return []; } }
+  function saveLocal(items) { localStorage.setItem(WL_KEY, JSON.stringify(items)); }
+
+  function renderLocal() {
+    wlGrid.querySelectorAll('[data-persisted="false"]').forEach(n => n.remove());
+    loadLocal().forEach(item => wlGrid.appendChild(renderItem(item, true)));
+  }
+
+  function itemToHtml(item) {
+    return `      <article class="card wishlist-item" data-priority="${escapeHtml(item.priority)}" data-added="${escapeHtml(item.added)}" data-persisted="true">
+        <div style="display:flex; justify-content:space-between; align-items:start; gap:12px;">
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="badge planned">Priority: ${escapeHtml(item.priority)}</span>
+        </div>${item.desc ? `\n        <p>${escapeHtml(item.desc)}</p>` : ''}
+        <p class="muted">Added: ${escapeHtml(item.added)}</p>
+      </article>`;
+  }
+
+  function toast(msg) {
+    let t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  wlForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(wlForm);
+    const item = {
+      id: 'local-' + Date.now(),
+      title: (fd.get('title') || '').toString().trim(),
+      desc: (fd.get('desc') || '').toString().trim(),
+      priority: (fd.get('prio') || 'medium').toString(),
+      added: new Date().toISOString().slice(0,10),
+    };
+    if (!item.title) return;
+    const items = loadLocal(); items.push(item); saveLocal(items);
+    wlGrid.appendChild(renderItem(item, true));
+    wlForm.reset();
+    toast('Idee lokal gespeichert. Über „HTML kopieren" in die Datei übernehmen.');
+  });
+
+  document.getElementById('wl-copy-all')?.addEventListener('click', async () => {
+    const items = [];
+    wlGrid.querySelectorAll('[data-persisted="false"]').forEach(n => {
+      items.push({
+        title: n.querySelector('h3').textContent,
+        desc: n.querySelector('p:not(.muted)')?.textContent || '',
+        priority: n.dataset.priority,
+        added: n.dataset.added,
+      });
+    });
+    if (!items.length) { toast('Keine neuen lokalen Ideen zum Kopieren.'); return; }
+    const snippet = items.map(itemToHtml).join('\n');
+    try {
+      await navigator.clipboard.writeText(snippet);
+      toast(`${items.length} Idee(n) als HTML kopiert. Vor </div> in claude:wishlist einfügen.`);
+    } catch (e) {
+      prompt('Kopieren fehlgeschlagen — manuell kopieren:', snippet);
+    }
+  });
+
+  document.getElementById('wl-clear-local')?.addEventListener('click', () => {
+    if (!confirm('Alle nur-lokalen Wishlist-Ideen löschen?')) return;
+    saveLocal([]); renderLocal(); toast('Lokale Ideen gelöscht.');
+  });
+
+  renderLocal();
+</script>
+</body>
+</html>

@@ -26,3 +26,7 @@
 - Verified tracked files contain no API key patterns and exclude local secrets, virtual environment, node_modules and builds.
 - Configured origin, successfully pushed initial main and established upstream tracking; Git terminal write authentication is confirmed.
 - Local environment check passed. Collaborator invitation, teammate clone/install and first PR remain user/team actions.
+- Added AGENTS.md and PROJECT_CONTEXT.md for future conversations; wired CLAUDE.md and README to the persistent context.
+- Created project-docs from the prescribed template, with verified state, unknowns, a 26-entry file map, decisions, backlog and changelog. Copied the maintenance protocol verbatim.
+- Captured three actual rehearsal screenshots using the existing running local services; no services owned by the user were stopped.
+- Documentation checks passed: 28 balanced marker pairs, valid meta, all local links resolve, no unrelated template content, under 100 KB. Browser verified six tabs, image loading and wishlist add/persist/remove with no page or console errors.

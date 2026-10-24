@@ -19,3 +19,13 @@ facing a need to verify full-stack development without inventing the entry,
 we decided for a deterministic echo rehearsal with a Vite development proxy and a separate opt-in API check,
 to achieve a testable local workflow and clear prior-work disclosure,
 accepting that public hosting and actual product logic remain future work.
+
+### Keep project context in the repository for future conversations
+**Date:** 2026-10-23 · **Status:** Accepted
+**Files:** `AGENTS.md`, `PROJECT_CONTEXT.md`, `project-docs/`, `CLAUDE.md`
+
+In the context of reopening coding-agent conversations and collaborating with a beginner teammate,
+facing context loss and historical checklist assumptions,
+we decided for a short Markdown snapshot plus a maintained HTML project page linked from agent entry files,
+to achieve a discoverable handoff with explicit verification dates and unknowns,
+accepting that state changes require updating both the snapshot and the relevant HTML markers.

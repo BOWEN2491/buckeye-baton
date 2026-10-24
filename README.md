@@ -4,6 +4,16 @@
 
 这是 **2026-10-22 创建的通用环境练习**。正式比赛项目和题目尚未确定。如果复用这里的代码，请按 `PRIOR_WORK.md` 披露赛前工作。
 
+## 新对话从这里开始
+
+在实际项目目录中打开新的 coding agent 对话。先读 [AGENTS.md](AGENTS.md) 和 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)，完整状态与文件地图在 [项目文档](project-docs/index.html)。HTML 项目页可在本机浏览器直接打开，无需启动服务器；GitHub 文件页展示的是源码。
+
+可以直接发送：
+
+> 这是 Hacking1024 / HackOHI/O 2026 项目。请先读 AGENTS.md、PROJECT_CONTEXT.md、project-docs/index.html 的 meta 与相关章节，以及 DECISIONS.md；核对当前 Git 状态。先总结当前阶段、已完成项和未确认事项，再处理我接下来提出的任务。不要把赛前联调练习误当作已经选好题目的比赛产品。
+
+完成有实质内容的工作后，请同步更新项目页及摘要。账号、报名、队友安装等事项只有获得证据后才能标记完成。
+
 ## 现在怎么用
 
 在 PowerShell 中执行：
@@ -77,6 +87,9 @@ macOS/Linux 可用 `python3 -m venv .venv`，然后用 `.venv/bin/python -m pip 
 
 | 文件 | 用途 |
 |---|---|
+| `AGENTS.md` | 后续 coding agent 的入口和工作约定 |
+| `PROJECT_CONTEXT.md` | 新对话快速背景与已验证/未知状态 |
+| `project-docs/index.html` | 完整项目状态、文件地图和更新记录 |
 | `CHECKLIST.md` | 已完成项和必须手动完成的清单 |
 | `TEAMMATE.md` | 队友练习、真实接口格式和 Git 协作步骤 |
 | `PRIOR_WORK.md` | 赛前工作披露模板 |

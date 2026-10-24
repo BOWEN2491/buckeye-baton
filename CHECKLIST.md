@@ -15,6 +15,7 @@
 - [x] Vercel 连接可读，团队 `BOBOP1G` 下当前未返回项目；没有部署应用。
 - [x] Git 本地初始提交。
 - [x] 2026-10-23 已连接并成功推送到 `BOWEN2491/Hacking1024`，本机 Git 写入权限已验证。
+- [x] 已建立 `AGENTS.md`、`PROJECT_CONTEXT.md` 和 `project-docs/`，用于新对话背景恢复与持续维护。
 
 ## 需要你手动完成
 

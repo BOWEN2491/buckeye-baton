@@ -9,6 +9,7 @@ Goal: prepare a local, generic development rehearsal in D:\HackOHIO_1024 and ide
 4. Build, HTTP and rendered-browser validation — complete.
 5. Chinese handoff, teammate exercise and manual checklist — complete.
 6. Connect user-created BOWEN2491/Hacking1024 repository, update exact setup instructions, push and verify — complete (2026-10-23).
+7. Add persistent project docs and new-chat entry points, verify and sync — complete (2026-10-23).
 
 ## Constraints
 - API success already reported by user; no key visible in agent process.
@@ -19,3 +20,5 @@ Goal: prepare a local, generic development rehearsal in D:\HackOHIO_1024 and ide
 
 ## Errors
 - Official hack.osu.edu/2026 page returned 403 via web fetch; rules and event overview read from official event Devpost pages instead.
+- Documentation capture found existing listeners on 8000/5173; health checks confirmed the intended rehearsal, so existing services were reused without stopping them.
+- Marker validation initially assumed 29 sections; corrected the validator to compare against the supplied template, which contains 28 required pairs. All pairs are present and balanced.
