@@ -75,7 +75,7 @@ test('Explore Recommended explains its order; Newest, search and status still re
   expect(aiRequests).toEqual([]);
 });
 
-test('workbench Priority, author reply dates, referral/reply/follow-up/delete recompute, and pickup clears the boost', async ({ page }) => {
+test('age-only Priority, system suggestions, referral/reply/follow-up/delete recompute, and pickup clears the boost', async ({ page }) => {
   test.setTimeout(240_000);
   await mkdir(evidenceDir, { recursive: true });
   const stamp = Date.now();
@@ -90,12 +90,12 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
   await page.goto('/workspace');
   await expect(page.getByRole('button', { name: 'Priority', exact: true })).toHaveAttribute('aria-pressed', 'true');
   const titles = () => page.locator('.workbench-item .workbench-title').allInnerTexts();
-  await expect(page.locator('.workbench-item').first()).toContainText(dueSoonTitle);
-  await expect(page.locator('.workbench-item').first().getByLabel('Priority')).toContainText('Reply date within 24 hours');
+  await expect(page.locator('.workbench-item').first()).toContainText(fixtureQuestion);
+  await expect(page.locator('.workbench-item').first().getByLabel('Priority')).toContainText('Waiting 10 days');
   const fixtureItem = page.locator('.workbench-item', { hasText: fixtureQuestion });
   await expect(fixtureItem.getByLabel('Priority')).toContainText('Waiting 10 days for a reply');
   const priorityOrder = await titles();
-  expect(priorityOrder.indexOf(dueSoonTitle)).toBeLessThan(priorityOrder.indexOf(fixtureQuestion));
+  expect(priorityOrder.indexOf(fixtureQuestion)).toBeLessThan(priorityOrder.indexOf(dueSoonTitle));
   await page.screenshot({ path: path.join(evidenceDir, 'staff-workbench-priority-desktop.png'), fullPage: true });
   await page.getByRole('button', { name: 'Oldest first', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Oldest first', exact: true })).toHaveAttribute('aria-pressed', 'true');
@@ -104,31 +104,21 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
   expect(oldest.indexOf(fixtureQuestion)).toBeLessThan(oldest.indexOf(dueSoonTitle));
   expect([...oldest].sort()).toEqual([...priorityOrder].sort());
 
-  // Mia changes her reply date on the fixture question (on Alex's project); a failed save keeps the input.
-  await identity(page, 'student-mia');
+  // Reply-date inputs are retired; old stored dates do not affect age-based priority.
+  await identity(page, "student-mia");
   await page.goto(fixturePath);
-  const thread = page.getByRole('article', { name: fixtureQuestion, exact: true });
-  await thread.getByRole('button', { name: 'Edit reply date', exact: true }).click();
-  await thread.getByLabel('Hoping for a reply by').fill(localDay(2));
-  await page.route('**/api/project-questions/p3-old-question', route => route.request().method() === 'PATCH' ? route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Storage is temporarily unavailable."}}' }) : route.fallback(), { times: 1 });
-  await thread.getByRole('button', { name: 'Save date', exact: true }).click();
-  await expect(thread.getByRole('alert').filter({ hasText: 'Couldn’t update the reply date.' })).toBeVisible();
-  await expect(thread.getByLabel('Hoping for a reply by')).toHaveValue(localDay(2));
-  await thread.getByRole('button', { name: 'Save date', exact: true }).click();
-  await expect(thread.getByText('Reply date updated.')).toBeVisible();
-  await expect(thread.getByLabel('Question priority')).toContainText('Reply date within 3 days');
-  const panel = page.getByRole('region', { name: 'Project priority' });
-  await expect(panel).toContainText('Reply date within 3 days');
-  await expect(panel.locator('.owner-advice')).toHaveCount(0);
+  const thread = page.getByRole("article", { name: fixtureQuestion, exact: true });
+  const panel = page.getByRole("region", { name: "Project priority" });
+  await expect(thread.getByRole("button", { name: "Edit reply date" })).toHaveCount(0);
+  await expect(thread).not.toContainText("Hoping for a reply by");
+  await expect(panel).toContainText("Waiting 10 days for a reply");
+  await expect(panel.locator(".owner-advice")).toHaveCount(0);
   await page.reload();
-  await expect(thread).toContainText('Hoping for a reply by');
-  await expect(thread.getByLabel('Question priority')).toContainText('Reply date within 3 days');
-
   // Alex owns the project but cannot change Mia's date; he sees owner advice instead.
   await identity(page, 'student-alex');
   await page.goto(fixturePath);
   await expect(thread.getByRole('button', { name: 'Edit reply date' })).toHaveCount(0);
-  const advice = panel.locator('.owner-advice');
+  const advice = panel.getByLabel('Suggestions for your project');
   await expect(advice).toContainText('No team has picked this project up yet.');
   await expect(advice).toContainText('has waited 10 days');
   await advice.getByRole('button', { name: 'Edit project from owner advice' }).click();
@@ -146,7 +136,7 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
     const plain = (await (await page.request.get('/api/workbench', { headers: { 'x-demo-user-id': 'mentor-sarah' } })).json()).data.awaitingReply.length;
     return [load, priority, plain];
   };
-  expect(await projectScore()).toBe(70);
+  expect(await projectScore()).toBe(50);
   await identity(page, 'staff-kevin');
   await page.goto(`${fixturePath}#q-p3-old-question`);
   await thread.getByRole('button', { name: 'Refer a mentor', exact: true }).click();
@@ -184,10 +174,10 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
   await thread.getByRole('button', { name: 'Post follow-up', exact: true }).click();
   await expect(thread).toContainText('New follow-up · waiting for Sarah Patel');
   // Waiting restarts at the follow-up (0 full days); the reply date still counts.
-  await expect(thread.getByLabel('Question priority')).toContainText('Reply date within 3 days');
+  await expect(thread.getByLabel('Question priority')).toContainText('No priority boost');
   await expect(thread.getByLabel('Question priority')).not.toContainText('Waiting');
-  await expect(panel).toContainText('Reply date within 3 days');
-  expect(await projectScore()).toBe(40);
+  await expect(panel.locator('.priority-reasons')).not.toContainText('Reply date');
+  expect(await projectScore()).toBe(20);
   expect(await sarahCounts()).toEqual([n, n, n]);
 
   await identity(page, 'mentor-sarah');
@@ -204,8 +194,8 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
   await thread.getByRole('button', { name: 'Delete referred mentor reply by Sarah Patel' }).last().click();
   await expect(thread.locator('.post.mentor_reply')).toHaveCount(1);
   await expect(thread).toContainText('New follow-up · waiting for Sarah Patel');
-  await expect(panel).toContainText('Reply date within 3 days');
-  expect(await projectScore()).toBe(40);
+  await expect(panel.locator('.priority-reasons')).not.toContainText('Reply date');
+  expect(await projectScore()).toBe(20);
   expect(await sarahCounts()).toEqual([n, n, n]);
 
   // Pickup removes the no-pickup boost; source, successor, summary and question history stay.
@@ -222,7 +212,7 @@ test('workbench Priority, author reply dates, referral/reply/follow-up/delete re
   await expect(page.getByRole('heading', { name: 'Picked up by (1)', exact: true })).toBeVisible();
   await expect(page.getByText('Fictional demo: the team could not get room availability data in time.')).toBeVisible();
   await expect(thread.locator('.post')).toHaveCount(3); // reply, thanks, follow-up (second reply deleted)
-  expect(await projectScore()).toBe(20);
+  expect(await projectScore()).toBe(0);
   await page.goto('/');
   await expect(card(page, fixtureTitle).getByLabel('Why recommended')).not.toContainText('no pickup yet');
 

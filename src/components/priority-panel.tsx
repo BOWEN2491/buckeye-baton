@@ -25,8 +25,9 @@ export function PriorityPanel({ projectId, isOwner, onEdit }: { projectId: strin
           <UpdatedRefresh asOf={data.priority.asOf} loading={loading} onRefresh={() => void reload()} />
           <PriorityRules />
           {isOwner && (
-            <div className="owner-advice" aria-label="Owner advice">
-              <h3>Owner advice</h3>
+            <div className="owner-advice" aria-label="Suggestions for your project">
+              <h3>Suggestions for your project</h3>
+              <p className="field-help">System suggestions based on your project and its discussions. Use the links below to update the project or add context to a question.</p>
               {data.advice.length ? (
                 <ul>
                   {data.advice.map((a) => (
@@ -45,7 +46,7 @@ export function PriorityPanel({ projectId, isOwner, onEdit }: { projectId: strin
                   ))}
                 </ul>
               ) : (
-                <p className="field-help">No advice right now. Your project and its questions look up to date.</p>
+                <p className="field-help">No suggestions right now.</p>
               )}
             </div>
           )}

@@ -1,5 +1,9 @@
 # Buckeye Baton — API contract
 
+## P3 product revision — age-only priority
+
+See[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md). Priority reasons now only `no_pickup` / `waiting_for_reply`, advice codes only `improve_handoff` / `narrow_question`. Legacy dueAt is retained in storage/responses and author-only PATCH for compatibility, but has **zero effect on scores, ordering and advice**. Current UI creates questions with dueAt:null and has no reply-date input/editor/display. Maximum question score30, project50; all other opt-in shapes, exact tie-breaks and P1 permissions stay unchanged. Old deadline-based descriptions below refer to the first P3 version and are superseded by this addendum.
+
 ## P3 endpoints — independently accepted locally, product acceptance pending
 
 Final4839e77 is integrated on codex/p3-integration, with coordinator J1–J10 passing; see[P3_ACCEPTANCE.md](P3_ACCEPTANCE.md). main is unmerged. Exact microsecond tie-break keys stay internal; public ISO dates and response shapes remain unchanged.

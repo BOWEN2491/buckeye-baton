@@ -1,5 +1,12 @@
 # Decisions
 
+### Retain clearly named system suggestions and use age-only help priority
+**Date:** 2026-10-24 · **Status:** User-requested product revision implemented; local type/build, backend13/13 and e2e14/14 passed; manual recheck pending
+**Supersedes:** Deadline scoring/UI and simultaneous status fields from the initial P3 specification
+**Files:** docs/P3_PRODUCT_REVISION.md, src/server/priority.ts, src/components/project-form.tsx
+
+In the context of manual product feedback, facing an editable-sounding system advice label, an overloaded form and an unnecessary reply-date variable, we decided for Suggestions for your project with unchanged action links, conditional state-specific fields backed by the same retained reflection state, and publication/wait-age-only priority, to achieve clearer authorship and fewer inputs, accepting retained legacy dueAt data/API that no longer influence ranking. Ordinary comments remain outside the help queue, and a follow-up starts its own unanswered request age after a formal reply.
+
 ### Specify explainable P3 priority with existing publication age and reply cycles
 **Date:** 2026-10-24 · **Status:** Implemented on 4839e77 and independently accepted locally 10/10; user product acceptance/main merge pending
 **Files:** docs/P3_CONTRACT.md, docs/P3_AGENT_TASK.md, docs/P3_START_PROMPT.md

@@ -1,5 +1,7 @@
 # Buckeye Baton — agent entry
 
+Current P3 product revision supersedes deadline-based rules: read docs/P3_PRODUCT_REVISION.md. Preserve system suggestions/actions under “Suggestions for your project”; show only selected status fields but retain all reflection state; retire reply-date UI and ignore legacy dueAt in priority/advice. Retain date data/compatibility API and exact microsecond ordering. Read the latest docs/P3_PREVIEW.md/runtime manifest before touching port3000 or any active .next/.data.
+
 Read PROJECT_CONTEXT.md, docs/MVP_SPEC.md, docs/API_CONTRACT.md, docs/ACCEPTANCE.md, DECISIONS.md, and project-docs/index.html before changes.
 
 Start with docs/PROJECT_OVERVIEW.md for the consolidated scope. Main is the shared baseline after the user-authorized PR #1 merge. Use short-lived task branches; old permanent frontend/backend preparation branches were removed. Design references are in design/; unresolved prototype additions are not automatically approved requirements. Historical planning notes live in docs/legacy/planning/.

@@ -33,7 +33,6 @@ function Item({ thread, project, role }: { thread: PrioritizedThread; project?: 
       <div className="question-head">
         <StateBadge thread={thread} />
         {hasNewFollowUp(thread) && <span className="kind-badge follow_up">New follow-up</span>}
-        {q.dueAt && <span className="metadata">Hoping for a reply by {formatDate(q.dueAt)}</span>}
       </div>
       <Link className="workbench-title" href={`/projects/${q.projectId}#q-${q.id}`}>
         {q.title}

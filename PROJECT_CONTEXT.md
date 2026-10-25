@@ -1,5 +1,7 @@
 # Buckeye Baton — 当前项目状态
 
+最新产品修订优先：用户选择保留系统建议，改名Suggestions for your project且入口不变；项目编辑按状态只显示对应字段且保留隐藏历史；排序只按项目/未回答求助的发布等待年龄，取消期限加分与日期界面。旧dueAt数据/兼容API保留但不影响排序。实现与测试见docs/P3_PRODUCT_REVISION.md；下文旧日期规划/原10/10为历史状态。
+
 更新：2026-10-24。仓库：https://github.com/BOWEN2491/buckeye-baton
 
 ## 定位

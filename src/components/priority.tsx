@@ -50,8 +50,8 @@ export function PriorityRules() {
       <summary>How priority works</summary>
       <ul>
         <li>Paused projects nobody has picked up: +5 per full week since the project was shared, up to +20.</li>
-        <li>Questions waiting for a referral or mentor reply: +5 per full day waiting, up to +30.</li>
-        <li>Hoped-for reply date passed: +50; within 24 hours: +35; within 3 days: +20.</li>
+        <li>Questions waiting for a referral or mentor reply: +5 per full day since the unanswered request was posted, up to +30. After a reply, a new follow-up starts a new wait.</li>
+        <li>Reply dates do not affect priority. Ordinary comments do not add a priority boost.</li>
         <li>A project counts only its single highest question. These are fixed rules, not predictions.</li>
       </ul>
     </details>

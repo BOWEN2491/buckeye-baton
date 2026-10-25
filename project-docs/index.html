@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "按用户要求停止P1/P2旧服务，3000启动P3最终4839e77；独立验收样例及只读健康/页面检查完成，旧库保留",
-  "nextUp": "用户在3000按P3_MANUAL_ACCEPTANCE验收；AI生成未启用、3001已停；main不合并、P4未开始",
+  "lastCompleted": "P3产品反馈三项修订完成；建议改名入口保留、状态字段切换保留历史、无期限计分，后端13/13和浏览器14/14通过",
+  "nextUp": "更新3000保留当前验收库后用户只复验三项修改；AI未启用、main不合并、P4未开始",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -237,6 +237,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>P3产品反馈修订</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前规则与复验重点</a>：Suggestions for your project保留入口；状态表单只显示对应内容且历史保留；无期限加分/日期界面，旧数据兼容。原P3期限规则为历史。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3当前预览</h3><p><a href="../docs/P3_PREVIEW.md">3000运行版本、PID与数据路径</a>：4839e77、独立持久验收库、虚构样例已准备，无模型/mock；旧P1/P2服务按用户要求停止，3001空闲。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3手动产品验收</h3><p><a href="../docs/P3_MANUAL_ACCEPTANCE.md">TC01–TC10与分数速查</a>：推荐/筛选、作者日期、引荐/回复/追问/删除、接棒、手机及失败恢复。需独立P3预览和明确虚构老数据；当前3000/3001仍为P1/P2，本清单未执行。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3最终本地验收10/10</h3><p><a href="../docs/P3_ACCEPTANCE.md">4839e77独立复验</a>：类型/构建、后端13/13、浏览器14/14及原R1两种探针通过。已集成协调分支，待用户产品验收；原3000/3001保持，不合并main。</p></div>
@@ -336,6 +337,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P3产品反馈三项修订通过本地回归</h3><p>Suggestions for your project保留入口，解释系统建议；表单随状态显示且输入/历史保留；日期输入/编辑和期限分移除，旧dueAt不改动且不参与排序。类型/生产构建、13/13后端、14/14浏览器通过，无真实模型调用。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>3000切换为P3手动验收预览</h3><p>核对并停止旧25596/31004，启动4839e77生产构建；仅独立库添加老项目与临期问题，只读检查推荐50分及队列35/30顺序、页面无异常。原库/配置保留，未调用AI或合并main。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3手动产品验收清单</h3><p>整理TC01–TC10、身份动作、相对顺序、分数变化及一次反馈模板；明确独立预览与老项目样例前置条件。仅文档准备，未启动服务、修改数据或代替用户验收。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3返修验收通过并集成</h3><p>4839e77按内部精确微秒比较同分问题，R1关闭；独立13/13后端、14/14浏览器及原探针通过，J1–J10全部通过。只合入P3协调分支，原数据/服务不动，用户产品验收待进行。</p></div>

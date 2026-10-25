@@ -28,18 +28,6 @@ export function hasNewFollowUp(thread: QuestionThread) {
 export function StateBadge({ thread }: { thread: QuestionThread }) {
   return <span className={`question-state ${thread.state}`}>{stateLabel(thread)}</span>;
 }
-// A date input holds a local calendar day; requests use the end of that day in UTC.
-function localDayToIso(day: string) {
-  return new Date(`${day}T23:59:00`).toISOString();
-}
-function isoToLocalDay(iso: string) {
-  const d = new Date(iso);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-function todayInput() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 function RoleChip({ user }: { user: User }) {
   return <span className={`role-chip ${user.role}`}>{readable(user.role)}</span>;
 }
@@ -49,7 +37,6 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [wantsMentor, setWantsMentor] = useState<"" | "yes" | "no">("");
-  const [due, setDue] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent) {
@@ -57,12 +44,10 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
     if (busy) return;
     if (!title.trim()) return setError("Write your question.");
     if (!wantsMentor) return setError("Choose whether you want a mentor to answer.");
-    const dueAt = due ? localDayToIso(due) : null;
-    if (dueAt && Date.parse(dueAt) <= Date.now()) return setError("Choose a reply date in the future.");
     setError("");
     setBusy(true);
     try {
-      const thread = await api<QuestionThread>(`/projects/${projectId}/questions`, userId, { title, body, wantsMentor: wantsMentor === "yes", dueAt });
+      const thread = await api<QuestionThread>(`/projects/${projectId}/questions`, userId, { title, body, wantsMentor: wantsMentor === "yes", dueAt: null });
       onPosted(thread);
     } catch (err) {
       setError(`Couldn’t post your question. ${errorText(err)} Your text is kept. Try again.`);
@@ -92,11 +77,6 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
           No, just open discussion
         </label>
       </fieldset>
-      <label>
-        Hoping for a reply by <span className="optional">(optional)</span>
-        <input type="date" value={due} min={todayInput()} readOnly={busy} onChange={(e) => setDue(e.target.value)} />
-        <span className="field-help">Shown to readers in their own time zone. No reminders are sent.</span>
-      </label>
       <div className="form-actions">
         <button type="button" className="button secondary" onClick={onCancel} disabled={busy}>
           Cancel
@@ -246,63 +226,6 @@ function Composer({ thread, onPosted }: { thread: QuestionThread; onPosted: () =
 const kindLabel: Record<ProjectPostKind, string> = { comment: "Comment", follow_up: "Follow-up", mentor_reply: "Referred mentor reply" };
 
 // Only the asker sees this; the server also rejects everyone else, including the project owner.
-function ReplyDateEditor({ thread, onSaved }: { thread: QuestionThread; onSaved: (message: string) => void }) {
-  const { userId } = useIdentity();
-  const [open, setOpen] = useState(false);
-  const [day, setDay] = useState(thread.question.dueAt ? isoToLocalDay(thread.question.dueAt) : "");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  async function save(clear: boolean) {
-    if (busy) return;
-    if (!clear && !day) return setError("Choose a date, or remove the reply date.");
-    const dueAt = clear ? null : localDayToIso(day);
-    if (dueAt && Date.parse(dueAt) <= Date.now()) return setError("Choose a reply date in the future.");
-    setBusy(true);
-    setError("");
-    try {
-      await api<QuestionThread>(`/project-questions/${thread.question.id}`, userId, { dueAt }, "PATCH");
-      setOpen(false);
-      if (clear) setDay("");
-      onSaved(clear ? "Reply date removed." : "Reply date updated.");
-    } catch (err) {
-      setError(`Couldn’t update the reply date. ${errorText(err)} Your choice is kept.`);
-    } finally {
-      setBusy(false);
-    }
-  }
-  if (!open)
-    return (
-      <button type="button" className="text-button reply-date-toggle" onClick={() => setOpen(true)}>
-        Edit reply date
-      </button>
-    );
-  return (
-    <div className="reply-date-editor">
-      <label htmlFor={`reply-date-${thread.question.id}`}>Hoping for a reply by</label>
-      <input id={`reply-date-${thread.question.id}`} type="date" value={day} min={todayInput()} readOnly={busy} onChange={(e) => setDay(e.target.value)} />
-      <span className="field-help">Shown to readers in their own time zone. Changing the date may change its priority, but does not change its reply status or mentor assignment.</span>
-      {error && (
-        <p className="field-error" role="alert">
-          {error}
-        </p>
-      )}
-      <div className="inline-actions">
-        <button type="button" className="button primary" disabled={busy} onClick={() => void save(false)}>
-          {busy ? "Saving…" : "Save date"}
-        </button>
-        {thread.question.dueAt && (
-          <button type="button" className="button secondary" disabled={busy} onClick={() => void save(true)}>
-            Remove date
-          </button>
-        )}
-        <button type="button" className="button secondary" disabled={busy} onClick={() => setOpen(false)}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function Thread({ thread, projectOwnerId, priority, highlighted, onChanged }: { thread: QuestionThread; projectOwnerId: string; priority?: QuestionPriority | null; highlighted: boolean; onChanged: () => void }) {
   const { user } = useIdentity();
   const [success, setSuccess] = useState("");
@@ -333,23 +256,12 @@ function Thread({ thread, projectOwnerId, priority, highlighted, onChanged }: { 
     <article id={`q-${q.id}`} className={highlighted ? "question-thread highlighted" : "question-thread"} aria-label={q.title}>
       <div className="question-head">
         <StateBadge thread={thread} />
-        {q.dueAt && <span className="metadata">Hoping for a reply by {formatDate(q.dueAt)}</span>}
       </div>
       <h3>{q.title}</h3>
       {priority && (
         <div className="question-priority" aria-label="Question priority">
           <PriorityReasons reasons={priority.reasons} />
         </div>
-      )}
-      {user?.role === "student" && user.id === q.authorId && (
-        <ReplyDateEditor
-          key={q.dueAt ?? "none"}
-          thread={thread}
-          onSaved={(message) => {
-            setSuccess(message);
-            onChanged();
-          }}
-        />
       )}
       <p className="metadata">
         Asked by {thread.author.name} · {formatDateTime(q.createdAt)}

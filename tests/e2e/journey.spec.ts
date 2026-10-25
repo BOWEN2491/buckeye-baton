@@ -43,8 +43,15 @@ test('owned reflections save across ongoing, finished and paused without losing 
   await page.getByRole('button', { name: 'Edit project', exact: true }).click();
   await page.getByLabel('Current progress', { exact: true }).fill('Built the first notification prototype.');
   await page.getByLabel('Project status', { exact: true }).selectOption('finished');
+  await expect(page.getByLabel('Current progress', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Why we paused', { exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Add outcome', exact: true }).click();
   await page.getByLabel('Outcome 1', { exact: true }).fill('Completed a keyboard accessible notification flow.');
+  await page.getByLabel('Project status', { exact: true }).selectOption('paused');
+  await expect(page.getByLabel('Outcome 1', { exact: true })).toHaveCount(0);
+  await page.getByLabel('Why we paused', { exact: true }).fill('Unsaved pause note survives switching.');
+  await page.getByLabel('Project status', { exact: true }).selectOption('finished');
+  await expect(page.getByLabel('Outcome 1', { exact: true })).toHaveValue('Completed a keyboard accessible notification flow.');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page.getByLabel('Outcome 1', { exact: true })).toHaveValue('Completed a keyboard accessible notification flow.');
   expect((await saved()).status).toBe('ongoing');
@@ -65,6 +72,9 @@ test('owned reflections save across ongoing, finished and paused without losing 
   await expect(page.getByText('Added clear progress and retry messages.', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Edit project', exact: true }).click();
   await page.getByLabel('Project status', { exact: true }).selectOption('paused');
+  await expect(page.getByLabel('Outcome 1', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Current progress', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Why we paused', { exact: true })).toHaveValue('Unsaved pause note survives switching.');
   await page.getByLabel('Why we paused', { exact: true }).fill('The team needs access to a test mailing service.');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page.getByLabel('Why we paused', { exact: true })).toHaveValue('The team needs access to a test mailing service.');
@@ -80,6 +90,9 @@ test('owned reflections save across ongoing, finished and paused without losing 
   await expect(page.getByText('Arrange test service access before implementation.', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Edit project', exact: true }).click();
   await page.getByLabel('Project status', { exact: true }).selectOption('ongoing');
+  await expect(page.getByLabel('Why we paused', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Outcome 1', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Current progress', { exact: true })).toHaveValue('Built the first notification prototype.');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
   await expect(page.getByText('Built the first notification prototype.', { exact: true })).toBeVisible();
   const project = await saved();

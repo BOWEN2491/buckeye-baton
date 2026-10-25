@@ -36,7 +36,7 @@ const detail = async (id: string) => (await request('projectPriority', id)).data
 const qp = async (projectId: string, questionId: string) => (await detail(projectId)).questions.find((q: any) => q.questionId === questionId).priority;
 const sum = (reasons: { points: number }[]) => reasons.reduce((s, r) => s + r.points, 0);
 
-test('P3 rules: shared-age pickup boost, waiting and reply-date points, pendingSince and max aggregation', async () => {
+test('P3 rules: shared-age pickup boost and age-only waiting points, pendingSince and max aggregation', async () => {
  process.env.DATABASE_MODE = 'pglite'; process.env.PGLITE_DATA_DIR = await mkdtemp(path.join(tmpdir(), 'buckeye-baton-p3-rules-'));
  setClock(() => new Date(A));
  try {
@@ -62,8 +62,8 @@ test('P3 rules: shared-age pickup boost, waiting and reply-date points, pendingS
   await project(db, 'qp', 'ongoing', -1 * D);
   const cases: [string, number, number | null, number, string[]][] = [
    ['w-23h', -D + 1000, null, 0, []], ['w-1d', -D, null, 5, ['waiting_for_reply']], ['w-3d', -3 * D, null, 15, ['waiting_for_reply']], ['w-6d', -6 * D, null, 30, ['waiting_for_reply']], ['w-9d', -9 * D, null, 30, ['waiting_for_reply']],
-   ['due-now', -H, 0, 50, ['reply_overdue']], ['due-past', -H, -2 * D, 50, ['reply_overdue']], ['due-24h', -H, 24 * H, 35, ['reply_due_soon']], ['due-24h+1', -H, 24 * H + 1000, 20, ['reply_due_soon']],
-   ['due-72h', -H, 72 * H, 20, ['reply_due_soon']], ['due-72h+1', -H, 72 * H + 1000, 0, []], ['wait-and-due', -4 * D, 2 * H, 55, ['waiting_for_reply', 'reply_due_soon']], ['future-created', 2 * H, null, 0, []],
+   ['due-now', -H, 0, 0, []], ['due-past', -H, -2 * D, 0, []], ['due-24h', -H, 24 * H, 0, []], ['due-24h+1', -H, 24 * H + 1000, 0, []],
+   ['due-72h', -H, 72 * H, 0, []], ['due-72h+1', -H, 72 * H + 1000, 0, []], ['wait-and-due', -4 * D, 2 * H, 20, ['waiting_for_reply']], ['future-created', 2 * H, null, 0, []],
   ];
   for (const [id, created, due] of cases) await question(db, id, 'qp', created, { due });
   for (const [id, , , score, codes] of cases) {
@@ -73,10 +73,10 @@ test('P3 rules: shared-age pickup boost, waiting and reply-date points, pendingS
   }
   assert.equal((await qp('qp', 'future-created')).waitingHours, 0);
   assert.equal((await qp('qp', 'w-3d')).reasons[0].label, 'Waiting 3 days for a reply');
-  assert.equal((await qp('qp', 'due-past')).reasons[0].label, 'Reply date passed');
+  assert.deepEqual((await qp('qp', 'due-past')).reasons, []);
   // Project takes only the single highest question (55), never stacked across questions.
-  assert.equal((await detail('qp')).priority.score, 55);
-  assert.deepEqual((await detail('qp')).priority.reasons.map((r: any) => r.questionId), ['wait-and-due', 'wait-and-due']);
+  assert.equal((await detail('qp')).priority.score, 30);
+  assert.deepEqual((await detail('qp')).priority.reasons.map((r: any) => r.questionId), ['w-9d']);
 
   // Non-pending states have no priority even with a passed date; pendingSince across replies and follow-ups.
   await project(db, 'states', 'ongoing', -30 * D);
@@ -109,8 +109,8 @@ test('P3 rules: shared-age pickup boost, waiting and reply-date points, pendingS
   // Pickup boost plus the best question; capped at 100 by construction (20 + 80).
   await project(db, 'combo', 'paused', -90 * D);
   await question(db, 'combo-q', 'combo', -8 * D, { due: -H });
-  assert.equal((await detail('combo')).priority.score, 100);
-  assert.deepEqual((await detail('combo')).priority.reasons.map((r: any) => r.code), ['no_pickup', 'waiting_for_reply', 'reply_overdue']);
+  assert.equal((await detail('combo')).priority.score, 50);
+  assert.deepEqual((await detail('combo')).priority.reasons.map((r: any) => r.code), ['no_pickup', 'waiting_for_reply']);
   assert.equal((await request('projectPriority', 'missing')).status, 404);
   assert.equal((await priorityGET(new Request('http://localhost/api/projects/combo/priority'), { params: Promise.resolve({ id: 'combo' }) })).status, 200);
  } finally { setClock(null); await closeDatabase(); }
@@ -149,8 +149,8 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
   assert.ok(rec.every((p: any) => p.priority && sum(p.priority.reasons) === p.priority.score && 'introduction' in p));
   for (let i = 1; i < rec.length; i++) assert.ok(rec[i - 1].priority.score >= rec[i].priority.score);
   const byId = Object.fromEntries(rec.map((p: any) => [p.id, p.priority.score]));
-  assert.equal(byId['busy'], 70); assert.equal(byId['old-paused'], 20); assert.equal(byId['picked-src'], 0); assert.equal(byId['same-a'], 0);
-  assert.deepEqual(rec.slice(0, 3).map((p: any) => [p.id, p.priority.score]), [['busy', 70], ['project-events', 30], ['old-paused', 20]]); // seeded question is ~128 days old on the fixed clock
+  assert.equal(byId['busy'], 30); assert.equal(byId['old-paused'], 20); assert.equal(byId['picked-src'], 0); assert.equal(byId['same-a'], 0);
+  assert.deepEqual(rec.slice(0, 3).map((p: any) => [p.id, p.priority.score]), [['busy', 30], ['project-events', 30], ['old-paused', 20]]); // tied project scores keep Newest order
   const zeros = rec.filter((p: any) => p.priority.score === 0).map((p: any) => p.id);
   assert.deepEqual(zeros, newest.filter((p: any) => zeros.includes(p.id)).map((p: any) => p.id));
   // Filters apply first, but successor counts use all relations.
@@ -165,11 +165,11 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
   assert.ok(oldest.needsReferral.every((t: any) => !('priority' in t)));
   for (const key of ['needsReferral', 'referred']) assert.deepEqual(staff[key].map((t: any) => t.question.id).sort(), oldest[key].map((t: any) => t.question.id).sort());
   const needIds = staff.needsReferral.map((t: any) => t.question.id);
-  assert.ok(needIds.indexOf('busy-due') < needIds.indexOf('busy-old'));
+  assert.ok(needIds.indexOf('busy-old') < needIds.indexOf('busy-due'));
   const referredIds = staff.referred.map((t: any) => t.question.id);
   assert.equal(referredIds[referredIds.length - 1], 'busy-replied');
   assert.equal(staff.referred.find((t: any) => t.question.id === 'busy-replied').priority, null);
-  assert.ok(referredIds.indexOf('busy-awaiting') < referredIds.indexOf('busy-other'));
+  assert.ok(referredIds.indexOf('busy-other') < referredIds.indexOf('busy-awaiting'));
   const sarah = (await request('workbench', undefined, 'GET', 'mentor-sarah', undefined, '?sort=priority')).data;
   assert.deepEqual(sarah.awaitingReply.map((t: any) => t.question.id), ['busy-awaiting']);
   assert.deepEqual(sarah.replied.map((t: any) => t.question.id), ['busy-replied']);
@@ -185,7 +185,7 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
   // Advice for an old paused project with an old question nearing its date.
   await question(db, 'old-q', 'old-paused', -4 * D, { due: 6 * H });
   const advice = (await detail('old-paused')).advice;
-  assert.deepEqual(advice.map((a: any) => [a.code, a.questionId]), [['improve_handoff', null], ['narrow_question', 'old-q'], ['review_reply_date', 'old-q']]);
+  assert.deepEqual(advice.map((a: any) => [a.code, a.questionId]), [['improve_handoff', null], ['narrow_question', 'old-q']]);
   assert.ok(!/probab|guarantee|likely/i.test(JSON.stringify(advice)));
   assert.deepEqual((await detail('same-a')).advice, []);
 
@@ -196,6 +196,8 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
   const questionsBefore = await snapshot();
   const postsBefore = (await db.query('SELECT * FROM project_posts ORDER BY id')).rows;
   const hashBefore = (await request('introduction', 'busy', 'GET', 'student-alex')).data.sourceHash;
+  const priorityBeforeDateEdit = await qp('busy', 'busy-awaiting');
+  const projectBeforeDateEdit = (await detail('busy')).priority;
   assert.equal((await request('projectQuestion', 'busy-awaiting', 'PATCH', undefined, { dueAt: future })).status, 401);
   assert.equal((await request('projectQuestion', 'missing', 'PATCH', 'student-mia', { dueAt: future })).status, 404);
   for (const user of ['student-alex', 'staff-kevin', 'mentor-sarah']) assert.equal((await request('projectQuestion', 'busy-awaiting', 'PATCH', user, { dueAt: future })).status, 403, user);
@@ -203,6 +205,8 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
    assert.equal((await request('projectQuestion', 'busy-awaiting', 'PATCH', 'student-mia', bad)).status, 400, JSON.stringify(bad));
   const updated = await request('projectQuestion', 'busy-awaiting', 'PATCH', 'student-mia', { dueAt: future });
   assert.equal(updated.status, 200); assert.equal(updated.data.question.dueAt, future); assert.equal(updated.data.state, 'awaiting_reply');
+  assert.deepEqual(await qp('busy', 'busy-awaiting'), priorityBeforeDateEdit);
+  assert.deepEqual((await detail('busy')).priority, projectBeforeDateEdit);
   assert.ok(!('priority' in updated.data));
   assert.equal((await qp('busy', 'busy-awaiting')).pendingSince, at(-4 * D));
   const cleared = await questionPATCH(new Request('http://localhost/api/project-questions/busy-awaiting', { method: 'PATCH', headers: { 'x-demo-user-id': 'student-mia' }, body: JSON.stringify({ dueAt: null }) }), { params: Promise.resolve({ id: 'busy-awaiting' }) });
