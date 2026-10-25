@@ -65,11 +65,17 @@ async function views(sql: Sql, items: Row[], now: Date): Promise<InboxItem[]> {
 
 // Unread = unread activity + unread invitations that are still effectively pending.
 async function unreadCount(sql: Sql, userId: string, now: Date) {
- const activity = (await rows(sql, `SELECT count(*)::int AS n FROM inbox_items WHERE "recipientId"=$1 AND kind='activity' AND "readAt" IS NULL`, [userId]))[0].n as number;
- const pending = await rows(sql, `SELECT * FROM inbox_items WHERE "recipientId"=$1 AND kind='invitation' AND "readAt" IS NULL AND status='pending'`, [userId]);
+ const activity = (await rows(sql, `SELECT count(*)::int AS n FROM inbox_items WHERE "recipientId"=$1 AND kind='activity' AND "readAt" IS NULL AND ${visibleSql}`, [userId]))[0].n as number;
+ const pending = await rows(sql, `SELECT * FROM inbox_items WHERE "recipientId"=$1 AND kind='invitation' AND "readAt" IS NULL AND status='pending' AND ${visibleSql}`, [userId]);
  const statuses = await effectiveStatuses(sql, pending, now);
  return activity + pending.filter(i => statuses.get(i.id) === 'pending').length;
 }
+
+// A removed post remains visible only to its remover; retired help invitations stay stored but hidden.
+const visibleSql = `( (kind='activity' AND ("postId" IS NULL OR EXISTS (
+ SELECT 1 FROM project_posts p WHERE p.id=inbox_items."postId"
+ AND (p."deletedAt" IS NULL OR p."deletedBy"=inbox_items."recipientId")
+))) OR (kind='invitation' AND "invitationKind"='pickup') )`;
 
 const filterSql: Record<InboxFilter, string> = { all: '', unread: ' AND "readAt" IS NULL', invitations: ` AND kind='invitation'` };
 // Unread uses the same meaning as unreadCount: unread Activity plus unread invitations that are still
@@ -93,7 +99,7 @@ export async function listInbox(req: Request, db: Sql, user: User) {
  const batch = Math.max(limit + 1, 50);
  for (;;) {
   const params: unknown[] = [user.id];
-  let where = `"recipientId"=$1`;
+  let where = `"recipientId"=$1 AND ${visibleSql}`;
   if (filter === 'unread') { params.push(now); where += unreadSql.replace('$NOW', `$${params.length}`); }
   else where += filterSql[filter];
   if (after) { params.push(after); where += ` AND ("createdAt", id) < (SELECT "createdAt", id FROM inbox_items WHERE id=$${params.length})`; }
@@ -114,7 +120,7 @@ export async function listInbox(req: Request, db: Sql, user: User) {
 
 export async function markRead(req: Request, db: Sql, user: User, id: string) {
  await parse(req, z.object({ read: z.literal(true, { error: 'Send {"read": true}' }) }).strict());
- const item = (await rows(db, 'UPDATE inbox_items SET "readAt"=COALESCE("readAt", clock_timestamp()) WHERE id=$1 AND "recipientId"=$2 RETURNING *', [id, user.id]))[0] ?? fail(404, 'NOT_FOUND', 'Message not found');
+ const item = (await rows(db, `UPDATE inbox_items SET "readAt"=COALESCE("readAt", clock_timestamp()) WHERE id=$1 AND "recipientId"=$2 AND ${visibleSql} RETURNING *`, [id, user.id]))[0] ?? fail(404, 'NOT_FOUND', 'Message not found');
  return json((await views(db, [item], await inboxNow(db)))[0]);
 }
 

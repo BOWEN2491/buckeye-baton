@@ -1,3 +1,5 @@
+> Current product override (2026-10-25): see [P4_PRODUCT_REVISION.md](docs/P4_PRODUCT_REVISION.md). Automatic invitations are pickup-only. Removed-post notifications are hidden from recipients other than the remover.
+
 # Buckeye Baton — 当前项目状态
 
 更新：2026-10-25。仓库：https://github.com/BOWEN2491/buckeye-baton

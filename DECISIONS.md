@@ -116,3 +116,9 @@ In the context of the user authorizing homepage/card interactions before pickup 
 **Supersedes:** The adoption compatibility portion of “Deliver project reflections first and preserve legacy records additively”.
 
 In the context of the user explicitly asking to delete the remaining old adoption implementation, facing old links that still exposed a superseded workflow, we decided for source-project redirects, removal of unused lesson/adoption components and adoption response fields, and HTTP 410 for retired adoption writes, to achieve one project-centered interface, accepting a deliberate compatibility break for obsolete adoption clients while preserving all stored history and inline historical experience.
+
+### Restrict invitations to baton pickup and hide removed-post notifications
+**Date:** 2026-10-25 · **Status:** Accepted
+**Supersedes:** Original P4 help-invitation scope and universal Comment removed display.
+
+In the context of P4 product acceptance and the user's clarified deletion rule, facing unwanted help invitations for old questions and unwanted deletion entries in other recipients' Inbox, we decided for pickup-only automatic dispatch and a shared server-side notification visibility predicate, to achieve an Inbox focused on useful activity and project continuation, accepting retained but inaccessible legacy help invitation history. Manual referrals remain intact; no table or user content is deleted.

@@ -1,3 +1,18 @@
+# Current acceptance addendum — 2026-10-25
+
+本次产品修订以 [P4_PRODUCT_REVISION.md](P4_PRODUCT_REVISION.md) 为准，下方原始剧本中的 help 邀请、Interested helpers 和“所有人看到 Comment removed”已退役，不再执行。
+
+1. Mia → Inbox → Invitations：仅出现接棒邀请；Accept 只表示兴趣，Continue to pickup 仍需正常创建。已接受/忽略/已有接棒的历史状态按真实记录保留。
+2. Sarah → Inbox → Invitations：不出现老问题求助邀请；正常引荐、回复和追问仍在 Activity。
+3. Kevin → 项目问题：仍可 Refer a mentor；没有 Interested helpers 区块。
+4. 创建评论后由作者删除：原接收者刷新 Inbox，该通知消失，未读数同步减少；没有新删除通知。
+5. 由项目所有者删除别人评论：其他接收者通知消失；删除者原先收到的那条可保留 Comment removed，无正文。
+6. 检查 All / Unread / Invitations、Load more、Refresh 和手机390px；历史项目、讨论、AI草稿保持。
+
+当前预览地址与运行SHA见 [P4_PREVIEW.md](P4_PREVIEW.md)。下方保留原始交付剧本供追溯，冲突时不适用。
+
+---
+
 # P4 手动验收剧本：统一 Inbox 与自动邀请
 
 **2026-10-25已准备好独立预览：http://127.0.0.1:3001，实际应用372646c。** 请直接从第1节开始，不需重复第0节建库/启动；Mia与Sarah的初始邀请已生成。当前PID/数据库与保护规则见[P4_PREVIEW.md](P4_PREVIEW.md)。原3000/P3不变。

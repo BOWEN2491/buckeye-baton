@@ -1,3 +1,5 @@
+Current P4 product override: docs/P4_PRODUCT_REVISION.md supersedes conflicting original P4 rules. Invitations are pickup-only; notifications for removed posts are hidden from recipients except the remover.
+
 # Buckeye Baton — agent entry
 
 Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md and docs/PROJECT_OVERVIEW.md before changes. P4 is now integrated in codex/p4-integration and independently accepted locally10/10 on372646c; next is user product acceptance in a separate preview. See docs/P4_ACCEPTANCE.md. P4_AGENT_TASK/P4_CONTRACT remain delivery references. Do not start from old main, which lacks P2/P3/P4.

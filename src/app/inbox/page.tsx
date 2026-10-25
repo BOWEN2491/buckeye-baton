@@ -23,7 +23,7 @@ function activityTitle(i: ActivityItem) {
   if (i.postKind === "follow_up") return `${who} asked a follow-up`;
   return `${who} commented on “${i.questionTitle ?? "a question"}”`;
 }
-const invitationTitle = (i: InvitationItem) => (i.invitationKind === "pickup" ? "A paused project could use your experience" : "A question could use your experience");
+const invitationTitle = (_i: InvitationItem) => "A paused project could use your experience";
 
 function Item({ item, onOpen, onRead, onRespond, busy }: { item: InboxItem; onOpen: (item: InboxItem) => void; onRead: (item: InboxItem) => void; onRespond: (item: InvitationItem, action: "accept" | "ignore") => void; busy: boolean }) {
   const unread = !item.readAt;
@@ -63,9 +63,7 @@ function Item({ item, onOpen, onRead, onRespond, busy }: { item: InboxItem; onOp
             Status: <strong>{readable(item.status)}</strong>
             {item.status === "pending" ? ` · expires ${formatDateTime(item.expiresAt)}` : ""}
           </p>
-          {item.status === "accepted" && item.actionable && item.invitationKind === "help" && (
-            <p className="field-help">You can join the discussion with a comment. Only a mentor referred by Staff can post a formal mentor reply.</p>
-          )}
+
         </div>
       )}
       <div className="inline-actions">
@@ -147,7 +145,7 @@ function Preferences() {
           Automatic invitations
         </label>
       )}
-      <p className="field-help">Invitations suggest projects or questions that match your public experience. Activity updates will still arrive.</p>
+      <p className="field-help">Invitations suggest paused projects that match your public experience. Activity updates will still arrive.</p>
       <Feedback error={failure} success={message} />
     </section>
   );

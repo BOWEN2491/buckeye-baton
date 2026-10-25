@@ -1,3 +1,5 @@
+> Current product override (2026-10-25): see [P4_PRODUCT_REVISION.md](P4_PRODUCT_REVISION.md). Automatic invitations are pickup-only. Removed-post notifications are hidden from recipients other than the remover.
+
 # P4 冻结契约：统一 Inbox 与自动站内邀请
 
 实现状态更新（2026-10-25）：372646c已按本契约独立技术验收10/10，详见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)，实际接口见API_CONTRACT。以下正文保留冻结时的规格；用户产品验收/main合并另行进行。

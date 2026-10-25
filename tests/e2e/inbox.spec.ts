@@ -46,9 +46,7 @@ test('the production runner sent invitations before any page was opened and keep
   expect(pickup.reason).toContain('You shared a finished project about maps');
   expect(pickup.evidence.map((e: any) => e.projectId)).toEqual(['p4-mia-finished']);
   const sarah = (await inboxApi(request, 'mentor-sarah', '?filter=invitations')).items;
-  const help = sarah.find((i: any) => i.invitationKind === 'help' && i.questionId === 'p3-old-question');
-  expect(help).toBeTruthy();
-  expect(help.reason).toBe('You previously replied as a mentor on a maps project.');
+  expect(sarah).toEqual([]);
   expect((await inboxApi(request, 'student-alex', '?filter=invitations')).items.some((i: any) => i.projectId === 'p3-old-paused')).toBe(false);
   // A later automatic check completes on its own (60 s interval) and sends no duplicates.
   await expect.poll(async () => (await status()).lastCompletedAt, { timeout: 90_000, intervals: [5_000] }).not.toBe(first.lastCompletedAt);
@@ -154,7 +152,8 @@ test('four identities receive the right Activity, can read, open and see removed
   await expect(thread.locator('.post.mentor_reply')).toHaveCount(1);
   await identity(page, 'student-mia');
   await page.goto('/inbox');
-  await expect(page.getByRole('listitem', { name: 'Comment removed' }).first()).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Comment removed' })).toHaveCount(0);
+  expect((await latest('student-alex')).some((i: any) => i.removed)).toBe(true);
   for (const user of ['student-mia', 'student-alex', 'staff-kevin'])
     expect(JSON.stringify(await inboxApi(page.request, user))).not.toContain('Start with an in-app confirmation step.');
   // Privacy: someone else's message cannot be marked read.
@@ -167,7 +166,7 @@ test('four identities receive the right Activity, can read, open and see removed
   await page.screenshot({ path: path.join(evidenceDir, 'inbox-mobile.png'), fullPage: true });
 });
 
-test('invitations: accept is only intent, Staff sees interested helpers, settings, empty and failure states', async ({ page }) => {
+test('invitations: accept is only intent, only pickup invitations, manual Staff referrals, settings, empty and failure states', async ({ page }) => {
   test.setTimeout(180_000);
   await mkdir(evidenceDir, { recursive: true });
   await page.goto('/');
@@ -203,21 +202,17 @@ test('invitations: accept is only intent, Staff sees interested helpers, setting
   await page.getByRole('checkbox', { name: 'Automatic invitations' }).check();
   await expect(page.getByText('Automatic invitations are on.')).toBeVisible();
 
-  // Sarah accepts the help invitation; Kevin sees her as an interested helper and still refers manually.
+  // Mentors receive activity but no automatic help invitations; manual referrals remain available.
   await identity(page, 'mentor-sarah');
   await page.goto('/inbox');
-  const help = page.getByRole('listitem', { name: 'A question could use your experience' }).filter({ hasText: 'Study Room Finder Pilot' });
-  await help.getByRole('button', { name: 'Accept', exact: true }).click();
-  await expect(help).toContainText('Only a mentor referred by Staff can post a formal mentor reply.');
+  await page.getByRole('button', { name: 'Invitations', exact: true }).click();
+  await expect(page.locator('.inbox-item')).toHaveCount(0);
   await identity(page, 'staff-kevin');
   await page.goto('/projects/p3-old-paused#q-p3-old-question');
   const thread = page.getByRole('article', { name: 'How fresh must room data be before students trust it?', exact: true });
-  const helpers = thread.getByLabel('Interested helpers');
-  await expect(helpers).toContainText('Sarah Patel');
-  await expect(thread).toContainText('Waiting for Staff referral');
-  await helpers.getByRole('button', { name: 'Refer mentor', exact: true }).click();
-  await expect(thread.getByRole('combobox', { name: 'Mentor', exact: true })).toHaveValue('mentor-sarah');
-  await page.screenshot({ path: path.join(evidenceDir, 'interested-helpers-desktop.png'), fullPage: true });
+  await expect(thread.getByLabel('Interested helpers')).toHaveCount(0);
+  await thread.getByRole('button', { name: 'Refer a mentor', exact: true }).click();
+  await expect(thread.getByRole('combobox', { name: 'Mentor', exact: true })).toBeVisible();
   await thread.getByRole('button', { name: 'Cancel', exact: true }).click();
   expect((await page.request.get('/api/project-questions/p3-old-question/interested-helpers', as('student-mia'))).status()).toBe(403);
 
@@ -292,7 +287,7 @@ test('R2 Refresh: new messages beyond the first page stay reachable, and later L
   expect(await alexTotal(page)).toBe(n0 + 28);
 });
 
-test('R2 Refresh: a deleted comment far past the first page shows as removed', async ({ page }) => {
+test('R2 Refresh: a comment deleted by its author disappears from another recipient beyond the first page', async ({ page }) => {
   test.setTimeout(180_000);
   const stamp = Date.now();
   const q0 = await miaAsks(page, `Deleted preview base ${stamp}`);
@@ -305,8 +300,8 @@ test('R2 Refresh: a deleted comment far past the first page shows as removed', a
   expect((await page.request.delete(`/api/project-posts/${commentId}`, mia)).status()).toBe(200);
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await expect(page.locator('.inbox-item').filter({ hasText: commentBody })).toHaveCount(0);
-  await expect(page.getByRole('listitem', { name: 'Comment removed' }).filter({ hasText: `Deleted preview base ${stamp}` })).toHaveCount(1);
-  await expect(page.locator('.inbox-item')).toHaveCount(count);
+  await expect(page.getByRole('listitem', { name: 'Comment removed' }).filter({ hasText: `Deleted preview base ${stamp}` })).toHaveCount(0);
+  await expect(page.locator('.inbox-item')).toHaveCount(count - 1);
 });
 
 test('R2 Refresh: Mark as read removes the message from Unread and the count matches', async ({ page }) => {

@@ -4,7 +4,7 @@ import * as v from './validation';
 import { z } from 'zod';
 import * as priority from './priority';
 import { lockDispatch, notify } from './inbox';
-import { settleHelp, settlePickup } from './invitations';
+import { settlePickup } from './invitations';
 // Exact microsecond epoch as text, for P3 tie-breaks across questions (public dates stay millisecond ISO).
 const exactUs = `(extract(epoch FROM "createdAt") * 1000000)::bigint::text AS "createdAtUs"`;
 import { fail, json, rows, one, role, parse, insert } from './http';
@@ -124,7 +124,6 @@ export async function addPost(req: Request, db: Storage, user: User, questionId:
   if (input.kind === 'follow_up') recipients.push([referral?.mentorId, 'assigned_mentor']);
   if (input.kind === 'mentor_reply') recipients.push([referral?.staffId, 'referring_staff']);
   await notify(sql, { event: 'post_created', eventKey: `post:${postId}`, actorId: user.id, projectId: question.projectId, questionId, postId, recipients });
-  if (input.kind === 'mentor_reply') await settleHelp(sql, questionId); // a formal reply ends the waiting round
   return thread(sql, questionId);
  }), 201);
 }
@@ -158,7 +157,6 @@ export async function deletePost(db: Storage, user: User, postId: string) {
    fail(403, 'FORBIDDEN', 'Only the comment author or project owner can delete this comment');
   // Keep the original record for history, but exclude it from discussions and queue state.
   if (!post.deletedAt) await sql.query('UPDATE project_posts SET "deletedAt"=clock_timestamp(), "deletedBy"=$2 WHERE id=$1', [postId, user.id]);
-  await settleHelp(sql, post.questionId); // deleting the round's starting follow-up ends that round
   return thread(sql, post.questionId);
  }));
 }

@@ -7,7 +7,6 @@ import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
 import { MentorSelect, invalidateMentorWorkload } from "./mentor-workload";
 import type { QuestionPriority } from "@/shared/p3-types";
-import type { InterestedHelper } from "@/shared/p4-types";
 import { PriorityReasons, invalidateProjectPriority, useProjectPriority } from "./priority";
 
 export function stateLabel(thread: QuestionThread) {
@@ -90,42 +89,6 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
   );
 }
 
-// Staff only: people who accepted a help invitation for this question's current waiting round.
-// Interest is not a referral; a mentor still needs Staff's manual referral to post a formal reply.
-function InterestedHelpers({ thread, onRefer }: { thread: QuestionThread; onRefer?: (mentorId: string) => void }) {
-  const { userId } = useIdentity();
-  const { data, error, reload } = useResource<InterestedHelper[]>(`/project-questions/${thread.question.id}/interested-helpers`, userId);
-  if (error && !data)
-    return (
-      <p className="workload-unavailable">
-        Interested helpers unavailable.{" "}
-        <button type="button" className="text-button" onClick={() => void reload()}>
-          Retry
-        </button>
-      </p>
-    );
-  if (!data?.length) return null;
-  return (
-    <div className="interested-helpers" aria-label="Interested helpers">
-      <strong>Interested helpers</strong>
-      <ul>
-        {data.map((h) => (
-          <li key={h.invitationId}>
-            <span>
-              {h.user.name} <RoleChip user={h.user} /> · accepted {formatDate(h.acceptedAt)} · {h.matchedTags.join(", ")}
-            </span>
-            {h.user.role === "mentor" && onRefer && (
-              <button type="button" className="text-button" onClick={() => onRefer(h.user.id)}>
-                Refer mentor
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChanged: (message: string) => void }) {
   const { userId, users } = useIdentity();
   const mentors = users.filter((u) => u.role === "mentor");
@@ -140,7 +103,6 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
   if (thread.referral)
     return (
       <>
-        <InterestedHelpers thread={thread} />
         <div className="referral-note">
           <button className="button secondary" disabled>
             Referred
@@ -151,10 +113,6 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
         </div>
       </>
     );
-  const referFromInterest = (id: string) => {
-    setMentorId(id);
-    setOpen(true);
-  };
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (busy || conflict) return;
@@ -177,7 +135,6 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
   if (!open)
     return (
       <>
-      <InterestedHelpers thread={thread} onRefer={referFromInterest} />
       <div className="referral-note">
         <button className="button primary" onClick={() => setOpen(true)}>
           Refer a mentor
@@ -188,7 +145,6 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
     );
   return (
     <form className="referral-form form-stack" onSubmit={submit} aria-label="Refer a mentor" noValidate>
-      <InterestedHelpers thread={thread} onRefer={setMentorId} />
       <Feedback error={error} />
       {conflict && (
         <button type="button" className="button secondary" onClick={() => onChanged("")}>

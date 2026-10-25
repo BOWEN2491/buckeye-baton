@@ -87,9 +87,29 @@ test('P4 Activity: recipient matrix, de-duplication, self-exclusion, atomic roll
   // Deleted post: event kept, text gone everywhere.
   assert.equal((await request('projectPost', replyId, 'DELETE', 'student-alex')).status, 200);
   for (const user of ['student-mia', 'staff-kevin', 'student-alex']) {
-   const item = (await activity(user)).find((i: any) => i.preview === null && i.removed);
-   assert.ok(item, user);
+   const removedRows = (await db.query('SELECT id FROM inbox_items WHERE "recipientId"=$1 AND "postId"=$2', [user, replyId])).rows;
+   assert.equal(removedRows.length, 1); // history is retained
+   const id = String(removedRows[0].id);
+   const item = (await activity(user)).find((i: any) => i.id === id);
+   if (user === 'student-alex') { assert.ok(item?.removed); assert.equal(item.preview, null); }
+   else {
+    assert.equal(item, undefined);
+    assert.ok(!(await inbox(user, '?filter=unread&limit=50')).items.some((i: any) => i.id === id));
+    assert.equal((await request('inboxItem', id, 'PATCH', user, { read: true })).status, 404);
+   }
    assert.ok(!JSON.stringify(await inbox(user)).includes('Start with in-app confirmation.'), user);
+  }
+
+  // The author removing their own post hides it from every original recipient.
+  const selfReply = await post('mentor-sarah', q, 'mentor_reply', 'Author removes this.');
+  const selfId = selfReply.data.posts.at(-1).id;
+  const rawBefore = (await db.query('SELECT count(*)::int AS n FROM inbox_items')).rows[0].n;
+  const beforeUnread = await Promise.all(['student-mia', 'staff-kevin', 'student-alex'].map(async u => (await inbox(u)).unreadCount));
+  assert.equal((await request('projectPost', selfId, 'DELETE', 'mentor-sarah')).status, 200);
+  assert.equal((await db.query('SELECT count(*)::int AS n FROM inbox_items')).rows[0].n, rawBefore);
+  for (const [n, user] of ['student-mia', 'staff-kevin', 'student-alex'].entries()) {
+   assert.equal((await inbox(user)).unreadCount, beforeUnread[n] - 1);
+   assert.ok(!(await activity(user)).some((i: any) => i.preview === 'Author removes this.'));
   }
 
   // Atomicity: a failing notification insert rolls back the business write too.
@@ -145,7 +165,7 @@ test('P4 Activity: recipient matrix, de-duplication, self-exclusion, atomic roll
   const total = (await db.query('SELECT count(*)::int AS n FROM inbox_items')).rows[0].n;
   await setup(db); await setup(db); await seed(db); await closeDatabase();
   assert.equal((await (await database()).query('SELECT count(*)::int AS n FROM inbox_items')).rows[0].n, total);
-  assert.equal((await activity('student-mia')).length, 3);
+  assert.equal((await activity('student-mia')).length, 2);
  } finally { await closeDatabase(); }
 });
 
@@ -170,6 +190,8 @@ test('P4 invitations: eligibility boundaries, evidence matching, limits, permane
   await project(db, 'old-paused', 'student-alex', 'paused', [' Maps ', 'web', 'WEB'], -14 * D);
   await project(db, 'young-paused', 'student-alex', 'paused', ['maps'], -14 * D + 1000);
 
+  // Retired help history does not consume the active pickup invitation quota.
+  await db.query(`INSERT INTO inbox_items (id,"recipientId",kind,"eventKey","projectId","questionId","invitationKind",status,"cycleKey","expiresAt","createdAt") VALUES ('zoe-legacy-help','student-zoe','invitation','invite:help:transit-q','transit-history','transit-q','help','accepted','transit-q',$1,$2)`, [at(7 * D), at(-H)]);
   let run = await dispatchInvitations(db);
   assert.equal(run.created, 1);
   let zoe = await invitations('student-zoe');
@@ -211,36 +233,27 @@ test('P4 invitations: eligibility boundaries, evidence matching, limits, permane
   assert.equal(zoe[0].status, 'accepted'); assert.equal(zoe[0].actionable, false);
   assert.equal((await invitations('student-mia'))[0].status, 'ignored');
 
-  // Help target: waiting exactly 3 days; Sarah matches via her real formal reply; assigned mentor excluded later.
+  // Old questions never generate help invitations, even with matching mentor evidence.
   await project(db, 'transit-now', 'student-alex', 'ongoing', ['transit'], -30 * D);
   now = A + 10 * D;
-  await question(db, 'help-q', 'transit-now', 'student-alex', 10 * D - 3 * D);
-  await question(db, 'help-young', 'transit-now', 'student-alex', 10 * D - 3 * D + 1000);
-  run = await dispatchInvitations(db);
-  const sarah = await invitations('mentor-sarah');
-  assert.equal(sarah.length, 1); assert.equal(sarah[0].questionId, 'help-q'); assert.equal(sarah[0].invitationKind, 'help');
-  assert.equal(sarah[0].reason, 'You previously replied as a mentor on a transit project.');
-  assert.deepEqual(sarah[0].evidence.map((e: any) => e.projectId), ['transit-history']);
-  assert.equal(sarah[0].href, '/projects/transit-now#q-help-q');
-  // Mia's empty finished 'transit' project is not evidence, so the young question (once eligible) gets nobody but Zoe.
-  assert.ok(!(await invitations('student-mia')).some((i: any) => i.questionId === 'help-q'));
-  // Interested helpers: Staff only, after acceptance, for the current round only.
+  await question(db, 'help-q', 'transit-now', 'student-alex', 7 * D);
+  await dispatchInvitations(db);
+  assert.deepEqual(await invitations('mentor-sarah'), []);
+  // Historical help invitations are hidden, inaccessible and retired without deleting history.
+  await db.query(`INSERT INTO inbox_items (id,"recipientId",kind,"eventKey","projectId","questionId","invitationKind",status,"cycleKey","expiresAt") VALUES ('legacy-help','mentor-sarah','invitation','invite:help:help-q','transit-now','help-q','help','pending','help-q',$1)`, [at(20 * D)]);
+  for (const filter of ['all', 'unread', 'invitations']) {
+   const page = await inbox('mentor-sarah', `?filter=${filter}&limit=50`);
+   assert.ok(!page.items.some((i: any) => i.id === 'legacy-help'));
+   assert.equal(page.unreadCount, 0);
+  }
+  assert.equal((await request('invitationRespond', 'legacy-help', 'POST', 'mentor-sarah', { action: 'accept' })).status, 404);
+  assert.equal((await request('inboxItem', 'legacy-help', 'PATCH', 'mentor-sarah', { read: true })).status, 404);
+  await dispatchInvitations(db);
+  assert.equal((await db.query("SELECT status FROM inbox_items WHERE id='legacy-help'")).rows[0].status, 'cancelled');
   assert.deepEqual((await request('interestedHelpers', 'help-q', 'GET', 'staff-kevin')).data, []);
-  assert.equal((await request('invitationRespond', sarah[0].id, 'POST', 'mentor-sarah', { action: 'accept' })).status, 200);
-  const helpers = (await request('interestedHelpers', 'help-q', 'GET', 'staff-kevin')).data;
-  assert.deepEqual(helpers.map((h: any) => [h.user.id, h.matchedTags]), [['mentor-sarah', ['transit']]]);
-  for (const user of ['student-mia', 'mentor-sarah', 'student-alex']) assert.equal((await request('interestedHelpers', 'help-q', 'GET', user)).status, 403);
-  assert.equal((await request('interestedHelpers', 'missing', 'GET', 'staff-kevin')).status, 404);
-  // Accepting does not change the queue, workload or referral; Staff still refers manually.
-  const sw = (await request('workbench', undefined, 'GET', 'staff-kevin')).data;
-  assert.ok(sw.needsReferral.some((t: any) => t.question.id === 'help-q'));
-  assert.equal((await request('mentorWorkload', undefined, 'GET', 'staff-kevin')).data.items.find((i: any) => i.mentor.id === 'mentor-sarah').awaitingReply, 0);
-  assert.equal((await request('questionPosts', 'help-q', 'POST', 'mentor-sarah', { body: 'Formal?', kind: 'mentor_reply' })).status, 403);
-  assert.equal((await request('questionReferral', 'help-q', 'POST', 'staff-kevin', { mentorId: 'mentor-sarah', reason: 'She accepted and fits.' })).status, 201);
-  // A formal reply ends the round: helpers list empties; new follow-up starts a new round without re-inviting Sarah.
+  assert.equal((await request('interestedHelpers', 'help-q', 'GET', 'student-mia')).status, 403);
+  assert.equal((await request('questionReferral', 'help-q', 'POST', 'staff-kevin', { mentorId: 'mentor-sarah', reason: 'Relevant experience.' })).status, 201);
   assert.equal((await request('questionPosts', 'help-q', 'POST', 'mentor-sarah', { body: 'Fictional answer.', kind: 'mentor_reply' })).status, 201);
-  assert.deepEqual((await request('interestedHelpers', 'help-q', 'GET', 'staff-kevin')).data, []);
-  assert.equal((await invitations('mentor-sarah'))[0].actionable, false);
 
   // Expiry: computed on read without writing; a response persists it and returns 409.
   now = A + 11 * D;

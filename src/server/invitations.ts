@@ -2,18 +2,16 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { Sql } from './db';
 import { fail, json, rows, parse, role } from './http';
-import { threads } from './relay';
 import * as priority from './priority';
 import { lockDispatch } from './inbox';
-import type { QuestionThread } from '../shared/relay-types';
 import type { User } from '../shared/types';
-import type { InterestedHelper, InvitationItem, InvitationKind, InvitationRunnerStatus, InvitationStatus, MatchEvidence } from '../shared/p4-types';
+import type { InvitationItem, InvitationKind, InvitationRunnerStatus, InvitationStatus, MatchEvidence } from '../shared/p4-types';
 
 type Row = Record<string, any>;
 interface Storage extends Sql { transaction<T>(fn: (sql: Sql) => Promise<T>): Promise<T> }
 const iso = (value: unknown) => value instanceof Date ? value.toISOString() : value as string;
 const HOUR = 3_600_000, DAY = 24 * HOUR;
-export const PICKUP_AGE = 14 * DAY, HELP_WAIT = 3 * DAY, EXPIRY = 7 * DAY;
+export const PICKUP_AGE = 14 * DAY, EXPIRY = 7 * DAY;
 
 // Production uses database time after the lock is taken; tests inject a fixed clock (internal only).
 let testClock: (() => Date) | null = null;
@@ -23,34 +21,21 @@ export async function inboxNow(sql: Sql) {
 }
 
 const normalizeTags = (tags: unknown) => [...new Set((Array.isArray(tags) ? tags : []).map(t => String(t).trim().toLowerCase()).filter(Boolean))];
-const helpKey = (questionId: string) => `invite:help:${questionId}`;
 const pickupKey = (projectId: string) => `invite:pickup:${projectId}`;
 
 // ---- Targets: computed from shared threads and project facts, never a second state machine. ----
-interface Target { kind: InvitationKind; eventKey: string; cycleKey: string; project: Row; thread: QuestionThread | null; score: number; timeKey: bigint; id: string }
+interface Target { kind: InvitationKind; eventKey: string; cycleKey: string; project: Row; score: number; timeKey: bigint; id: string }
 async function successorCounts(sql: Sql, ids: string[]) {
  return new Map((await rows(sql, 'SELECT "sourceProjectId" AS id, count(*)::int AS n FROM project_relations WHERE "sourceProjectId" = ANY($1::text[]) GROUP BY "sourceProjectId"', [ids])).map(r => [r.id, r.n as number]));
 }
 const projectsSql = `SELECT *, (extract(epoch FROM "createdAt") * 1000000)::bigint::text AS "createdAtUs" FROM projects`;
-// Current cycle of a help target: the stable id of the pending event (question id or first unanswered follow-up id).
-function helpCycle(thread: QuestionThread) {
- if (thread.state !== 'needs_referral' && thread.state !== 'awaiting_reply') return null;
- return priority.pendingEvent(thread).postId ?? thread.question.id;
-}
 async function eligibleTargets(sql: Sql, now: Date): Promise<Target[]> {
  const projects = await rows(sql, projectsSql);
- const byId = new Map(projects.map(p => [p.id, p]));
  const succ = await successorCounts(sql, projects.map(p => p.id));
  const targets: Target[] = [];
  for (const p of projects) {
   const pickup = priority.noPickup(p as never, succ.get(p.id) ?? 0, now);
-  if (pickup && pickup.hours * HOUR >= PICKUP_AGE) targets.push({ kind: 'pickup', eventKey: pickupKey(p.id), cycleKey: p.id, project: p, thread: null, score: pickup.points, timeKey: BigInt(p.createdAtUs), id: p.id });
- }
- for (const t of await threads(sql, 'TRUE', [])) {
-  const cycle = helpCycle(t);
-  const qp = priority.questionPriority(t, now);
-  if (!cycle || !qp || qp.waitingHours * HOUR < HELP_WAIT) continue;
-  targets.push({ kind: 'help', eventKey: helpKey(t.question.id), cycleKey: cycle, project: byId.get(t.question.projectId)!, thread: t, score: qp.score, timeKey: priority.exactKeys(t).pending, id: t.question.id });
+  if (pickup && pickup.hours * HOUR >= PICKUP_AGE) targets.push({ kind: 'pickup', eventKey: pickupKey(p.id), cycleKey: p.id, project: p, score: pickup.points, timeKey: BigInt(p.createdAtUs), id: p.id });
  }
  // P3 score first; ties: exact wait start / project createdAt, then kind, then id.
  const cmp = (x: bigint | string, y: bigint | string) => (x < y ? -1 : x > y ? 1 : 0);
@@ -75,13 +60,9 @@ async function candidates(sql: Sql, target: Target): Promise<Candidate[]> {
  // Students: own Finished projects with real reflection content or retained historical lessons.
  for (const p of await rows(sql, `SELECT p.id, p."ownerId", p.tags, p.reflection, (SELECT count(*) FROM lessons l WHERE l."projectId"=p.id)::int AS lessons FROM projects p JOIN users u ON u.id=p."ownerId" WHERE p.status='finished' AND u.role='student'`))
   if (hasReflection(p.reflection) || p.lessons > 0) add(p.ownerId, p.id, p.tags, 'shared_experience');
- // Mentors: undeleted formal replies on other people's projects (comments and unanswered referrals don't count).
- if (target.kind === 'help')
-  for (const r of await rows(sql, `SELECT DISTINCT post."authorId", project.id, project.tags FROM project_posts post JOIN project_questions q ON q.id=post."questionId" JOIN projects project ON project.id=q."projectId" JOIN users u ON u.id=post."authorId" WHERE post.kind='mentor_reply' AND post."deletedAt" IS NULL AND u.role='mentor' AND project."ownerId" <> post."authorId"`))
-   add(r.authorId, r.id, r.tags, 'mentor_reply');
- const excluded = new Set([target.project.ownerId, target.thread?.question.authorId, target.thread?.referral?.mentorId].filter(Boolean));
+ const excluded = new Set([target.project.ownerId]);
  return [...found.entries()]
-  .filter(([id]) => users.has(id) && !excluded.has(id) && !prefsOff.has(id) && (target.kind === 'help' ? ['student', 'mentor'].includes(users.get(id)!.role) : users.get(id)!.role === 'student'))
+  .filter(([id]) => users.has(id) && !excluded.has(id) && !prefsOff.has(id) && users.get(id)!.role === 'student')
   .map(([id, e]) => ({ user: users.get(id)!, matchedTags: tags.filter(t => e.tags.has(t)), evidence: [...e.evidence].map(([projectId, kind]) => ({ projectId, kind })) }))
   .sort((a, b) => b.matchedTags.length - a.matchedTags.length || b.evidence.length - a.evidence.length || (a.user.id < b.user.id ? -1 : 1));
 }
@@ -91,12 +72,7 @@ async function validity(sql: Sql, items: Row[]) {
  const projectIds = [...new Set(items.map(i => i.projectId))];
  const projects = new Map((await rows(sql, 'SELECT id, status FROM projects WHERE id = ANY($1::text[])', [projectIds])).map(p => [p.id, p]));
  const succ = await successorCounts(sql, projectIds);
- const questionIds = [...new Set(items.filter(i => i.invitationKind === 'help').map(i => i.questionId))];
- const cycles = new Map((questionIds.length ? await threads(sql, 'id = ANY($1::text[])', [questionIds]) : []).map(t => [t.question.id, helpCycle(t)]));
- // Target still valid for the same cycle (ignores expiry and preferences).
- return (i: Row) => i.invitationKind === 'pickup'
-  ? projects.get(i.projectId)?.status === 'paused' && !(succ.get(i.projectId) ?? 0)
-  : cycles.get(i.questionId) === i.cycleKey;
+ return (i: Row) => i.invitationKind === 'pickup' && projects.get(i.projectId)?.status === 'paused' && !(succ.get(i.projectId) ?? 0);
 }
 export async function effectiveStatuses(sql: Sql, items: Row[], now: Date): Promise<Map<string, InvitationStatus>> {
  const out = new Map<string, InvitationStatus>();
@@ -114,7 +90,6 @@ export async function settleInvitations(sql: Sql, now: Date, eventKeys?: string[
  const statuses = await effectiveStatuses(sql, pending, now);
  for (const i of pending) { const s = statuses.get(i.id); if (s && s !== 'pending') await sql.query('UPDATE inbox_items SET status=$2 WHERE id=$1 AND status=\'pending\'', [i.id, s]); }
 }
-export const settleHelp = async (sql: Sql, questionId: string) => settleInvitations(sql, await inboxNow(sql), [helpKey(questionId)]);
 export const settlePickup = async (sql: Sql, projectId: string) => settleInvitations(sql, await inboxNow(sql), [pickupKey(projectId)]);
 
 export function reasonText(kind: InvitationKind, evidence: { kind: MatchEvidence['kind'] }[], tags: string[]) {
@@ -143,7 +118,7 @@ export async function invitationView(sql: Sql, items: Row[], now: Date): Promise
 }
 
 // ---- Dispatch: one locked transaction, database time, persistent limits and permanent de-duplication. ----
-const count = async (sql: Sql, where: string, params: unknown[]) => (await rows(sql, `SELECT count(*)::int AS n FROM inbox_items WHERE kind='invitation' AND ${where}`, params))[0].n as number;
+const count = async (sql: Sql, where: string, params: unknown[]) => (await rows(sql, `SELECT count(*)::int AS n FROM inbox_items WHERE kind='invitation' AND "invitationKind"='pickup' AND ${where}`, params))[0].n as number;
 export async function dispatchInvitations(db: Storage) {
  return db.transaction(async sql => {
   await lockDispatch(sql);
@@ -162,7 +137,7 @@ export async function dispatchInvitations(db: Storage) {
     if (await count(sql, '"recipientId"=$1 AND "createdAt" > $2', [c.user.id, day]) >= 1) continue;
     if (await count(sql, '"recipientId"=$1 AND "createdAt" > $2', [c.user.id, week]) >= 3) continue;
     await sql.query(`INSERT INTO inbox_items (id,"recipientId",kind,"eventKey","projectId","questionId","invitationKind",status,"cycleKey","matchedTags",evidence,"expiresAt","createdAt") VALUES ($1,$2,'invitation',$3,$4,$5,$6,'pending',$7,$8,$9,$10,$11)`,
-     [randomUUID(), c.user.id, target.eventKey, target.project.id, target.thread?.question.id ?? null, target.kind, target.cycleKey, JSON.stringify(c.matchedTags), JSON.stringify(c.evidence), new Date(now.getTime() + EXPIRY), now]);
+     [randomUUID(), c.user.id, target.eventKey, target.project.id, null, target.kind, target.cycleKey, JSON.stringify(c.matchedTags), JSON.stringify(c.evidence), new Date(now.getTime() + EXPIRY), now]);
     created++;
     break;
    }
@@ -184,7 +159,7 @@ export async function respond(req: Request, db: Storage, user: User, id: string)
  const input = await parse(req, z.object({ action: z.enum(['accept', 'ignore'], { error: 'action must be accept or ignore' }) }).strict());
  const outcome = await db.transaction(async sql => {
   await lockDispatch(sql);
-  const row = (await rows(sql, `SELECT * FROM inbox_items WHERE id=$1 AND "recipientId"=$2 AND kind='invitation' FOR UPDATE`, [id, user.id]))[0] ?? fail(404, 'NOT_FOUND', 'Invitation not found');
+  const row = (await rows(sql, `SELECT * FROM inbox_items WHERE id=$1 AND "recipientId"=$2 AND kind='invitation' AND "invitationKind"='pickup' FOR UPDATE`, [id, user.id]))[0] ?? fail(404, 'NOT_FOUND', 'Invitation not found');
   const now = await inboxNow(sql);
   const desired = input.action === 'accept' ? 'accepted' : 'ignored';
   if (row.status === desired) return { row, unavailable: false, now };
@@ -211,16 +186,11 @@ export async function setPreferences(req: Request, db: Storage, user: User) {
  return json({ automaticInvitations: input.automaticInvitations });
 }
 
-// Staff only: accepted help invitations for the question's current waiting round.
+// Retained compatibility endpoint: question-help invitations have been retired.
 export async function interestedHelpers(db: Sql, user: User, questionId: string) {
  role(user, 'staff');
- const thread = (await threads(db, 'id=$1', [questionId]))[0] ?? fail(404, 'NOT_FOUND', 'Question not found');
- const cycle = helpCycle(thread);
- if (!cycle) return json([]);
- const accepted = await rows(db, `SELECT * FROM inbox_items WHERE kind='invitation' AND "eventKey"=$1 AND status='accepted' AND "cycleKey"=$2 ORDER BY "respondedAt", id`, [helpKey(questionId), cycle]);
- const users = new Map((await rows(db, 'SELECT * FROM users')).map(u => [u.id, u as User]));
- const views = await invitationView(db, accepted, await inboxNow(db));
- return json(accepted.map(a => ({ invitationId: a.id, user: users.get(a.recipientId)!, acceptedAt: iso(a.respondedAt), matchedTags: a.matchedTags ?? [], evidence: views.get(a.id)!.evidence } satisfies InterestedHelper)));
+ if (!(await rows(db, 'SELECT id FROM project_questions WHERE id=$1', [questionId])).length) fail(404, 'NOT_FOUND', 'Question not found');
+ return json([]);
 }
 
 export function runnerEnabled() {
