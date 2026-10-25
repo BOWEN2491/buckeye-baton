@@ -12,7 +12,7 @@ P2实现分支codex/p2-implementation交付df5f050，R1–R3及E1已关闭，总
 
 ## 从哪里开始
 
-当前P3执行依据：P3_AGENT_TASK.md / P3_CONTRACT.md；worker分支codex/p3-implementation已交付2977e4d。总控四项检查通过，但额外微秒探针失败，8/10（80%），按P3_REVIEW.md修复R1后复验。协调分支只增加审查文档，未集成候选应用，P3产品预览尚未启动。
+当前P3最终4839e77已总控验收10/10并集成codex/p3-integration，后端13/13、浏览器14/14及两个原失败探针通过，见P3_ACCEPTANCE.md。P3_REVIEW.md为已关闭历史记录。下一步用户产品验收，P3产品预览尚未启动，现有3000/3001仍是P1/P2，不合并main、不进入P4。
 
 先读 PROJECT_CONTEXT.md 和 docs/PROJECT_OVERVIEW.md，再读 MVP_SPEC.md、API_CONTRACT.md、PHASE1_ACCEPTANCE.md。ACCEPTANCE.md 是完整未来目标，不代表当前功能已完成。
 

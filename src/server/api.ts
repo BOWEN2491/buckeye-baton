@@ -5,6 +5,12 @@ import { ApiFailure, fail, json, rows, one, actor, role, ownProject, parse, vali
 import * as relay from './relay';
 import * as intro from './introductions';
 export { ApiFailure };
+// An absent sort keeps the original response; any present but unsupported value (even empty) is rejected.
+function sortParam<T extends string>(search: URLSearchParams, allowed: T[]): T | undefined {
+ if(!search.has('sort')) return undefined;
+ const value=search.get('sort') as T;
+ return allowed.includes(value)?value:fail(400,'INVALID_INPUT',`sort must be one of: ${allowed.join(', ')}`);
+}
 export async function handle(req: Request, resource: string, id?: string): Promise<Response> {
  try {
   if(resource==='adoptions'||resource==='adoption') fail(410,'FEATURE_RETIRED','Lesson adoption has been retired. Experience is now part of the project.');
@@ -13,10 +19,13 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='users'&&method==='GET') return json(await rows(db,'SELECT * FROM users ORDER BY name'));
   if(resource==='projects'&&method==='GET') {
    const q=search.get('q')??''; const status=search.get('status'); if(status&&!['ongoing','finished','paused'].includes(status)) fail(400,'INVALID_INPUT','Invalid project status');
-   return json(await intro.browseProjects(db,await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC',[`%${q}%`,status])));
+   const sort=sortParam(search,['recommended','newest']);
+   const browse=await intro.browseProjects(db,await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC, id ASC',[`%${q}%`,status]));
+   return json(sort==='recommended'?await relay.recommend(db,browse):browse);
   }
   if(resource==='project'&&method==='GET') return json(await relay.projectDetail(db,id!));
   if(resource==='projectQuestions'&&method==='GET') return await relay.listQuestions(db,id!);
+  if(resource==='projectPriority'&&method==='GET') return await relay.projectPriorityDetail(db,id!);
   if(resource==='lessons'&&method==='GET') {const q=`%${search.get('q')??''}%`;return json(await rows(db,'SELECT * FROM lessons WHERE title ILIKE $1 OR assumed ILIKE $1 OR happened ILIKE $1 OR change ILIKE $1 OR conditions ILIKE $1 ORDER BY "createdAt" DESC',[q]));}
   if(resource==='lesson'&&method==='GET') {
    const lesson=await one(db,'lessons',id!);
@@ -32,7 +41,8 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
   if(resource==='projectPost'&&method==='DELETE') return await relay.deletePost(db,user,id!);
   if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
-  if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user);
+  if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user,sortParam(search,['priority','oldest']));
+  if(resource==='projectQuestion'&&method==='PATCH') return await relay.updateDueAt(req,db,user,id!);
   if(resource==='mentorWorkload'&&method==='GET') return await relay.mentorWorkload(db,user);
   if(resource==='introduction'&&method==='GET') return await intro.getEditor(db,user,id!);
   if(resource==='introduction'&&method==='PATCH') return await intro.publish(req,db,user,id!);

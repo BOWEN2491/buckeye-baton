@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Project } from "@/shared/types";
-import type { QuestionThread, Workbench as WorkbenchData } from "@/shared/relay-types";
+import type { Workbench as WorkbenchData } from "@/shared/relay-types";
+import type { PrioritizedThread, WorkbenchSort } from "@/shared/p3-types";
+import { PriorityReasons, PriorityRules, UpdatedRefresh } from "./priority";
 import { formatDate, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Empty, Feedback, Loading } from "./ui";
@@ -21,7 +23,7 @@ const tabs: Record<"staff" | "mentor", { key: Tab; label: string; empty: string;
   ],
 };
 
-function Item({ thread, project, role }: { thread: QuestionThread; project?: Project; role: "staff" | "mentor" }) {
+function Item({ thread, project, role }: { thread: PrioritizedThread; project?: Project; role: "staff" | "mentor" }) {
   const { users } = useIdentity();
   const owner = users.find((u) => u.id === project?.ownerId);
   const q = thread.question;
@@ -47,19 +49,35 @@ function Item({ thread, project, role }: { thread: QuestionThread; project?: Pro
           {role === "mentor" && lastReply && thread.state === "replied" ? ` · You replied ${formatDate(lastReply.createdAt)}` : ""}
         </p>
       )}
+      {thread.priority && (
+        <div className="card-priority" aria-label="Priority">
+          <strong>Priority · waiting since {formatDate(thread.priority.pendingSince)}</strong>
+          <PriorityReasons reasons={thread.priority.reasons} projectId={q.projectId} />
+        </div>
+      )}
     </li>
   );
 }
 
 export function RoleWorkbench({ role }: { role: "staff" | "mentor" }) {
   const { userId } = useIdentity();
-  const { data, error, loading } = useResource<WorkbenchData>("/workbench", userId);
+  const [sort, setSort] = useState<WorkbenchSort>("priority");
+  const { data, error, loading, reload } = useResource<Record<keyof WorkbenchData, PrioritizedThread[]>>(`/workbench?sort=${sort}`, userId);
   const { data: projects = [] } = useResource<Project[]>("/projects");
   const [tab, setTab] = useState<Tab>(tabs[role][0].key);
   const current = tabs[role].find((t) => t.key === tab)!;
   if (loading && !data) return <Loading />;
-  if (!data) return <Feedback error={error} />;
+  if (!data)
+    return (
+      <div>
+        <Feedback error={error} />
+        <button className="button secondary" onClick={() => void reload()}>
+          Retry
+        </button>
+      </div>
+    );
   const list = data[tab];
+  const asOf = Object.values(data).flat().find((t) => t.priority)?.priority?.asOf;
   return (
     <section aria-label={role === "staff" ? "Staff workbench" : "Mentor workbench"}>
       <Feedback error={error} />
@@ -71,6 +89,23 @@ export function RoleWorkbench({ role }: { role: "staff" | "mentor" }) {
           </button>
         ))}
       </div>
+      <div className="sort-bar">
+        <div className="filter-buttons" role="group" aria-label="Sort questions">
+          {(["priority", "oldest"] as const).map((s) => (
+            <button key={s} aria-pressed={sort === s} className={sort === s ? "selected" : ""} onClick={() => setSort(s)}>
+              {s === "priority" ? "Priority" : "Oldest first"}
+            </button>
+          ))}
+        </div>
+        {sort === "priority" ? (
+          <UpdatedRefresh asOf={asOf} loading={loading} onRefresh={() => void reload()} />
+        ) : (
+          <button type="button" className="text-button" onClick={() => void reload()} disabled={loading}>
+            {loading ? "Refreshing…" : "Refresh"}
+          </button>
+        )}
+      </div>
+      {sort === "priority" && <PriorityRules />}
       <p className="field-help workbench-help">{current.help}</p>
       {list.length ? (
         <ul className="workbench-list">

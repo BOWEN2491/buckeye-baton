@@ -1,8 +1,25 @@
 # Buckeye Baton — API contract
 
-## P3 planned contract — not implemented
+## P3 endpoints — independently accepted locally, product acceptance pending
 
-计划中的可选projects/workbench排序、项目priority GET、问题作者dueAt PATCH见[P3_CONTRACT.md](P3_CONTRACT.md)。当前应用尚未提供这些能力，不能按文档存在宣称API已上线。P3保持默认旧响应兼容，无schema新增；精确交付以P3_REPORT及总控独立验收为准。
+Final4839e77 is integrated on codex/p3-integration, with coordinator J1–J10 passing; see[P3_ACCEPTANCE.md](P3_ACCEPTANCE.md). main is unmerged. Exact microsecond tie-break keys stay internal; public ISO dates and response shapes remain unchanged.
+
+Rules: [P3_CONTRACT.md](P3_CONTRACT.md). Types `src/shared/p3-types.ts`; the only scoring/ordering/advice module is `src/server/priority.ts` (server clock, injectable in tests only); data glue `recommend`, `workbench(sort)`, `projectPriorityDetail`, `updateDueAt` in `src/server/relay.ts`, all reading the shared `threads()` (deleted posts excluded). No schema change, no stored scores, no AI calls.
+
+| Method and path | Identity | Success |
+|---|---|---|
+| GET `/api/projects?q=&status=&sort=recommended` | public | 200 `RecommendedProject[]` (BrowseProject + `priority`), score desc then createdAt desc, id asc; all matching projects incl. 0 |
+| GET `/api/projects?sort=newest` / no sort | public | 200 original `BrowseProject[]`, createdAt desc, id asc |
+| GET `/api/workbench?sort=priority` | Staff / Mentor | 200 four-array `PrioritizedWorkbench`; per group pending first (score desc, pendingSince, createdAt, id), others after in createdAt,id with `priority:null` |
+| GET `/api/workbench?sort=oldest` / no sort | Staff / Mentor | 200 original `Workbench` |
+| GET `/api/projects/:id/priority` | public | 200 `ProjectPriorityDetail` (priority, per-question priority, advice); 404 unknown |
+| PATCH `/api/project-questions/:id` | asking Student | `{dueAt: future ISO Z \| null}` strict → 200 `QuestionThread`; 401 / 404 / 403 (incl. project owner) / 400 |
+
+- Unsupported `sort` (including empty) → 400 `INVALID_INPUT`. Project detail keeps its four keys; question GET/write responses keep `QuestionThread`.
+- Points: no-pickup Paused (no relation at all) `min(20, 5 × full weeks since createdAt)`; pending question (`needs_referral`/`awaiting_reply`) `min(30, 5 × full days since pendingSince)` + reply date passed 50 / ≤24h 35 / ≤72h 20; a project adds only its single highest question. Reasons are listed in that order and always sum to the score.
+- pendingSince: question.createdAt while no valid mentor reply; otherwise the first valid follow-up after the last valid mentor reply (shared SQL order).
+- Advice: `improve_handoff` (Paused, no pickup, shared ≥14 days), `narrow_question` (pending ≥3 days), `review_reply_date` (pending, reply date ≤ asOf+24h).
+- Pages: Explore Recommended/Newest with reasons, Updated/Refresh and rules; workbench Priority/Oldest first; project "Recommended because" panel with owner advice; author-only "Edit reply date".
 
 ## Product acceptance addendum: project comment deletion
 

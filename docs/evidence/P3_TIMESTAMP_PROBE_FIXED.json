@@ -1,0 +1,41 @@
+{
+  "sha": "4839e770f2f95130ac1409f5cfaa980583469452",
+  "initial": {
+    "stored": [
+      {
+        "id": "z-earlier",
+        "timestamp": "2027-02-20 12:00:00.0001+00"
+      },
+      {
+        "id": "a-later",
+        "timestamp": "2027-02-20 12:00:00.0002+00"
+      }
+    ],
+    "expected": [
+      "z-earlier",
+      "a-later"
+    ],
+    "oldest": [
+      "z-earlier",
+      "a-later"
+    ],
+    "priority": [
+      "z-earlier",
+      "a-later"
+    ],
+    "donor": "z-earlier",
+    "expectedDonor": "z-earlier"
+  },
+  "followUp": {
+    "expected": [
+      "a-later",
+      "z-earlier"
+    ],
+    "priority": [
+      "a-later",
+      "z-earlier"
+    ],
+    "donor": "a-later",
+    "expectedDonor": "a-later"
+  }
+}

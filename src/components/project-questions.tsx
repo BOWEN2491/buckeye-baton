@@ -6,6 +6,8 @@ import { ApiRequestError, api, errorText, formatDate, formatDateTime, readable, 
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
 import { MentorSelect, invalidateMentorWorkload } from "./mentor-workload";
+import type { QuestionPriority } from "@/shared/p3-types";
+import { PriorityReasons, invalidateProjectPriority, useProjectPriority } from "./priority";
 
 export function stateLabel(thread: QuestionThread) {
   const mentor = thread.referral?.mentor.name;
@@ -29,6 +31,10 @@ export function StateBadge({ thread }: { thread: QuestionThread }) {
 // A date input holds a local calendar day; requests use the end of that day in UTC.
 function localDayToIso(day: string) {
   return new Date(`${day}T23:59:00`).toISOString();
+}
+function isoToLocalDay(iso: string) {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 function todayInput() {
   const now = new Date();
@@ -239,7 +245,65 @@ function Composer({ thread, onPosted }: { thread: QuestionThread; onPosted: () =
 
 const kindLabel: Record<ProjectPostKind, string> = { comment: "Comment", follow_up: "Follow-up", mentor_reply: "Referred mentor reply" };
 
-function Thread({ thread, projectOwnerId, highlighted, onChanged }: { thread: QuestionThread; projectOwnerId: string; highlighted: boolean; onChanged: () => void }) {
+// Only the asker sees this; the server also rejects everyone else, including the project owner.
+function ReplyDateEditor({ thread, onSaved }: { thread: QuestionThread; onSaved: (message: string) => void }) {
+  const { userId } = useIdentity();
+  const [open, setOpen] = useState(false);
+  const [day, setDay] = useState(thread.question.dueAt ? isoToLocalDay(thread.question.dueAt) : "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  async function save(clear: boolean) {
+    if (busy) return;
+    if (!clear && !day) return setError("Choose a date, or remove the reply date.");
+    const dueAt = clear ? null : localDayToIso(day);
+    if (dueAt && Date.parse(dueAt) <= Date.now()) return setError("Choose a reply date in the future.");
+    setBusy(true);
+    setError("");
+    try {
+      await api<QuestionThread>(`/project-questions/${thread.question.id}`, userId, { dueAt }, "PATCH");
+      setOpen(false);
+      if (clear) setDay("");
+      onSaved(clear ? "Reply date removed." : "Reply date updated.");
+    } catch (err) {
+      setError(`Couldn’t update the reply date. ${errorText(err)} Your choice is kept.`);
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (!open)
+    return (
+      <button type="button" className="text-button reply-date-toggle" onClick={() => setOpen(true)}>
+        Edit reply date
+      </button>
+    );
+  return (
+    <div className="reply-date-editor">
+      <label htmlFor={`reply-date-${thread.question.id}`}>Hoping for a reply by</label>
+      <input id={`reply-date-${thread.question.id}`} type="date" value={day} min={todayInput()} readOnly={busy} onChange={(e) => setDay(e.target.value)} />
+      <span className="field-help">Shown to readers in their own time zone. Changing the date may change its priority, but does not change its reply status or mentor assignment.</span>
+      {error && (
+        <p className="field-error" role="alert">
+          {error}
+        </p>
+      )}
+      <div className="inline-actions">
+        <button type="button" className="button primary" disabled={busy} onClick={() => void save(false)}>
+          {busy ? "Saving…" : "Save date"}
+        </button>
+        {thread.question.dueAt && (
+          <button type="button" className="button secondary" disabled={busy} onClick={() => void save(true)}>
+            Remove date
+          </button>
+        )}
+        <button type="button" className="button secondary" disabled={busy} onClick={() => setOpen(false)}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Thread({ thread, projectOwnerId, priority, highlighted, onChanged }: { thread: QuestionThread; projectOwnerId: string; priority?: QuestionPriority | null; highlighted: boolean; onChanged: () => void }) {
   const { user } = useIdentity();
   const [success, setSuccess] = useState("");
   const [deleting, setDeleting] = useState("");
@@ -272,6 +336,21 @@ function Thread({ thread, projectOwnerId, highlighted, onChanged }: { thread: Qu
         {q.dueAt && <span className="metadata">Hoping for a reply by {formatDate(q.dueAt)}</span>}
       </div>
       <h3>{q.title}</h3>
+      {priority && (
+        <div className="question-priority" aria-label="Question priority">
+          <PriorityReasons reasons={priority.reasons} />
+        </div>
+      )}
+      {user?.role === "student" && user.id === q.authorId && (
+        <ReplyDateEditor
+          key={q.dueAt ?? "none"}
+          thread={thread}
+          onSaved={(message) => {
+            setSuccess(message);
+            onChanged();
+          }}
+        />
+      )}
       <p className="metadata">
         Asked by {thread.author.name} · {formatDateTime(q.createdAt)}
       </p>
@@ -330,7 +409,14 @@ function Thread({ thread, projectOwnerId, highlighted, onChanged }: { thread: Qu
 
 export function ProjectQuestions({ projectId, projectOwnerId, status }: { projectId: string; projectOwnerId: string; status: ProjectStatus }) {
   const { user } = useIdentity();
-  const { data, error, loading, reload } = useResource<QuestionThread[]>(`/projects/${projectId}/questions`);
+  const { data, error, loading, reload: reloadThreads } = useResource<QuestionThread[]>(`/projects/${projectId}/questions`);
+  const { data: priorityDetail } = useProjectPriority(projectId);
+  const questionPriority = new Map(priorityDetail?.questions.map((q) => [q.questionId, q.priority]) ?? []);
+  // Any write here can change waiting time or state, so priority views on the page re-read too.
+  const reload = async () => {
+    invalidateProjectPriority();
+    await reloadThreads();
+  };
   const [asking, setAsking] = useState(false);
   const [success, setSuccess] = useState("");
   const [hash, setHash] = useState("");
@@ -390,6 +476,7 @@ export function ProjectQuestions({ projectId, projectOwnerId, status }: { projec
             thread={t}
             projectOwnerId={projectOwnerId}
             highlighted={hash === t.question.id}
+            priority={questionPriority.get(t.question.id)}
             onChanged={() => void reload()}
           />
         ))
