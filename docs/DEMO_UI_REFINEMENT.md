@@ -1,3 +1,5 @@
+> Recommend badge preview update (2026-10-25): active3001 app/build is `C:/Users/23678/.codex/workspaces/buckeye-baton-recommend-badge`, source78155806c80aa07cd7b1e1895f27f2db014d50cc, Node37840. Uses the same protected P4-held database/config; see `.data/recommend-preview-runtime.json`. Supersedes the prior runtime below; do not rebuild active `.next`.
+
 # Demo UI refinement — 2026-10-25
 
 User requested three interface changes and a read-only explanation of current AI browsing introductions.

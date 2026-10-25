@@ -1,3 +1,5 @@
+> Recommend badge preview update (2026-10-25): active3001 app/build is `C:/Users/23678/.codex/workspaces/buckeye-baton-recommend-badge`, source78155806c80aa07cd7b1e1895f27f2db014d50cc, Node37840. Uses the same protected P4-held database/config; see `.data/recommend-preview-runtime.json`. Supersedes the prior runtime below; do not rebuild active `.next`.
+
 > Latest preview (2026-10-25): user-requested UI refinement runs on3001 from `C:/Users/23678/.codex/workspaces/buckeye-baton-demo-ui`, application SHA `56c61dbd55b60e50e253b59706a0bcc8116597bd`, build `-c6pnNww7xXiQXnxiIeNg`. Same P4-held database/config, pre-restart backup `p5-before-demo-ui-20261025`. Do not rebuild the active `.next` or open its database from a second process. PR6 is unmerged; P5 itself is accepted/merged. See docs/DEMO_UI_REFINEMENT.md and the active app `.data/demo-ui-preview-runtime.json`. This supersedes older3001 runtime notes below.
 
 # Buckeye Baton — current agent entry
