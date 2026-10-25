@@ -31,7 +31,8 @@ export default defineConfig({
       timeout: 20_000,
     },
     {
-      command: `npm run start -- --port ${port}`,
+      // P3 fixtures use dates relative to now and only touch this run's temporary database.
+      command: `npx tsx tests/e2e/p3-fixtures.ts && npm run start -- --port ${port}`,
       url: `${baseURL}/api/health`,
       reuseExistingServer: false,
       timeout: 60_000,

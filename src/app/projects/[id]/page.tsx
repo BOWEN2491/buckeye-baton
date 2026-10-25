@@ -9,6 +9,7 @@ import { Feedback, Loading, PageHeading, Status, Tags } from "@/components/ui";
 import { ProjectForm } from "@/components/project-form";
 import { ProjectQuestions } from "@/components/project-questions";
 import { IntroductionPanel } from "@/components/introduction-panel";
+import { PriorityPanel } from "@/components/priority-panel";
 import { flashKey, SourceLine, Successors } from "@/components/relay-links";
 function Text({ value, empty }: { value?: string; empty: string }) {
   return (
@@ -313,6 +314,15 @@ export default function ProjectPage({
             <Successors successors={successors} />
           </div>
           <aside>
+            <PriorityPanel
+              key={p.updatedAt}
+              projectId={p.id}
+              isOwner={mine}
+              onEdit={() => {
+                setEditing(true);
+                setSuccess("");
+              }}
+            />
             <RelayActions projectId={p.id} status={p.status} />
             <div className="panel contextual-panel">
               <h3>Your project keeps its history.</h3>
