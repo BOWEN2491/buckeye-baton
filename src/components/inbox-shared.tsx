@@ -24,4 +24,3 @@ export function useLiveRefresh(reload: () => void) {
     };
   }, [reload]);
 }
-
