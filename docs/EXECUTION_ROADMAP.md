@@ -1,3 +1,5 @@
+> 2026-10-25 current status: P0–P4 are user product accepted, including final pickup-only invitations and deletion visibility. User authorized PR #3 → main with all accepted P2–P4. See RELEASE_ACCEPTANCE.md. The earlier pending/no-merge statuses below are historical.
+
 # Buckeye Baton — 分级实施与总控台账
 
 2026-10-25。**P3含产品修订已通过用户验收，当前启动P4。** P4最终372646c独立技术验收 **10/10（100%）**，全部返修关闭；详见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)。待用户产品验收，不合main。按一个外部全栈Agent、用户转交一次最终READY、总控独立验收的方式执行。

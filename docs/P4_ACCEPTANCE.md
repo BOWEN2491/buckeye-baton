@@ -1,3 +1,5 @@
+> Product acceptance update (2026-10-25): final application5a5fddf and both product revisions passed user acceptance; merge explicitly authorized. See RELEASE_ACCEPTANCE.md and P4_PRODUCT_REVISION.md. The original technical report below remains historical evidence.
+
 # P4 总控最终独立验收：10/10
 
 2026-10-25（America/New_York）。独立核验精确提交 **372646c7d5338c09a2868b3c8191d1a4dfdcf835**，worker分支codex/p4-implementation，起始基线1c3ed64181097806a2d0eca700e6c64d464d33e6。

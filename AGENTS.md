@@ -1,14 +1,8 @@
-Active P4 preview now runs product revision5a5fddf at3001, app/build buckeye-baton-p4-product-revision. Old buckeye-baton-p4-review is still the protected database and .env.local holder; do not remove/archive it. Read current docs/P4_PREVIEW.md and runtime manifest; historical372646c paths/PIDs below are superseded.
+# Buckeye Baton — current agent entry
 
-Current P4 product override: docs/P4_PRODUCT_REVISION.md supersedes conflicting original P4 rules. Invitations are pickup-only; notifications for removed posts are hidden from recipients except the remover.
+2026-10-25: user confirmed all P4 product revisions pass and explicitly authorized merging the complete accepted version into main. P0–P4 are product accepted. PR #3 is being updated from its old P2 scope to include accepted P2/P3/P4. See docs/RELEASE_ACCEPTANCE.md; this status supersedes old no-merge/pending-product-acceptance notes.
 
-# Buckeye Baton — agent entry
-
-Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md and docs/PROJECT_OVERVIEW.md before changes. P4 is now integrated in codex/p4-integration and independently accepted locally10/10 on372646c; next is user product acceptance in a separate preview. See docs/P4_ACCEPTANCE.md. P4_AGENT_TASK/P4_CONTRACT remain delivery references. Do not start from old main, which lacks P2/P3/P4.
-
-P4 application372646c passed typecheck/build, backend20/20, production e2e23/23 and the original refresh/Load-more race probe. R1/R2/R3 and R2-follow-up are closed. Product acceptance is pending; do not reopen historical failures from P4_REVIEW/P4_RECHECK or claim cloud/real PostgreSQL verification. Current3000 remains P3, not P4; no main merge authorization.
-
-P0/P1 are accepted and merged. P2 including comment deletion is product accepted; P3 including age-only priority, conditional project status form and the suggestion Detail toggle is product accepted. Latest accepted app source is38e4901; c1441fd adds preview documentation. Main merge/PR #3 has not been authorized by the latest acceptance; do not merge it.
+Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVERVIEW.md and docs/P4_PRODUCT_REVISION.md. Pickup-only invitations and remover-only removed-post notifications supersede the original P4 contract. Application source5a5fddf passed typecheck/build, backend20/20 and production browser23/23; subsequent commits are documentation only.
 
 ## Active rules
 - Project-centered app; embedded experience, not independent Lesson adoption. Old adoption writes stay410; stored history remains.
@@ -21,11 +15,10 @@ P0/P1 are accepted and merged. P2 including comment deletion is product accepted
 - P4 adds all-role Activity Inbox and bounded automatic invitations. Notification and business writes must share transactions; acceptance does not assign Mentor or create a pickup. Automatic invitation opt-out does not mute activity. Follow the frozen P4 contract, no AI matching or fictional solved counts.
 
 ## Environment and collaboration
-- P4 manual preview is now live at127.0.0.1:3001: app/build directory C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review, actual source372646c, independent persistent SQL, runner enabled, real OpenAI/gpt-6-luna configured and validated once. Read docs/P4_PREVIEW.md and .data/p4-preview-runtime.json before operations. This formerly disposable review directory is now active: never rebuild its.next, switch its commit, archive it or connect another process to its SQL while running. Preserve3000/P3 too.
-- Preserve existing work; no reset/force-push or unrequested dependency changes. Report normally only once at complete READY; genuine blockers may add BLOCKED. Do not autonomously merge main or deploy.
-- Current3000 preview is P3, app/build directory C:/Users/23678/.codex/workspaces/buckeye-baton-p3-detail; its database and user configuration are in buckeye-baton-p3-review. Read docs/P3_PREVIEW.md and the runtime manifest before any process operation. Do not build in an active service directory or touch its .next/.data/env. Old P1/P2 databases also remain protected. 3001 was stopped; recheck port occupancy.
-- Coordinator checkout C:/Users/23678/.codex/workspaces/buckeye-baton is not the worker implementation directory. Own clone/build/ports/test database required.
-- Next15.5.28 / TS / Node22 / Tailwind / pg. Explicit PGlite mode is single-process: never connect a second worker/CLI to the active directory.
-- Run npm run typecheck, npm run test:backend, npm run build and npm run test:e2e as appropriate. NEXT_TELEMETRY_DISABLED=1 may be required locally. P4 real model calls0; existing P2 regressions use mock, do not read/copy keys.
-- No .env.local, secrets, databases, node_modules or build artifacts in Git. Update project-docs via markers and record material decisions. Do not call local PGlite checks real PostgreSQL/Neon/AWS/public deployment verification.
-- Historical rehearsal and old frontend/backend preparation branches were removed at user request. Recover old code from Git history if needed; design/ is reference, unapproved prototype features are not requirements.
+- Preserve active previews:3001/P4 app/build C:/Users/23678/.codex/workspaces/buckeye-baton-p4-product-revision, source5a5fddf. Database and .env.local remain in buckeye-baton-p4-review. Do not archive either directory, rebuild the active .next, switch the active checkout or open its PGlite from a second process. Read docs/P4_PREVIEW.md and .data/p4-preview-runtime.json before process operations.
+- 3000/P3 app/build buckeye-baton-p3-detail and database/config buckeye-baton-p3-review remain protected. No preview/data/key changes are needed for the main merge.
+- Next15.5.28 / TypeScript / Node22 / Tailwind / pg; PGlite is explicit, single-process local storage. Real PostgreSQL/Neon/AWS/public deployment/multi-instance operation remain unverified.
+- No .env.local, keys, databases, node_modules or build artifacts in Git. Existing real model configuration may stay enabled for user actions; no additional paid calls are required by this merge.
+- No reset/force-push or unrequested dependency changes. User authorized this merge; deployment and future merges still require applicable authorization. Preserve feature branches and worktrees unless cleanup is requested.
+- Tests: npm run typecheck, npm run test:backend, npm run build, npm run test:e2e; NEXT_TELEMETRY_DISABLED=1 may be needed. Do not repeat unchanged application tests merely for documentation updates.
+- Update project-docs via markers. History and old reports are retained; prefer current release/preview documents over old pending statuses.

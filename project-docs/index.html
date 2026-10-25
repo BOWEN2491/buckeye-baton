@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P4产品修订：自动邀请仅接棒；删除通知对非删除者隐藏，历史数据与正常动态保持",
-  "nextUp": "在3001复验P4产品修订；保留同库、真实模型配置与3000/P3，不合main",
+  "lastCompleted": "P0–P4及最终产品修订均验收通过，用户明确授权统一合入main",
+  "nextUp": "main作为完整共享基线；保留3000/3001与数据，后续部署另行规划",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 8, "featuresTotal": 8}
 }
@@ -166,7 +166,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P4产品修订：自动邀请只限接棒，评论删除后其他人的相关通知隐藏。独立3001预览5a5fddf已更新，待用户复验；同库、真实模型配置、3000/P3与main保留。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P0–P4全部通过产品验收，用户明确授权PR #3统一合入main。最终应用5a5fddf已通过typecheck/build、backend20/20和browser23/23。预览与数据保留，尚未部署。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -188,7 +188,7 @@
 <div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">产品验收通过</span></h3><p>所有者确认AI浏览简介/标签、Mentor Awaiting reply、作者/项目所有者评论删除。main合并尚无最新授权。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3 <span class="badge done">产品修订验收通过</span></h3><p>可解释年龄排序，Suggestions原入口与收起Detail说明，状态对应表单。无deadline评分/日期UI，微秒稳定排序与历史保持；当前3000应用38e4901。</p></div>
-<div class="card" data-updated="2026-10-25"><h3>P4 <span class="badge done">技术10/10 · 待产品验收</span></h3><p>全角色Activity Inbox、事务通知、未读/分页/刷新、仅接棒自动邀请、限频去重、接受/忽略/设置与Node runner。评论被删除后仅删除者可保留无正文旧通知，其他接收者隐藏；help邀请与Interested helpers退役。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4 <span class="badge done">技术及产品验收通过</span></h3><p>全角色Activity Inbox、事务通知、未读/分页/刷新、仅接棒自动邀请、限频去重、接受/忽略/设置与Node runner。评论被删除后仅删除者可保留无正文旧通知，其他接收者隐藏；help邀请与Interested helpers退役。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。</p></div>
 <!-- claude:features:end -->
   </section>
@@ -347,6 +347,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>完整版本获准合并</h3><p>用户确认P4全部通过，授权P2–P4统一PR #3 → main；3000/3001、数据库和模型配置保留。详见docs/RELEASE_ACCEPTANCE.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4产品修订</h3><p>邀请收窄为Pick up the baton；旧help邀请隐藏、不可操作且不占接棒配额。删除通知对非删除者隐藏；原项目/讨论/AI记录保留。见docs/P4_PRODUCT_REVISION.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4真实AI启用</h3><p>用户填好本地key后仅重启3001，Node显式加载P4.env.local，真实gpt-6-luna一次生成200、1句/2标签，未发布草稿。8项目/讨论/公开卡片保持，同库备份完成，3000和main不变。</p></div>
 
