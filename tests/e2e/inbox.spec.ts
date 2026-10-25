@@ -241,3 +241,90 @@ test('invitations: accept is only intent, Staff sees interested helpers, setting
   await page.setViewportSize({ width: 390, height: 844 });
   await noOverflow(page);
 });
+
+// R2 (docs/P4_REVIEW.md): Refresh re-reads the whole loaded window, keeps Load more correct and
+// re-validates older loaded messages (deleted previews, Unread removal). Each scenario is independent.
+const mia = as('student-mia');
+async function alexTotal(page: Page, filter = 'all') {
+  let n = 0, cursor = '';
+  for (;;) {
+    const data = await inboxApi(page.request, 'student-alex', `?filter=${filter}&limit=50${cursor ? `&cursor=${cursor}` : ''}`);
+    n += data.items.length;
+    if (!data.nextCursor) return n;
+    cursor = data.nextCursor;
+  }
+}
+async function miaAsks(page: Page, title: string) {
+  return (await (await page.request.post('/api/projects/project-signup/questions', { ...mia, data: { title, body: '', wantsMentor: false, dueAt: null } })).json()).data.question.id as string;
+}
+async function loadAll(page: Page) {
+  while (await page.getByRole('button', { name: 'Load more', exact: true }).isVisible()) {
+    const before = await page.locator('.inbox-item').count();
+    await page.getByRole('button', { name: 'Load more', exact: true }).click();
+    await expect.poll(() => page.locator('.inbox-item').count()).toBeGreaterThan(before);
+  }
+}
+async function openAlexInbox(page: Page) {
+  await page.goto('/');
+  await identity(page, 'student-alex');
+  await page.goto('/inbox');
+  await expect(page.locator('.inbox-item').first()).toBeVisible();
+  await loadAll(page);
+}
+
+test('R2 Refresh: new messages beyond the first page stay reachable, and later Load more neither skips nor repeats', async ({ page }) => {
+  test.setTimeout(180_000);
+  const stamp = Date.now();
+  await miaAsks(page, `Refresh seed ${stamp}`);
+  await openAlexInbox(page);
+  const n0 = await alexTotal(page);
+  await expect(page.locator('.inbox-item')).toHaveCount(n0);
+  for (let i = 0; i < 25; i++) await miaAsks(page, `Refresh burst ${stamp} #${String(i).padStart(2, '0')}`);
+  await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+  await expect(page.locator('.inbox-item').first()).toContainText(`Refresh burst ${stamp} #24`);
+  await loadAll(page);
+  await expect(page.locator('.inbox-item')).toHaveCount(n0 + 25);
+  for (let i = 0; i < 3; i++) await miaAsks(page, `Refresh late ${stamp} #${i}`);
+  await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+  await expect(page.locator('.inbox-item').first()).toContainText(`Refresh late ${stamp} #2`);
+  await loadAll(page);
+  await expect(page.locator('.inbox-item')).toHaveCount(n0 + 28);
+  expect(await alexTotal(page)).toBe(n0 + 28);
+});
+
+test('R2 Refresh: a deleted comment far past the first page shows as removed', async ({ page }) => {
+  test.setTimeout(180_000);
+  const stamp = Date.now();
+  const q0 = await miaAsks(page, `Deleted preview base ${stamp}`);
+  const commentBody = `Older comment that will be deleted ${stamp}`;
+  const commentId = (await (await page.request.post(`/api/project-questions/${q0}/posts`, { ...mia, data: { body: commentBody, kind: 'comment' } })).json()).data.posts.at(-1).id;
+  for (let i = 0; i < 25; i++) await miaAsks(page, `Deleted preview filler ${stamp} #${i}`);
+  await openAlexInbox(page);
+  await expect(page.locator('.inbox-item').filter({ hasText: commentBody })).toHaveCount(1);
+  const count = await page.locator('.inbox-item').count();
+  expect((await page.request.delete(`/api/project-posts/${commentId}`, mia)).status()).toBe(200);
+  await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+  await expect(page.locator('.inbox-item').filter({ hasText: commentBody })).toHaveCount(0);
+  await expect(page.getByRole('listitem', { name: 'Comment removed' }).filter({ hasText: `Deleted preview base ${stamp}` })).toHaveCount(1);
+  await expect(page.locator('.inbox-item')).toHaveCount(count);
+});
+
+test('R2 Refresh: Mark as read removes the message from Unread and the count matches', async ({ page }) => {
+  test.setTimeout(120_000);
+  await miaAsks(page, `Unread removal ${Date.now()}`);
+  await page.goto('/');
+  await identity(page, 'student-alex');
+  await page.goto('/inbox');
+  await page.getByRole('button', { name: 'Unread', exact: true }).click();
+  await expect(page.locator('.inbox-item').first()).toBeVisible();
+  await loadAll(page);
+  const before = await alexTotal(page, 'unread');
+  await expect(page.locator('.inbox-item')).toHaveCount(before);
+  const first = page.locator('.inbox-item').first();
+  const label = await first.getAttribute('aria-label');
+  const context = await first.locator('h3 + p').innerText();
+  await first.getByRole('button', { name: 'Mark as read', exact: true }).click();
+  await expect(page.locator('.inbox-item')).toHaveCount(before - 1);
+  await expect(page.getByText(`${before - 1} unread ·`)).toBeVisible();
+  await expect(page.getByRole('listitem', { name: label! }).filter({ hasText: context })).toHaveCount(0);
+});

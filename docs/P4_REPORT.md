@@ -3,6 +3,14 @@
 2026-10-24 · 分支 `codex/p4-implementation` · 基线 `origin/codex/p4-integration` @ `1c3ed64`（包含已验收应用 `38e4901` 和 P4 三份文档）· 契约 `docs/P4_CONTRACT.md`
 最终提交 SHA 见 READY 短块（本报告随该提交一起推送）。本报告是实现方自测，**不等于总控验收通过**，不给总体进度计分。手动剧本见 [P4_MANUAL_ACCEPTANCE.md](P4_MANUAL_ACCEPTANCE.md)。
 
+## 返修 R1–R3（依据 docs/P4_REVIEW.md，审查提交 7b8a629）
+
+| 项 | 修复 | 正式回归（旧代码失败 → 修复后通过） |
+|---|---|---|
+| R1 Unread 与未读数语义不一致 | `listInbox`（src/server/inbox.ts）：Unread 先在 SQL 中排除已持久化的终态和已到期邀请，再在分页边界之前逐行计算有效状态（排除因资格失效而取消的邀请），按精确 `(createdAt,id)` 批量扫描，凑够 limit+1 后才决定 nextCursor。失效记录不会遮住后面的真正未读。All/Invitations 保留历史；GET 不写库；游标与权限不变 | `tests/p4-review.test.ts` R1：同微秒的两条 Activity、60 条失效邀请（超过一个扫描批次，包含 cancelled、已过期、Ongoing 项目上的 pending）、一条有效 pending，以 limit=2 翻页得到 `[a2, valid, a1, a0]`，每页 unreadCount=4；Invitations 历史仍可见；GET 前后表一致。**在 7b8a629 的 inbox.ts 上失败** |
+| R2 Refresh 只合并首页 | `src/app/inbox/page.tsx` 改为加载窗口：Refresh 从头分页重新读取 max(20, 当前已加载条数)，然后同时替换列表和 Load more 游标。新消息把旧消息推出窗口时，Load more 从最后显示的一条继续，不漏不重；已读、失效和删除在整个已加载范围内同步；Mark as read / Accept / Ignore 通过同一事件刷新窗口；身份、筛选的迟到请求或旧刷新按 generation 丢弃；刷新失败时保留已加载内容，并明确提示 “Couldn’t refresh … Showing the messages loaded earlier.” | `tests/e2e/inbox.spec.ts` 三个独立用例：（a）全部加载后再来 25 条，Refresh 后可加载全部 n0+25 条；再来 3 条后 Load more 得到 n0+28 条，与 API 总数一致；（b）一条已在 25 条之后的评论被删除，Refresh 后显示 Comment removed、原文消失；（c）Unread 中 Mark as read 后条目减 1，计数一致。**用 7b8a629 的页面重新构建后三项都失败**（21/26 条、旧预览仍在、54≠53），修复后通过 |
+| R3 初始化失败后 runner 永久停止 | `src/server/invitation-runner.ts`：`database()` 也纳入受控失败处理，循环在 `finally` 中安排下一次（除非已停止），不会出现未处理的 reject 或忙循环。库不可用时只输出安全日志并记住时间，恢复后先持久化 lastFailureAt/DISPATCH_FAILED，再派发并写 lastCompletedAt，同时清除错误；停止语义和不重叠保持不变；没有新增公开接口或可调时钟 | `tests/p4-review.test.ts` R3 两项：（a）数据库配置不可用并失败多轮，切换为可用临时库后自动成功，lastFailureAt ≤ lastCompletedAt、error=null，没有 unhandledRejection；（b）注入的检查前两次 reject 后仍按间隔继续（≥4 次，最多同时 1 次）；检查进行中停止后不再排程；随后再次 start 正常运行。**在 7b8a629 的 runner/invitations 上三项都失败**（未处理的 reject，0 次运行） |
+
 ## Phase 0：可用 API 与关键缺口
 
 - 复用：`Database.transaction` / `database()` 单例（db.ts）；共用 `threads()` 与 P3 的 `pendingEvent` / `exactKeys` / `noPickup` / `questionPriority`（等待轮次、精确时间与年龄分只有一处实现）；`actor` / `role` / `parse` / `json` / `fail`（http.ts）；`useResource` 的身份 key 与过期响应保护（client.ts）。schema 由 setup 按分号拆分执行，因此新表都是单句 DDL，没有使用 PL/pgSQL。
@@ -53,9 +61,9 @@
 | 命令 | 结果 |
 |---|---|
 | `npm run typecheck` | 通过 |
-| `npm run test:backend` | **17/17** 通过（新增 P4 四项；原 13 项全部保留） |
+| `npm run test:backend` | **20/20** 通过（P4 四项，加 R1/R3 回归三项；原 13 项全部保留） |
 | `npm run build` | 通过；另以 `INVITATION_RUNNER_ENABLED=1` 和指向新临时目录的 PGlite 构建，构建后该目录未被创建，也没有 runner 输出（构建期不派发） |
-| `npm run test:e2e`（`E2E_PORT=3410`、mock 3509，生产 `next start`，独立临时 PGlite，runner 开启） | **17/17** 通过（约 2.3 分钟），含 390px |
+| `npm run test:e2e`（`E2E_PORT=3410`、mock 3509，生产 `next start`，独立临时 PGlite，runner 开启） | **20/20** 通过（含 R2 三项，返修后在最终提交上重跑），含 390px |
 
 ### 后端证据（tests/p4.test.ts，隔离 PGlite，固定时钟只在内部注入）
 

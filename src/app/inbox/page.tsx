@@ -194,23 +194,35 @@ export default function InboxPageView() {
   const [busy, setBusy] = useState("");
   const [notice, setNotice] = useState({ error: "", success: "" });
   const generation = useRef(0);
-  const path = (c?: string | null) => `/inbox?filter=${filter}&limit=20${c ? `&cursor=${encodeURIComponent(c)}` : ""}`;
-  // First page: replaces on a filter change; on refresh merges (new items first, known items updated) so
-  // already loaded older pages are neither shuffled nor duplicated.
-  const loadFirst = useCallback(async (merge: boolean) => {
+  const path = (limit: number, c?: string | null) => `/inbox?filter=${filter}&limit=${limit}${c ? `&cursor=${encodeURIComponent(c)}` : ""}`;
+  // How many messages are on screen; Refresh re-reads that whole window, not just the first page.
+  const loaded = useRef(0);
+  useEffect(() => {
+    loaded.current = items.length;
+  }, [items]);
+  // reset: first 20 for a new filter/identity. refresh: re-read max(20, loaded) items from the top in
+  // pages, then replace the list and the Load more cursor together. New messages push older ones past
+  // the window and Load more continues from the last shown item, so nothing is skipped or repeated;
+  // read, expired or deleted content is re-validated everywhere on screen. Late responses for an
+  // older filter/identity/refresh are discarded by the generation check.
+  const loadWindow = useCallback(async (mode: "reset" | "refresh") => {
     const current = ++generation.current;
     setState((s) => ({ ...s, loading: true }));
+    const target = mode === "reset" ? 20 : Math.max(20, loaded.current);
     try {
-      const page = await api<InboxPage>(path(), userId);
-      if (current !== generation.current) return;
-      setUnread(page.unreadCount);
-      setItems((old) => {
-        if (!merge) return page.items;
-        const fresh = new Map(page.items.map((i) => [i.id, i]));
-        const known = new Set(old.map((i) => i.id));
-        return [...page.items.filter((i) => !known.has(i.id)), ...old.map((i) => fresh.get(i.id) ?? i)];
-      });
-      if (!merge) setCursor(page.nextCursor);
+      const collected: InboxItem[] = [];
+      let next: string | null = null;
+      let unreadCount = 0;
+      do {
+        const page: InboxPage = await api<InboxPage>(path(Math.min(50, target - collected.length), next), userId);
+        if (current !== generation.current) return;
+        collected.push(...page.items.filter((i) => !collected.some((c) => c.id === i.id)));
+        next = page.nextCursor;
+        unreadCount = page.unreadCount;
+      } while (next && collected.length < target);
+      setItems(collected);
+      setCursor(next);
+      setUnread(unreadCount);
       setState({ loading: false, error: "", loaded: true });
     } catch (err) {
       if (current === generation.current) setState((s) => ({ ...s, loading: false, error: errorText(err) }));
@@ -221,26 +233,26 @@ export default function InboxPageView() {
     setItems([]);
     setCursor(null);
     setState({ loading: true, error: "", loaded: false });
-    void loadFirst(false);
+    void loadWindow("reset");
     return () => {
       generation.current++;
     };
-  }, [loadFirst]);
-  const refresh = useCallback(() => void loadFirst(true), [loadFirst]);
+  }, [loadWindow]);
+  const refresh = useCallback(() => void loadWindow("refresh"), [loadWindow]);
   useLiveRefresh(refresh);
   async function loadMore() {
     if (!cursor || more.loading) return;
     const current = generation.current;
     setMore({ loading: true, error: "" });
     try {
-      const page = await api<InboxPage>(path(cursor), userId);
+      const page = await api<InboxPage>(path(20, cursor), userId);
       if (current !== generation.current) return;
       setItems((old) => [...old, ...page.items.filter((i) => !old.some((o) => o.id === i.id))]);
       setCursor(page.nextCursor);
       setUnread(page.unreadCount);
       setMore({ loading: false, error: "" });
     } catch (err) {
-      setMore({ loading: false, error: errorText(err) });
+      if (current === generation.current) setMore({ loading: false, error: errorText(err) });
     }
   }
   const replace = (next: InboxItem) => setItems((old) => old.map((i) => (i.id === next.id ? next : i)));
@@ -302,7 +314,7 @@ export default function InboxPageView() {
       <Feedback error={notice.error} success={notice.success} />
       {state.error && (
         <div className="notice error" role="alert">
-          Couldn’t load your inbox. {state.error}{" "}
+          {state.loaded ? "Couldn’t refresh your inbox. Showing the messages loaded earlier." : "Couldn’t load your inbox."} {state.error}{" "}
           <button className="text-button" onClick={refresh}>
             Retry
           </button>

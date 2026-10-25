@@ -171,10 +171,11 @@ export async function dispatchInvitations(db: Storage) {
   return { created, checked, at: now.toISOString() };
  });
 }
-export async function recordDispatchFailure(db: Storage) {
+// `at` lets the runner record an earlier database outage once storage is reachable again.
+export async function recordDispatchFailure(db: Storage, at?: Date) {
  await db.transaction(async sql => {
   await lockDispatch(sql);
-  await sql.query(`UPDATE invitation_dispatch_state SET "lastFailureAt"=$1, error='DISPATCH_FAILED' WHERE id='singleton'`, [await inboxNow(sql)]);
+  await sql.query(`UPDATE invitation_dispatch_state SET "lastFailureAt"=$1, error='DISPATCH_FAILED' WHERE id='singleton'`, [at ?? await inboxNow(sql)]);
  });
 }
 

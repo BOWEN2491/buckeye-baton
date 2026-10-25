@@ -72,6 +72,11 @@ async function unreadCount(sql: Sql, userId: string, now: Date) {
 }
 
 const filterSql: Record<InboxFilter, string> = { all: '', unread: ' AND "readAt" IS NULL', invitations: ` AND kind='invitation'` };
+// Unread uses the same meaning as unreadCount: unread Activity plus unread invitations that are still
+// effectively pending. Persisted/obviously expired rows are excluded in SQL; eligibility-based
+// cancellation is checked per row. Rows are scanned in exact (createdAt, id) order and filtered
+// before the page boundary, so invalid rows never hide later unread messages.
+const unreadSql = ` AND "readAt" IS NULL AND (kind='activity' OR (status='pending' AND "expiresAt" > $NOW))`;
 export async function listInbox(req: Request, db: Sql, user: User) {
  const search = new URL(req.url).searchParams;
  const filter = (search.get('filter') ?? 'all') as InboxFilter;
@@ -80,19 +85,31 @@ export async function listInbox(req: Request, db: Sql, user: User) {
  const limit = Number(limitText);
  if (!/^\d+$/.test(limitText) || limit < 1 || limit > 50) fail(400, 'INVALID_INPUT', 'limit must be between 1 and 50');
  const cursor = search.get('cursor');
- const params: unknown[] = [user.id];
- let where = `"recipientId"=$1${filterSql[filter]}`;
- if (cursor) {
-  // The cursor is the last item id; its exact database createdAt is read here, never a JS millisecond value.
-  if (!(await rows(db, 'SELECT id FROM inbox_items WHERE id=$1 AND "recipientId"=$2', [cursor, user.id])).length) fail(400, 'INVALID_INPUT', 'Unknown cursor');
-  params.push(cursor);
-  where += ` AND ("createdAt", id) < (SELECT "createdAt", id FROM inbox_items WHERE id=$2)`;
- }
- params.push(limit + 1);
- const page = await rows(db, `SELECT * FROM inbox_items WHERE ${where} ORDER BY "createdAt" DESC, id DESC LIMIT $${params.length}`, params);
+ // The cursor is the last returned item id; its exact database createdAt is read in SQL, never a JS millisecond value.
+ if (cursor && !(await rows(db, 'SELECT id FROM inbox_items WHERE id=$1 AND "recipientId"=$2', [cursor, user.id])).length) fail(400, 'INVALID_INPUT', 'Unknown cursor');
  const now = await inboxNow(db);
- const items = await views(db, page.slice(0, limit), now);
- return json({ items, nextCursor: page.length > limit ? items[items.length - 1].id : null, unreadCount: await unreadCount(db, user.id, now), asOf: now.toISOString() });
+ const kept: Row[] = [];
+ let after = cursor; // keyset position of the last scanned row
+ const batch = Math.max(limit + 1, 50);
+ for (;;) {
+  const params: unknown[] = [user.id];
+  let where = `"recipientId"=$1`;
+  if (filter === 'unread') { params.push(now); where += unreadSql.replace('$NOW', `$${params.length}`); }
+  else where += filterSql[filter];
+  if (after) { params.push(after); where += ` AND ("createdAt", id) < (SELECT "createdAt", id FROM inbox_items WHERE id=$${params.length})`; }
+  params.push(filter === 'unread' ? batch : limit + 1);
+  const scanned = await rows(db, `SELECT * FROM inbox_items WHERE ${where} ORDER BY "createdAt" DESC, id DESC LIMIT $${params.length}`, params);
+  if (filter !== 'unread') { kept.push(...scanned); break; }
+  const statuses = await effectiveStatuses(db, scanned.filter(r => r.kind === 'invitation'), now);
+  for (const row of scanned) {
+   if (row.kind === 'activity' || statuses.get(row.id) === 'pending') kept.push(row);
+   if (kept.length > limit) break;
+  }
+  if (kept.length > limit || scanned.length < batch) break;
+  after = scanned[scanned.length - 1].id;
+ }
+ const items = await views(db, kept.slice(0, limit), now);
+ return json({ items, nextCursor: kept.length > limit ? items[items.length - 1].id : null, unreadCount: await unreadCount(db, user.id, now), asOf: now.toISOString() });
 }
 
 export async function markRead(req: Request, db: Sql, user: User, id: string) {

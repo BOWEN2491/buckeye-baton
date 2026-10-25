@@ -15,6 +15,7 @@ import './p2.test';
 import './post-deletion.test';
 import './p3.test';
 import './p4.test';
+import './p4-review.test';
 
 async function request(resource: string, id?: string, method='GET', user?: string, body?: unknown, query='') {
  const req = new Request(`http://localhost/api/${resource}${query}`, {method,headers:{...(user?{'x-demo-user-id':user}:{}),'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});
