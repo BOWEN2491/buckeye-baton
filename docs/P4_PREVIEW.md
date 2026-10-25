@@ -1,6 +1,8 @@
 # P4 独立手动验收预览
 
-AI配置准备（2026-10-25）：用户要求自行填写key，已在P4应用目录创建被Git忽略的`.env.local`，只有空白OPENAI_API_KEY、既有模型gpt-6-luna及官方base URL。尚未读取用户key、调用模型或重启服务；当前运行进程仍未启用模型。用户填好后，只重启3001加载该文件，保留同一P4数据库与3000/P3。该env不包含DATABASE_MODE/PGLITE_DATA_DIR，不得因此改用默认数据库。
+**AI已启用（2026-10-25）：** 用户自行填写P4 `.env.local` 后，已只重启3001，以Node `--env-file`加载本地配置。真实OpenAI / gpt-6-luna，非mock；一次生成返回200、1句/2标签，仅保存Mia的Campus Map Kiosk未发布草稿，没有确认或更改公开卡片。安全结果见[evidence/P4_AI_ENABLE_RESULT.json](evidence/P4_AI_ENABLE_RESULT.json)。key未打印、复制或提交Git；以后运行回归仍用mock，不能把此单次验收当持续真实调用授权。
+
+重启前后8个项目及讨论记录完全一致，生成草稿后公开项目列表仍一致。保持同一SQL目录、BuildID与应用372646c，自动邀请仍开启。停止服务后另存备份于P4目录`.data/p4-before-ai-backup-20261025`。最初组合命令被自动审批拒绝且未执行；随后以固定P4 PID分步停服、备份、启动完成，没有扩大操作范围。
 
 2026-10-25（America/New_York）。用户授权启动独立P4预览；**3000/P3及原有数据保留，main未合并**。端口/PID为本次启动快照，今后操作前重新核对runtime manifest和端口，不凭旧PID停进程。
 
@@ -10,10 +12,10 @@ AI配置准备（2026-10-25）：用户要求自行填写key，已在P4应用目
 - 实际应用源SHA：**372646c7d5338c09a2868b3c8191d1a4dfdcf835**，独立验收通过的最终应用。
 - 模式：`next start --hostname 127.0.0.1 --port 3001`；BuildID **w1qQ1NbMYOpR3DvMK9Vqd**。
 - 应用与构建目录：`C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review`，detached372646c；现在是**活跃预览目录**，不要归档/删除、切换提交或重建其.next。
-- Next服务PID **36504**；隐藏PowerShell启动器PID **32496**。
+- Next服务PID **14344**；隐藏PowerShell启动器PID **5852**（AI配置重启后）。
 - 独立持久PGlite：`C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review/.data/p4-preview-e2e-737dae5553fa44779b0d1d0ce0ff3459`。只有这个Next进程连接，禁止运行另一CLI直接打开此活跃数据库。
 - 自动邀请：**开启**，启动时检查，此后每次完成后60秒再检查。
-- 模型：**未启用真实模型，也没有mock**。没有读取/复制用户key，未进行AI调用；本预览不加载P3的.env.local。
+- 模型：**真实OpenAI / gpt-6-luna，非mock**，只加载P4自己的.env.local，不加载/复制P3的配置。本次真实调用1次、HTTP200，后续生成由用户操作。
 
 ## 数据与启动检查
 

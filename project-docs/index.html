@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "为P4创建忽略的.env.local空白key模板，沿用gpt-6-luna；尚未加载、重启或调用模型",
-  "nextUp": "用户填写P4 key后只重启3001并保留同库；3000/P3和main不变，继续P4产品验收",
+  "lastCompleted": "3001已重启加载P4本地AI配置；OpenAI/gpt-6-luna单次真实生成200，1句/2标签，只存未发布草稿，8项目与讨论保持",
+  "nextUp": "用户在3001继续P4产品验收，可用Mia查看Campus Map Kiosk草稿；同库/3000/P3/main保持",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 8, "featuresTotal": 8}
 }
@@ -236,7 +236,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
-<div class="card" data-updated="2026-10-25"><h3>P4独立预览3001</h3><p><a href="../docs/P4_PREVIEW.md">实际SHA/BuildID/PID/SQL保护与验收入口</a>：372646c、新演示库、runner开启，无真实模型/mock。p4-review现为活跃服务目录，不可重建或归档。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4独立预览3001</h3><p><a href="../docs/P4_PREVIEW.md">实际SHA/BuildID/PID/SQL保护与验收入口</a>：372646c、独立演示库、runner开启，真实OpenAI/gpt-6-luna已单次验证。p4-review现为活跃服务目录，不可重建或归档。</p></div>
 
 <div class="card" data-updated="2026-10-25"><h3>P4最终独立验收10/10</h3><p><a href="../docs/P4_ACCEPTANCE.md">372646c最终验收与限制</a> · <a href="../docs/P4_MANUAL_ACCEPTANCE.md">独立预览与用户手动剧本</a> · <a href="../docs/API_CONTRACT.md">已实现接口</a>。协调分支已集成，main和3000尚未切换。</p></div>
 
@@ -346,6 +346,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4真实AI启用</h3><p>用户填好本地key后仅重启3001，Node显式加载P4.env.local，真实gpt-6-luna一次生成200、1句/2标签，未发布草稿。8项目/讨论/公开卡片保持，同库备份完成，3000和main不变。</p></div>
+
 <div class="card" data-updated="2026-10-25"><h3>P4 AI本地配置模板</h3><p>按用户选择创建忽略的.env.local，key留空由本人填写，模型沿用gpt-6-luna；尚未重启或调用API。当前3001仍无模型，3000与同库保留。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>启动P4独立手动验收预览</h3><p>3001运行已验收372646c构建，新建独立持久SQL与虚构经验fixture，runner自动生成Mia接棒/Sarah求助邀请；只读页面/桌面/390px检查通过。无模型/mock，原3000/P3和用户库不变。</p></div>
 
