@@ -1,29 +1,42 @@
 # Buckeye Baton
 
-OSU project handoffs and team reflections. A hackathon demo connecting students, industry mentors, and OSU Staff.
+Buckeye Baton helps OSU students hand off projects, preserve lessons from unfinished or completed work, and get practical help from mentors. Students own project posts and discussions, Staff connects a specific question to a Mentor, and the Mentor responds in the original thread. The app is a hackathon demo with switchable demo identities, not production authentication.
 
-Start here: [project overview and current scope](docs/PROJECT_OVERVIEW.md), [collaboration and branch rules](docs/HANDOFF.md), and [teammate design references](design/README.md). The user has authorized PR #1 to become the shared main baseline; redundant frontend/backend preparation branches and checkouts have been removed.
+Start with the [project overview](docs/PROJECT_OVERVIEW.md), [current execution roadmap](docs/EXECUTION_ROADMAP.md), and [collaboration guide](docs/HANDOFF.md).
 
-Product update (2026-10-24): main includes P0 browsing/reflections and P1 pickup links, questions, Staff referrals and Mentor workbenches. P2 adds owner-reviewed AI browsing introductions/tags and Staff-visible Awaiting reply counts; commit df5f050 passed [independent local acceptance](docs/P2_ACCEPTANCE.md) and is integrated on codex/p2-integration, pending user product acceptance and main merge. Real PostgreSQL multi-connection behavior and hosted deployment remain unverified; P3–P4 are pending. Independent Lesson/adoption UI stays retired; legacy links redirect to their project, adoption writes return HTTP 410, and stored history is preserved.
+## Current product
 
-## Run locally
+The shared `main` branch includes the P0–P5 product:
 
-Requires Node.js 22 and npm.
+- Browse, search, and filter projects in Ongoing, Finished, and Paused states. Owners can update their project and preserve its history.
+- Pick up a Finished or Paused project by reproducing, continuing, or improving it. The new project links back to its source.
+- Ask project-specific questions, discuss them in one thread, and request a Mentor. Staff makes the referral; the assigned Mentor provides formal replies and can answer follow-ups.
+- Set a Mentor profile using five fixed expertise areas: front-end, back-end, algorithm, database, and brainstorming. For questions that request a Mentor, AI can score each area for relevance and show Staff up to three candidates with their current Awaiting reply load. Staff always chooses and confirms the referral.
+- New projects and pickups require a public GitHub repository URL. The app can read repository metadata and selected project files to draft a short project introduction and constrained Topics/Technologies. The owner edits and confirms the introduction before it appears publicly. Source provenance is shown in the app.
+- Every role has an Activity Inbox. Automatic invitations are limited to eligible pickup opportunities; they do not create a project or assign a Mentor.
+
+AI scores indicate relevance, not the probability that a Mentor will solve a question. When AI is unavailable, project content remains saved and Staff can still make a manual referral.
+
+## Run a fresh local copy
+
+Requires Node.js 22 and npm. In PowerShell:
 
 ```powershell
+git clone https://github.com/BOWEN2491/buckeye-baton.git
+cd buckeye-baton
 npm ci
 Copy-Item .env.example .env.local
 npm run db:setup
 npm run dev
 ```
 
-Open http://localhost:3000. The explicit local `DATABASE_MODE=pglite` stores a PostgreSQL-compatible database in `.data/pglite`; it survives application restarts. Run one app process per data directory. `npm run db:seed` ensures fictional seed content exists without deleting or overwriting user records. Schema setup adds the nullable project reflection column without resetting tables; old Lesson content remains available as historical experience.
+Open http://localhost:3000. To avoid a port already in use, run `npm run dev -- --port 3002` instead.
 
-### Inbox and automatic invitations (P4)
+A fresh clone gets its own ignored `.data/pglite` database and its own `.env.local`; neither is downloaded from GitHub. The first local database connection applies the schema and idempotently seeds fictional starter content: Alex, Mia, Mentor Sarah, Staff Kevin, four example projects, three legacy experience records, and two project questions. It does **not** include the 20-project simulation batch used by the separate 3001 preview. User actions in this clone stay in its database and do not affect another running copy, provided each app uses a different data directory.
 
-Every demo identity has an **Inbox** (navigation) with Activity about their projects and questions, plus automatic invitations. Activity is always on. Automatic invitations are created by a server-side runner that starts only when `INVITATION_RUNNER_ENABLED=1` is set for a continuously running `next start`/`next dev` process: it checks once at startup and then every 60 seconds after each check finishes. It reuses the app's own database connection (never open the same PGlite folder from a second process), keeps limits and de-duplication in the database, and does not run during `next build` or from any GET request. Staff can see the runner state and last successful check in their Inbox. Cloud or serverless scheduling has not been verified.
+The copied `.env.local` uses local PGlite and contains no API key. AI drafting and question analysis need `OPENAI_API_KEY` and `OPENAI_PROJECT_INTRO_MODEL` set locally. To process queued AI work and automatic pickup invitations, set `AI_ANALYSIS_RUNNER_ENABLED=1` and `INVITATION_RUNNER_ENABLED=1`; these background runners require a continuously running Node process and remain off by default. Never commit `.env.local` or share its secrets.
 
-To use Neon/hosted PostgreSQL, remove `DATABASE_MODE` from `.env.local` and provide your own `DATABASE_URL`. Use the provider's TLS connection string. Run `npm run db:setup` against that database. Never commit credentials. The application does not create a Neon account or AWS resources.
+`npm run db:seed` can re-ensure the starter fixture rows. It uses `ON CONFLICT DO NOTHING` and does not reset or overwrite later edits. Run only one app process against a given PGlite data directory.
 
 ## Validate
 
@@ -34,37 +47,27 @@ npm run build
 npm start
 ```
 
-Run the phase 1 production browser scenarios after building (the test starts its own server and isolated local database):
+Browser tests use an isolated temporary database and local provider mocks:
 
 ```powershell
 npx playwright install chromium
 npm run test:e2e
 ```
 
-Optionally set `QA_SCREENSHOT_DIR` to an absolute writable directory to save browser evidence. Test output and screenshots must not contain real personal information. See [verification evidence and limits](docs/QA_VERIFICATION.md).
+See [P5 verification results](docs/P5_TEST_REPORT.md), [P5 implementation report](docs/P5_REPORT.md), and [manual acceptance route](docs/P5_MANUAL_ACCEPTANCE.md).
 
-Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sarah`), Kevin (`staff-kevin`). The visible switcher supplies `x-demo-user-id`; this is deliberately impersonatable demo identity, not production authentication. Use fictional content only.
+## Demo identities
 
-## Handoff
+The starter identity switcher includes Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sarah`), and Kevin (`staff-kevin`). The `x-demo-user-id` header is intentionally impersonatable and must not be treated as authentication. Use fictional content only.
 
-- [P0–P4 roadmap and progress gates](docs/EXECUTION_ROADMAP.md)
-- [P1 shared contract](docs/P1_CONTRACT.md)
-- [P1 single-agent full-stack task](docs/P1_AGENT_TASK.md)
-- [P1 independent acceptance](docs/P1_ACCEPTANCE.md)
-- [P2 single-agent full-stack task](docs/P2_AGENT_TASK.md) / [P2 contract](docs/P2_CONTRACT.md)
-- [P2 independent acceptance](docs/P2_ACCEPTANCE.md) / [existing real-AI evidence](docs/evidence/P2_REAL_AI_RESULT.md)
+## Technical limits and deployment
 
-- [MVP and roles](docs/MVP_SPEC.md)
-- [API contract](docs/API_CONTRACT.md)
-- [Current phase 1 acceptance](docs/PHASE1_ACCEPTANCE.md)
-- [Full v2 target journey, pending](docs/ACCEPTANCE.md)
-- [Parallel chat handoff](docs/HANDOFF.md)
-- Shared TypeScript interfaces and fictional fixtures: `src/shared/`.
+The app uses Next.js 15, TypeScript, Node.js 22, Tailwind CSS, and PostgreSQL-compatible storage. Local PGlite is persistent but intended for one local Node process; do not share it between services. Real PostgreSQL multi-connection behavior, Neon/AWS setup, public deployment, production authentication, and multi-instance or serverless scheduling have not been verified. Hosted PostgreSQL requires a separately configured `DATABASE_URL` and `npm run db:setup`. Do not deploy local PGlite as a shared cloud database.
 
-Frontend owns components/pages; backend owns `src/server`, API route handlers, database schema, and scripts. Coordinate shared types and dependency changes. Remote repository: `BOWEN2491/buckeye-baton`. Main is the shared baseline; create short-lived branches for concrete tasks and use extra worktrees only for actual parallel work.
+## Project handoff documents
 
-## Deployment
-
-The implementation is pinned to Next.js 15 and Node.js 22 for the selected Amplify candidate. AWS eligibility, credits, database access, and public deployment remain external prerequisites. Validate a minimal hosted database read/write before deploying the entire experience. Local PGlite is for a single-process demo and is not shared production storage.
-
-Deferred: real login, uploads, project forks, complex graph, notifications, and AI. Future AI may tag questions and shortlist mentors while Staff makes the final choice.
+- [Product overview](docs/PROJECT_OVERVIEW.md) · [roadmap](docs/EXECUTION_ROADMAP.md) · [API contract](docs/API_CONTRACT.md)
+- [P1 contract and acceptance](docs/P1_CONTRACT.md) · [P2 acceptance](docs/P2_ACCEPTANCE.md) · [P3 product revision](docs/P3_PRODUCT_REVISION.md)
+- [P4 product revision](docs/P4_PRODUCT_REVISION.md) · [P5 contract](docs/P5_CONTRACT.md) · [P5 manual acceptance](docs/P5_MANUAL_ACCEPTANCE.md)
+- Shared types and demo fixtures: `src/shared/`
+- Database schema: `db/schema.sql`; local seed: `src/shared/fixtures.ts`
