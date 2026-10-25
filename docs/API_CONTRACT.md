@@ -4,7 +4,7 @@
 
 P3 product revisions, including age-only priority and the Detail toggle38e4901, have passed user acceptance. Current P3 UI has no deadline inputs or scoring; the age-only addendum below overrides the original deadline descriptions. Main merge remains pending explicit authorization; current3000 runs P3, not P1.
 
-**P4 candidate7b8a629 implements these endpoints on codex/p4-implementation, but is not accepted or integrated here.** [P4_CONTRACT.md](P4_CONTRACT.md) remains the frozen specification; [P4_REVIEW.md](P4_REVIEW.md) records independent7/10 and R1–R3 required repairs. The current3000/P3 service does not offer P4. Worker branch API_CONTRACT/P4_REPORT contain candidate implementation details; do not treat those as accepted production behavior yet.
+**P4 revised candidate2ad5607 implements the endpoints on codex/p4-implementation, not yet accepted or integrated here.** Independent recheck is9/10: R1/R3 closed, only R2 refresh/Load-more request coordination remains. See[P4_RECHECK.md](P4_RECHECK.md). Current3000 still runs P3; the frozen P4_CONTRACT stays unchanged.
 
 ## P3 product revision — age-only priority
 

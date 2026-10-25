@@ -1,5 +1,7 @@
 # P4 总控独立验收：需要返修
 
+**最新复验（2026-10-25）：** 2ad5607已独立通过四项检查、backend20/20/e2e20/20，R1/R3关闭，原R2三场景通过；但Load more被focus刷新打断后busy不释放，尚需R2-follow-up。当前9/10（90%），详见[P4_RECHECK.md](P4_RECHECK.md)。下文7/10和R1–R3是首轮历史。
+
 2026-10-24（America/New_York）。审查精确提交 **7b8a629151847d25f0a17b3e4cb15b7c32a86664**，基线1c3ed64181097806a2d0eca700e6c64d464d33e6。独立worktree：`C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review`。本报告覆盖worker自报，不代表产品验收通过。
 
 **结论：K1–K10 独立通过7/10（70%），R1–R3必须返修。** 未集成P4应用到协调分支，未合main、未替换3000预览。真实模型调用0，未读取/复制key。
@@ -81,7 +83,7 @@ Browser plugin及其browser技能未列出，因此按frontend-testing-debugging
 
 源探针：[后端TS](evidence/p4-backend-probe.ts)、[页面JS](evidence/p4-ui-probe.cjs)。它们输出实际观察值，不是已修复后的assert测试；worker需另补会在旧代码失败的正式回归。
 
-在含P4源码/依赖的独立clone根目录执行`npx tsx docs/evidence/p4-backend-probe.ts`：只创建临时memory PGlite、模拟首次配置失败，结果写入忽略的.review目录。此脚本不需要模型、真实pg或用户env。
+在含P4源码/依赖的独立clone根目录执行`npx tsx docs/evidence/p4-backend-probe.ts`：只创建临时memory PGlite、模拟首次配置失败，结果写入未跟踪的.review目录（不要提交临时输出）。此脚本不需要模型、真实pg或用户env。
 
 页面脚本：先用自己的临时SQL和空闲端口启动同一生产构建，runner关闭；设`P4_REVIEW_BASE_URL=http://127.0.0.1:<自己的端口>`后执行`node docs/evidence/p4-ui-probe.cjs`。它用Playwright受控响应复现三个合并场景，JSON/截图写入.review，不连接用户库。默认3247仅为本次已停止的探针服务端口。不要在3000运行或在活跃PGlite目录另开CLI。
 

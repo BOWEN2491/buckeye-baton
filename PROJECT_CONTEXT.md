@@ -1,10 +1,10 @@
 # Buckeye Baton — 当前项目状态
 
-更新：2026-10-24。仓库：https://github.com/BOWEN2491/buckeye-baton
+更新：2026-10-25。仓库：https://github.com/BOWEN2491/buckeye-baton
 
 ## 当前结论与执行入口
 
-**最新：P4候选7b8a629已独立审查，7/10（70%），需R1–R3返修。** 见docs/P4_REVIEW.md和docs/evidence/P4_*PROBES.json。typecheck/build、backend17/17、e2e17/17独立通过，但补充探针确认Unread失效邀请、刷新分页/旧预览及runner初始化失败恢复有缺陷。未集成P4应用，3000保留P3，不合main。Worker继续原codex/p4-implementation返修，正常一次READY；以下任务准备记录为起始状态，不再表示尚无实现交付。
+**最新（2026-10-25）：P4返修2ad5607独立9/10（90%），只余R2-follow-up。** 见docs/P4_RECHECK.md。typecheck/build、backend20/20、e2e20/20通过，原R1/R3及三个R2串行场景关闭；补充探针复现Load more未完成时focus自动刷新导致busy卡死。尚不集成P4、不替换3000或合main。Worker继续原分支只修该处，再一次READY。
 
 **P3用户产品验收通过，P4由单Agent交付后返修。** P4初始基线1c3ed64，候选7b8a629；总控仅提交审查文档，尚不集成应用或替换预览，未授权合并main。
 
