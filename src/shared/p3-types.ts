@@ -18,4 +18,4 @@ export interface ProjectPriorityDetail {
   advice: OwnerAdvice[];
 }
 export type ProjectSort = 'recommended' | 'newest';
-export type WorkbenchSort = 'priority' | 'oldest';
+export type WorkbenchSort = 'priority' | 'oldest' | 'newest';

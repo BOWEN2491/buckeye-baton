@@ -12,7 +12,10 @@ try {
       await page.goto(`${base}${route}`);
       await page.getByRole('heading', { name: route === '/' ? 'Explore projects' : /.+/ }).first().waitFor();
       if (route === '/') await page.locator('.project-card').first().waitFor();
-      else await page.locator('.reflection-hero').waitFor();
+      else {
+        await page.locator('.reflection-hero').waitFor();
+        await page.getByText('Loading questions…', { exact: true }).waitFor({ state: 'hidden' });
+      }
       await page.screenshot({ path: fileURLToPath(new URL(`./screenshots/${name}${viewport}.png`, import.meta.url)), fullPage: true });
     }
   }

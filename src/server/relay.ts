@@ -168,7 +168,7 @@ export async function deletePost(db: Storage, user: User, postId: string) {
 }
 
 // sort=undefined keeps the original Workbench response; 'priority' adds per-thread priority (P3).
-export async function workbench(db: Sql, user: User, sort?: 'priority' | 'oldest') {
+export async function workbench(db: Sql, user: User, sort?: 'priority' | 'oldest' | 'newest') {
  const empty: Workbench = { needsReferral: [], referred: [], awaitingReply: [], replied: [] };
  let groups: Workbench;
  if (user.role === 'staff') {
@@ -178,6 +178,8 @@ export async function workbench(db: Sql, user: User, sort?: 'priority' | 'oldest
   const mine = await threads(db, 'id IN (SELECT "questionId" FROM project_referrals WHERE "mentorId"=$1)', [user.id]);
   groups = { ...empty, awaitingReply: mine.filter(t => t.state === 'awaiting_reply'), replied: mine.filter(t => t.state === 'replied') };
  } else return fail(403, 'FORBIDDEN', 'The workbench is for Staff and Mentors');
+ // Threads arrive in exact database chronological order; reverse each group for Newest.
+ if (sort === 'newest') return json(Object.fromEntries(Object.entries(groups).map(([key, list]) => [key, [...list].reverse()])));
  if (sort !== 'priority') return json(groups);
  const asOf = priority.now();
  return json({ needsReferral: priority.prioritize(groups.needsReferral, asOf), referred: priority.prioritize(groups.referred, asOf), awaitingReply: priority.prioritize(groups.awaitingReply, asOf), replied: priority.prioritize(groups.replied, asOf) });

@@ -128,3 +128,8 @@ In the context of the user explicitly asking to delete the remaining old adoptio
 **Supersedes:** Original P4 help-invitation scope and universal Comment removed display.
 
 In the context of P4 product acceptance and the user's clarified deletion rule, facing unwanted help invitations for old questions and unwanted deletion entries in other recipients' Inbox, we decided for pickup-only automatic dispatch and a shared server-side notification visibility predicate, to achieve an Inbox focused on useful activity and project continuation, accepting retained but inaccessible legacy help invitation history. Manual referrals remain intact; no table or user content is deleted.
+
+### Compact recommendation explanations and chronological workbenches
+**Date:** 2026-10-25 · **Status:** Accepted (user request)
+
+In the context of demo UI feedback, facing dense Explore cards and unwanted task prioritisation controls, we decided for card-free recommendation explanations, a collapsed detail explanation, explicit en-US dates, and newest-question-first Staff/Mentor workbenches, to achieve a compact and predictable UI, accepting that new questions appear before older unanswered questions. Legacy priority/oldest API sorts remain compatible; the product workspace uses only sort=newest. Project recommendation scoring and AI generation remain unchanged.

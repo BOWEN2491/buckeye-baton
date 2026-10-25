@@ -64,6 +64,7 @@ Rules: [P3_CONTRACT.md](P3_CONTRACT.md). Types `src/shared/p3-types.ts`; the onl
 |---|---|---|
 | GET `/api/projects?q=&status=&sort=recommended` | public | 200 `RecommendedProject[]` (BrowseProject + `priority`), score desc then createdAt desc, id asc; all matching projects incl. 0 |
 | GET `/api/projects?sort=newest` / no sort | public | 200 original `BrowseProject[]`, createdAt desc, id asc |
+| GET `/api/workbench?sort=newest` | Staff / Mentor | 200 original `Workbench`, each group in reverse question creation order at database precision; current workspace UI uses this mode only |
 | GET `/api/workbench?sort=priority` | Staff / Mentor | 200 four-array `PrioritizedWorkbench`; per group pending first (score desc, pendingSince, createdAt, id), others after in createdAt,id with `priority:null` |
 | GET `/api/workbench?sort=oldest` / no sort | Staff / Mentor | 200 original `Workbench` |
 | GET `/api/projects/:id/priority` | public | 200 `ProjectPriorityDetail` (priority, per-question priority, advice); 404 unknown |

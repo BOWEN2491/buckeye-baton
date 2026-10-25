@@ -1929,3 +1929,8 @@ nav {
 .ai-sources summary { cursor: pointer; font-weight: 600; }
 .ai-sources ul { padding-left: 1.3rem; }
 @media (max-width: 480px) { .mentor-recommendations .section-heading { flex-direction: column; } .intro-row { flex-wrap: wrap; } }
+
+/* Recommendation explanations stay compact until explicitly opened. */
+.recommendation-details > summary { cursor: pointer; margin-bottom: 0; }
+.recommendation-details[open] > summary { margin-bottom: 1rem; }
+.recommendation-details > summary:focus-visible { outline: 2px solid #b62338; outline-offset: 4px; }

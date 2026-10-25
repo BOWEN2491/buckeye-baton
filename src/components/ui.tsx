@@ -2,8 +2,6 @@ import Link from "next/link";
 import type { Project } from "@/shared/types";
 import type { PublishedIntroduction } from "@/shared/p2-types";
 import type { P5PublishedIntroduction } from "@/shared/p5-types";
-import type { ProjectPriority } from "@/shared/p3-types";
-import { PriorityReasons } from "./priority";
 import { readable } from "@/lib/client";
 import { Icon } from "./app-shell";
 export function Feedback({
@@ -71,11 +69,9 @@ export function Tags({ tags }: { tags: string[] }) {
 export function ProjectCard({
   project,
   introduction,
-  priority,
 }: {
   project: Project;
   introduction?: PublishedIntroduction | null;
-  priority?: ProjectPriority;
 }) {
   // A confirmed introduction replaces the authored summary/tags on the card only while it is current.
   const candidate = introduction as P5PublishedIntroduction | null | undefined;
@@ -120,12 +116,6 @@ export function ProjectCard({
         </p>
       </div>
       {intro ? <><Tags tags={intro.topics} /><Tags tags={intro.technologies} /></> : <p className="field-help">Topics pending review</p>}
-      {priority && (
-        <div className="card-priority" aria-label="Why recommended">
-          <strong>Why recommended</strong>
-          <PriorityReasons reasons={priority.reasons} projectId={project.id} limit={2} />
-        </div>
-      )}
       <div className="card-footer">
         <Icon name="book" size={17} />
         <span>
