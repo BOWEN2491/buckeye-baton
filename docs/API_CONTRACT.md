@@ -1,5 +1,23 @@
 # Buckeye Baton — API contract
 
+## P4 endpoints — implemented on codex/p4-implementation, pending coordinator acceptance
+
+Rules: [P4_CONTRACT.md](P4_CONTRACT.md). Types `src/shared/p4-types.ts`. Server: `src/server/inbox.ts` (Activity, listing, read), `src/server/invitations.ts` (eligibility, matching, limits, dispatch, responses, helpers, status), `src/server/invitation-runner.ts` + `src/instrumentation.ts` (runner). Tables (additive): `inbox_items` (UNIQUE `("recipientId","eventKey")`, CHECKs, recipient/target indexes), `inbox_preferences`, `invitation_dispatch_state` (singleton row = lock + last completed/failed).
+
+| Method / path | Who | Result |
+|---|---|---|
+| GET `/api/inbox?filter=all\|unread\|invitations&limit=1–50&cursor=<item id>` | self | 200 `InboxPage`, newest first by exact `createdAt` desc, id desc; foreign/unknown cursor 400 |
+| PATCH `/api/inbox/:id` `{read:true}` | recipient | 200 item; idempotent; others 404 |
+| GET / PATCH `/api/inbox/preferences` `{automaticInvitations}` | self | 200; GET never writes; off cancels pending invitations |
+| POST `/api/invitations/:id/respond` `{action:'accept'\|'ignore'}` | recipient | 200 `InvitationItem`; same action again returns current; opposite or no longer valid 409 `INVITATION_UNAVAILABLE`; others 404 |
+| GET `/api/project-questions/:id/interested-helpers` | Staff | 200 accepted help invitations for the current waiting round; others 403 |
+| GET `/api/invitations/status` | Staff | 200 `InvitationRunnerStatus`; others 403 |
+
+- Activity is written in the same transaction as the question, post or referral (`question:<id>`, `post:<id>`, `referral:<id>` event keys); recipients follow the contract matrix, are de-duplicated with merged reasons, and exclude the actor. Rejected writes and duplicate referrals add nothing. Previews (≤160 code points) are read live; deleted posts show `removed:true`, `preview:null`.
+- Invitations: `pickup` (Paused, no successor, shared ≥14 days; Students) and `help` (needs_referral/awaiting_reply, current round waiting ≥3 days; Students or Mentors), matched by normalized author tags with Finished-project or formal-reply evidence, ranked by matched tags, evidence projects, user id. Limits: recipient 1/24 h and 3/7 days, target 1/24 h and 3 lifetime, one per recipient+kind+target forever (`invite:<kind>:<targetId>`). Expiry 7 days; cycle key = question id or first unanswered follow-up id. GET computes effective status without writing; dispatch, responses and related writes persist expired/cancelled.
+- Locking: dispatch, responses, preference changes, question/post/referral writes, post deletion, pickup and project PATCH take the `invitation_dispatch_state` row lock first.
+- Runner: `INVITATION_RUNNER_ENABLED=1`, Node runtime only, skipped during `next build`; checks at start and 60 s after each completion; failures roll back and record `lastFailureAt`/`DISPATCH_FAILED`; there is no public dispatch endpoint.
+
 ## Current status and planned P4
 
 P3 product revisions, including age-only priority and the Detail toggle38e4901, have passed user acceptance. Current P3 UI has no deadline inputs or scoring; the age-only addendum below overrides the original deadline descriptions. Main merge remains pending explicit authorization; current3000 runs P3, not P1.

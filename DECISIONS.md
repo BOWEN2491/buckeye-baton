@@ -1,5 +1,11 @@
 # Decisions
 
+### Implement P4 Inbox and invitations on the existing transaction and thread services
+**Date:** 2026-10-24 · **Status:** Implemented on codex/p4-implementation; pending coordinator acceptance
+**Files:** db/schema.sql, src/server/inbox.ts, src/server/invitations.ts, src/server/invitation-runner.ts, src/instrumentation.ts, src/app/inbox/page.tsx
+
+In the context of the frozen P4 contract asking for role Activity, automatic invitations and a browserless runner, facing lost notifications, duplicate sends and stale invitations under concurrent writes, we decided for Activity rows inserted inside each business transaction, invitations keyed by recipient plus kind/target with database limits, a singleton dispatch row taken first by every eligibility-changing write, and an opt-in Node runner via Next.js instrumentation reusing the app's database singleton, to achieve atomic, private, rate-limited delivery without new services, accepting serialized demo-scale writes and that only PGlite (single connection) was exercised; real multi-connection Postgres and cloud scheduling remain unverified.
+
 ### Specify one Inbox for role activity and bounded automatic invitations
 **Date:** 2026-10-24 · **Status:** Specification recorded on codex/p4-integration; application not implemented or accepted
 **Files:** docs/P4_CONTRACT.md, docs/P4_AGENT_TASK.md, docs/P4_START_PROMPT.md
