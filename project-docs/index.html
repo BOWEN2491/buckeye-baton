@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P4最终372646c独立技术验收10/10，R1/R2/R3及follow-up全部关闭；backend20/20、e2e23/23与原探针通过，已集成协调分支",
-  "nextUp": "准备独立P4预览与用户产品验收；3000仍P3、原数据/配置保留，main与云端尚未处理",
+  "lastCompleted": "P4独立预览3001已启动：372646c、新演示库、runner开启，Mia/Sarah邀请已生成；桌面/390px检查通过",
+  "nextUp": "用户直接在3001做P4产品验收；3000/P3、旧数据与配置保留，main不合并",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 8, "featuresTotal": 8}
 }
@@ -166,7 +166,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P4最终372646c已独立技术验收10/10并集成P4协调分支，全部返修关闭。用户产品验收尚未开始；3000仍P3，main不合并。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P4技术10/10，独立手动预览已在3001运行372646c，自动邀请开启，等待用户产品验收。3000继续P3，旧数据/配置保留，main不合并。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -214,6 +214,8 @@
 <!-- claude:design:spacing:end -->
 
     <!-- claude:design:screenshots:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4预览截图（虚构演示数据）</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/p4-inbox-desktop.png" alt="P4 Inbox invitation desktop"><p class="caption">3001/P4桌面，2026-10-25；邀请仍未接受</p></div><div class="screenshot"><img src="screenshots/p4-inbox-mobile.png" alt="P4 Inbox invitation at390px"><p class="caption">3001/P4，390px，无横向溢出</p></div></div></div>
+
 <div class="card" data-updated="2026-10-24"><h3>预览与验收截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">现有P3预览桌面，2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">现有P3预览390px，2026-10-24</p></div></div></div>
 <p class="muted">P4独立生产页面验收：<a href="../docs/evidence/p4-final-loadmore-recovered.png">Inbox分页恢复截图（虚构数据，2026-10-25）</a>；手机与四身份结果见P4_ACCEPTANCE。3000仍保留P3。</p>
 <!-- claude:design:screenshots:end -->
@@ -234,6 +236,8 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4独立预览3001</h3><p><a href="../docs/P4_PREVIEW.md">实际SHA/BuildID/PID/SQL保护与验收入口</a>：372646c、新演示库、runner开启，无真实模型/mock。p4-review现为活跃服务目录，不可重建或归档。</p></div>
+
 <div class="card" data-updated="2026-10-25"><h3>P4最终独立验收10/10</h3><p><a href="../docs/P4_ACCEPTANCE.md">372646c最终验收与限制</a> · <a href="../docs/P4_MANUAL_ACCEPTANCE.md">独立预览与用户手动剧本</a> · <a href="../docs/API_CONTRACT.md">已实现接口</a>。协调分支已集成，main和3000尚未切换。</p></div>
 
 <div class="card" data-updated="2026-10-25"><h3>P4中途复验（历史）：9/10</h3><p><a href="../docs/P4_RECHECK.md">R1/R3关闭与R2剩余竞态</a>：原套件20/20通过，延迟Load more/focus探针失败；原worker继续只修该处。</p></div>
@@ -342,6 +346,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>启动P4独立手动验收预览</h3><p>3001运行已验收372646c构建，新建独立持久SQL与虚构经验fixture，runner自动生成Mia接棒/Sarah求助邀请；只读页面/桌面/390px检查通过。无模型/mock，原3000/P3和用户库不变。</p></div>
+
 <div class="card" data-updated="2026-10-25"><h3>P4最终10/10并集成协调分支</h3><p>372646c四项检查通过：backend20/20、生产e2e23/23及原竞态探针通过；请求隔离修复关闭R2-follow-up，全部返修结束。只解决两份文档的集成冲突，应用与被测SHA一致；3000/用户数据/main保持不变，下一步独立P4产品验收。</p></div>
 
 <div class="card" data-updated="2026-10-25"><h3>P4返修复验9/10</h3><p>2ad5607类型/构建、backend20/20、e2e20/20通过；原R1/R3关闭，R2串行刷新场景通过。补充发现Load more被focus刷新打断后busy不释放，单项返修证据已保存；3000/main不变。</p></div>

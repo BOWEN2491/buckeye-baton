@@ -1,5 +1,7 @@
 # Buckeye Baton — 当前交接
 
+**P4独立产品预览已启动：3001，应用372646c，runner开启，无真实模型/mock。** 见[P4_PREVIEW.md](P4_PREVIEW.md)。p4-review现在持有活跃.next和独立SQL，不可重建/归档或另开连接；同时保留3000/P3。产品验收待用户进行，main不变。
+
 **最新P4（2026-10-25）：372646c独立技术验收10/10。** 见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)，四项检查/backend20/e2e23及原竞态探针通过，全部返修关闭。已集成P4协调分支，下一步独立P4预览与用户产品验收；3000继续P3，main未合并。
 
 2026-10-24。**P3产品验收通过，启动P4单Agent。** 当前入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)、[P4_CONTRACT.md](P4_CONTRACT.md)、[P4_START_PROMPT.md](P4_START_PROMPT.md)。原任务准备时为0/10，现以P4_ACCEPTANCE的10/10为准；任务书保留交付规格。
