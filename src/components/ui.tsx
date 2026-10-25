@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Project } from "@/shared/types";
 import type { PublishedIntroduction } from "@/shared/p2-types";
+import type { P5PublishedIntroduction } from "@/shared/p5-types";
 import type { ProjectPriority } from "@/shared/p3-types";
 import { PriorityReasons } from "./priority";
 import { readable } from "@/lib/client";
@@ -77,7 +78,8 @@ export function ProjectCard({
   priority?: ProjectPriority;
 }) {
   // A confirmed introduction replaces the authored summary/tags on the card only while it is current.
-  const intro = introduction && !introduction.stale ? introduction : null;
+  const candidate = introduction as P5PublishedIntroduction | null | undefined;
+  const intro = candidate?.version === 5 && !candidate.stale ? candidate : null;
   return (
     <article className="project-card">
       <div className="card-top">
@@ -99,7 +101,7 @@ export function ProjectCard({
       <p className="card-summary">
         {intro ? intro.sentences.join(" ") : project.summary}
       </p>
-      {intro && <p className="ai-label">AI-assisted · owner-reviewed</p>}
+      {intro && <p className="ai-label">AI-assisted · owner-reviewed{intro.sources.evidence !== "github" ? ` · ${intro.sources.evidence} evidence` : ""}</p>}
       <div className="card-highlight">
         <strong>
           {project.status === "finished"
@@ -117,7 +119,7 @@ export function ProjectCard({
             "The team has not shared this update yet."}
         </p>
       </div>
-      <Tags tags={intro ? intro.tags : project.tags} />
+      {intro ? <><Tags tags={intro.topics} /><Tags tags={intro.technologies} /></> : <p className="field-help">Topics pending review</p>}
       {priority && (
         <div className="card-priority" aria-label="Why recommended">
           <strong>Why recommended</strong>

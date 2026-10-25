@@ -3,11 +3,11 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type {
   Project,
-  ProjectInput,
   ProjectReflection,
   ProjectStatus,
 } from "@/shared/types";
 import { api } from "@/lib/client";
+import { githubUrlSchema } from "@/shared/p5-validation";
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
 const emptyReflection = (): ProjectReflection => ({
@@ -49,6 +49,12 @@ export function ProjectForm({
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    const f = new FormData(e.currentTarget);
+    const repository = String(f.get("codeUrl")).trim();
+    if ((!project || repository) && !githubUrlSchema.safeParse(repository).success) {
+      setError("Use your own public GitHub repository URL: https://github.com/owner/repo.");
+      return;
+    }
     const normalized = {
       ...reflection,
       outcomes: reflection.outcomes.map((s) => s.trim()).filter(Boolean),
@@ -79,17 +85,12 @@ export function ProjectForm({
       return;
     }
     setBusy(true);
-    const f = new FormData(e.currentTarget);
-    const input: ProjectInput = {
+    const input = {
       title: String(f.get("title")),
       summary: String(f.get("summary")),
       courseOrClub: String(f.get("courseOrClub")),
       term: String(f.get("term")),
       status,
-      tags: String(f.get("tags"))
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
       demoUrl: String(f.get("demoUrl")) || null,
       codeUrl: String(f.get("codeUrl")) || null,
       reflection: normalized,
@@ -167,15 +168,7 @@ export function ProjectForm({
           />
         </label>
       </div>
-      <label>
-        Topics
-        <input
-          name="tags"
-          defaultValue={project?.tags.join(", ")}
-          placeholder="web development, accessibility"
-        />
-        <span className="field-help">Separate topics with commas.</span>
-      </label>
+<p className="field-help">Topics and technologies are generated from your GitHub repository and saved project progress. Review the draft after saving.</p>
       <div className="form-row">
         <label>
           Demo link <span className="optional">optional</span>
@@ -188,14 +181,16 @@ export function ProjectForm({
           />
         </label>
         <label>
-          Code link <span className="optional">optional</span>
+          GitHub repository {project && <span className="optional">optional for existing projects</span>}
           <input
-            aria-label="Code link"
+            aria-label="GitHub repository"
+            required={!project}
             name="codeUrl"
             type="url"
             defaultValue={project?.codeUrl || ""}
             placeholder="https://github.com/…"
           />
+          <span className="field-help">Your own public repository. Required to generate an introduction and topics.</span>
         </label>
       </div>
       {project ? (

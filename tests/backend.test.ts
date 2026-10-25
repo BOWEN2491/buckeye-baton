@@ -16,6 +16,8 @@ import './post-deletion.test';
 import './p3.test';
 import './p4.test';
 import './p4-review.test';
+import './p5.test';
+import './p5-review.test';
 
 async function request(resource: string, id?: string, method='GET', user?: string, body?: unknown, query='') {
  const req = new Request(`http://localhost/api/${resource}${query}`, {method,headers:{...(user?{'x-demo-user-id':user}:{}),'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});
@@ -31,7 +33,7 @@ test('legacy discussion storage, retired adoption endpoints and project persiste
   assert.equal((await request('projects',undefined,'GET',undefined,undefined,'?status=ongoing')).data.length,1);
   assert.equal((await request('projects',undefined,'GET',undefined,undefined,'?status=wrong')).status,400);
   assert.ok((await request('lessons',undefined,'GET',undefined,undefined,'?q=information')).data.some((lesson: {id:string})=>lesson.id==='lesson-fields'));
-  const projectInput={title:'New project',summary:'A new project',courseOrClub:'OSU',term:'Fall 2026',tags:['web'],status:'ongoing'};
+  const projectInput={title:'New project',summary:'A new project',courseOrClub:'OSU',term:'Fall 2026',codeUrl:'https://github.com/example/test-project',status:'ongoing'};
   assert.equal((await request('projects',undefined,'POST',undefined,projectInput)).status,401);
   assert.equal((await request('projects',undefined,'POST','staff-kevin',projectInput)).status,403);
   assert.equal((await request('project','project-signup','PATCH','student-mia',{status:'paused'})).status,403);
@@ -79,7 +81,7 @@ test('legacy discussion storage, retired adoption endpoints and project persiste
 test('project reflections validate merged state, retain history and survive additive migrations', async () => {
  process.env.DATABASE_MODE='pglite'; process.env.PGLITE_DATA_DIR=await mkdtemp(path.join(tmpdir(),'buckeye-baton-v2-'));
  try {
-  const input={title:'Reflection journey',summary:'Fictional test project',courseOrClub:'OSU',term:'Fall 2026',tags:['web']};
+  const input={title:'Reflection journey',summary:'Fictional test project',courseOrClub:'OSU',term:'Fall 2026',codeUrl:'https://github.com/example/test-project'};
   const created=await request('projects',undefined,'POST','student-alex',input);
   assert.equal(created.status,201); assert.equal(created.data.status,'ongoing');
   assert.deepEqual(created.data.reflection,{progress:'',outcomes:[],problems:[],nextTeam:'',whyPaused:'',ifAgain:[],reusable:[]});

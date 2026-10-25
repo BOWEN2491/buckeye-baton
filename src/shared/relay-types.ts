@@ -3,7 +3,7 @@ import type { Lesson, Project, User } from './types';
 // P1 relay contract (docs/P1_CONTRACT.md). Dates are ISO UTC strings.
 export type PickupType = 'reproduce' | 'continue' | 'improve';
 export const pickupTypes: PickupType[] = ['reproduce', 'continue', 'improve'];
-export interface PickupInput { requestId: string; pickupType: PickupType; title: string; goal: string }
+export interface PickupInput { requestId: string; pickupType: PickupType; title: string; goal: string; codeUrl: string }
 export interface RelayLink { project: Project; owner: User; pickupType: PickupType; goal: string; pickedUpAt: string }
 export interface RelayProjectDetail { project: Project; lessons: Lesson[]; source: RelayLink | null; successors: RelayLink[] }
 

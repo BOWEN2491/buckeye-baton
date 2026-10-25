@@ -13,10 +13,10 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P0–P4及最终修订验收通过，PR #3已合main（3bf29b3）",
-  "nextUp": "main作为完整共享基线；保留3000/3001与数据，后续部署另行规划",
+  "lastCompleted": "P5实现与typecheck/build、backend26/26、browser24/24、模拟脚本2/2通过；基线main f2312ee",
+  "nextUp": "总控备份并升级3001、导入明确标注的模拟数据及产品验收；不合main",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
-  "health": {"featuresDone": 8, "featuresTotal": 8}
+  "health": {"featuresDone": 8, "featuresTotal": 10}
 }
 </script>
 <!-- claude:meta:end -->
@@ -166,7 +166,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P0–P4全部通过产品验收，PR #3已合入main（3bf29b3），本地总控使用main。最终应用5a5fddf已通过typecheck/build、backend20/20和browser23/23。预览与数据保留，尚未部署。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P0–P4已通过产品验收并合main。P5在独立实现分支通过typecheck/build、backend26/26、生产browser24/24及模拟脚本2/2；含来源变化、失败后重试计时与确认后详情标签刷新回归。下一步由总控升级3001和产品验收，尚未合main或部署。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -183,13 +183,15 @@
   <!-- ============ FEATURES ============ -->
   <section class="panel" id="features">
     <!-- claude:features:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5 <span class="badge wip">自动验收通过，待产品验收</span></h3><p>Mentor自选五类expertise，异步问题分类和Staff前三候选、实时Awaiting reply；GitHub公开仓库来源简介、限定Topics/Technologies、所有者确认与过期回退。详见<a href="../docs/P5_REPORT.md">P5交付报告</a>和<a href="../docs/P5_MANUAL_ACCEPTANCE.md">手动验收路线</a>。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P5产品模拟 <span class="badge wip">脚本验证通过，未导入预览</span></h3><p>20项目、4Mentor、30问题、60帖子与3接棒关系；20份simulation来源简介、24份明确虚构的评分，0真实模型调用。重复导入不覆盖编辑，事务失败整体回滚。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>项目与三状态总结 <span class="badge done">产品验收通过</span></h3><p>浏览/搜索/筛选、所有者编辑/校验、历史保留；表单只显示当前状态字段，切换保留未保存输入。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>接棒与导师连接 <span class="badge done">P1 accepted</span></h3><p>三种接棒、来源/后续关系、项目问题、Staff人工引荐、指定Mentor多轮正式回复和工作台；P1已合main。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">产品验收通过</span></h3><p>所有者确认AI浏览简介/标签、Mentor Awaiting reply、作者/项目所有者评论删除。main合并尚无最新授权。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3 <span class="badge done">产品修订验收通过</span></h3><p>可解释年龄排序，Suggestions原入口与收起Detail说明，状态对应表单。无deadline评分/日期UI，微秒稳定排序与历史保持；当前3000应用38e4901。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4 <span class="badge done">技术及产品验收通过</span></h3><p>全角色Activity Inbox、事务通知、未读/分页/刷新、仅接棒自动邀请、限频去重、接受/忽略/设置与Node runner。评论被删除后仅删除者可保留无正文旧通知，其他接收者隐藏；help邀请与Interested helpers退役。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>暂缓</h3><p>真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。AI导师推荐已进入P5实现。</p></div>
 <!-- claude:features:end -->
   </section>
 
@@ -214,10 +216,11 @@
 <!-- claude:design:spacing:end -->
 
     <!-- claude:design:screenshots:start -->
+<figure><img src="screenshots/p5-introduction-mobile.png" alt="P5 introduction and source provenance at390px"><figcaption>2026-10-25 P5生产浏览器回归：隔离测试库和本地mock证据，确认后项目标签即时更新；不是3001真实AI调用截图。</figcaption></figure>
 <figure><img src="screenshots/p4-inbox-mobile.png" alt="Pickup-only Inbox at390px"><figcaption>2026-10-25 P4修订：Sarah无help邀请；桌面/390px检查通过，无写入。</figcaption></figure>
 <div class="card" data-updated="2026-10-25"><h3>P4预览截图（虚构演示数据）</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/p4-inbox-desktop.png" alt="P4 Inbox invitation desktop"><p class="caption">3001/P4桌面，2026-10-25；邀请仍未接受</p></div><div class="screenshot"><img src="screenshots/p4-inbox-mobile.png" alt="P4 Inbox invitation at390px"><p class="caption">3001/P4，390px，无横向溢出</p></div></div></div>
 
-<div class="card" data-updated="2026-10-24"><h3>预览与验收截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">现有P3预览桌面，2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">现有P3预览390px，2026-10-24</p></div></div></div>
+<div class="card" data-updated="2026-10-25"><h3>预览与验收截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">P5隔离生产测试库桌面，2026-10-25，虚构数据</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">P5隔离生产测试库390px，2026-10-25，虚构数据</p></div></div></div>
 <p class="muted">P4独立生产页面验收：<a href="../docs/evidence/p4-final-loadmore-recovered.png">Inbox分页恢复截图（虚构数据，2026-10-25）</a>；手机与四身份结果见P4_ACCEPTANCE。3000仍保留P3。</p>
 <!-- claude:design:screenshots:end -->
 
@@ -237,6 +240,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5接口与验证</h3><p><a href="../docs/P5_CONTRACT.md">冻结契约</a> · <a href="../docs/P5_REPORT.md">交付报告</a> · <a href="../docs/P5_TEST_REPORT.md">测试证据</a>。src/server/recommendations.ts负责专长/评分/动态候选；github.ts负责有界固定版本读取；ai-jobs.ts和ai-runner.ts负责持久任务。tests/e2e/mock-github.mjs和mock-openai.mjs提供隔离证据，scripts/product-simulation.ts仅用于明确模拟批次。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4独立预览3001</h3><p><a href="../docs/P4_PREVIEW.md">实际SHA/BuildID/PID/SQL保护与验收入口</a>：372646c、独立演示库、runner开启，真实OpenAI/gpt-6-luna已单次验证。p4-review现为活跃服务目录，不可重建或归档。</p></div>
 
 <div class="card" data-updated="2026-10-25"><h3>P4最终独立验收10/10</h3><p><a href="../docs/P4_ACCEPTANCE.md">372646c最终验收与限制</a> · <a href="../docs/P4_MANUAL_ACCEPTANCE.md">独立预览与用户手动剧本</a> · <a href="../docs/API_CONTRACT.md">已实现接口</a>。协调分支已集成，main和3000尚未切换。</p></div>
@@ -276,10 +280,12 @@
 <!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5增量存储</h3><p>users.expertise、ai_jobs、question_analyses与github_source_cache；旧项目/简介/人工标签及通知不删除。源hash去重、旧结果失效、重启恢复与有限重试；网络调用在事务外完成。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>数据库</h3><p>Project.reflection与原P1关系/问题/帖子/引荐及P2简介保留。P4增量新增inbox_items、inbox_preferences、invitation_dispatch_state；通知与业务同事务，持久唯一约束和共用行锁约束邀请。迁移重跑不重置旧历史；真实pg多连接未验证。</p></div>
 <!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5持续任务与隔离测试</h3><p><code>AI_ANALYSIS_RUNNER_ENABLED=1</code>显式启动持续Node任务循环，默认关闭；<code>GITHUB_API_BASE_URL</code>仅用于隔离GitHub mock，默认官方API。模型复用现有服务端配置；测试显式假key和本地base URL，不读取真实配置。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>环境变量（仅名称）</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>；P2服务端使用<code>OPENAI_API_KEY</code>、<code>OPENAI_PROJECT_INTRO_MODEL</code>和可选<code>OPENAI_BASE_URL</code>。P4的<code>INVITATION_RUNNER_ENABLED</code>显式启用持续Node检查，默认关闭，构建不派发。真实.env.local和.data不进Git；P4测试无需真实key。</p></div>
 <!-- claude:architecture:env:end -->
 
@@ -347,6 +353,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5实现与模拟适配</h3><p>新增固定五类Mentor专长/问题分类/前三候选，GitHub来源简介及只读限定标签，持久单任务循环与增量迁移。typecheck/build、后端26/26、生产浏览器24/24与模拟2/2通过；含仓库来源hash变化/旧页确认、失败后有限重试和详情标签即时刷新。验证不改变3000/3001、main或部署。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>完整版本获准合并</h3><p>用户确认P4全部通过，P2–P4已通过PR #3合入main（3bf29b3）；3000/3001、数据库和模型配置保留。详见docs/RELEASE_ACCEPTANCE.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4产品修订</h3><p>邀请收窄为Pick up the baton；旧help邀请隐藏、不可操作且不占接棒配额。删除通知对非删除者隐藏；原项目/讨论/AI记录保留。见docs/P4_PRODUCT_REVISION.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4真实AI启用</h3><p>用户填好本地key后仅重启3001，Node显式加载P4.env.local，真实gpt-6-luna一次生成200、1句/2标签，未发布草稿。8项目/讨论/公开卡片保持，同库备份完成，3000和main不变。</p></div>

@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { handle } from '../src/server/api';
 import { closeDatabase, database } from '../src/server/db';
+import { confirmedTopics } from './p5-helpers';
 import { startInvitationRunner, stopInvitationRunner } from '../src/server/invitation-runner';
 
 // Regressions for docs/P4_REVIEW.md R1 and R3 (P4 review of 7b8a629).
@@ -18,6 +19,7 @@ test('P4 R1: Unread lists only effectively unread items, filtered before the pag
  process.env.DATABASE_MODE = 'pglite'; process.env.PGLITE_DATA_DIR = await mkdtemp(path.join(tmpdir(), 'buckeye-baton-p4-r1-'));
  try {
   const db = await database();
+  await confirmedTopics(db, 'project-v2-paused', ['front-end']);
   const future = new Date(Date.now() + 5 * 864e5).toISOString(), past = new Date(Date.now() - 864e5).toISOString();
   const activity = (id: string, createdAt: string) => db.query(`INSERT INTO inbox_items (id,"recipientId",kind,"eventKey",event,"actorId","projectId","createdAt") VALUES ($1,'student-mia','activity',$2,'question_created','student-alex','project-signup',$3)`, [id, `question:r1-${id}`, createdAt]);
   const invite = (id: string, projectId: string, status: string, expiresAt: string, createdAt: string) => db.query(`INSERT INTO inbox_items (id,"recipientId",kind,"eventKey","projectId","invitationKind",status,"cycleKey","matchedTags",evidence,"expiresAt","createdAt") VALUES ($1,'student-mia','invitation',$2,$3,'pickup',$4,$3,'[]','[]',$5,$6)`, [id, `invite:pickup:r1-${id}`, projectId, status, expiresAt, createdAt]);

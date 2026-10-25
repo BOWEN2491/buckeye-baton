@@ -892,6 +892,8 @@ nav {
   }
   nav {
     flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 0;
     grid-column: 1/-1;
     grid-row: 2;
     gap: 6px;
@@ -1914,3 +1916,16 @@ nav {
 .interested-helpers .text-button {
   margin-top: 0;
 }
+/* P5: concise evidence and mentor suggestions stay readable at phone widths. */
+.mentor-recommendations { padding: 1rem 0; border-bottom: 1px solid var(--border, #dce2ec); }
+.mentor-recommendations .section-heading { align-items: flex-start; gap: .75rem; }
+.mentor-candidates { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: .75rem; margin: 1rem 0; }
+.mentor-candidate { min-width: 0; border: 1px solid #dce2ec; border-radius: 10px; padding: 1rem; background: #fff; overflow-wrap: anywhere; }
+.mentor-candidate.selected { border-color: #b91c37; box-shadow: inset 0 0 0 1px #b91c37; }
+.mentor-candidate h4 { margin: 0 0 .6rem; }
+.mentor-candidate .role-chip { margin-left: .4rem; }
+.mentor-candidate .button { width: 100%; white-space: normal; }
+.ai-sources { margin: .8rem 0; overflow-wrap: anywhere; }
+.ai-sources summary { cursor: pointer; font-weight: 600; }
+.ai-sources ul { padding-left: 1.3rem; }
+@media (max-width: 480px) { .mentor-recommendations .section-heading { flex-direction: column; } .intro-row { flex-wrap: wrap; } }

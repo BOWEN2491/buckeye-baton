@@ -2,6 +2,30 @@
 
 # Buckeye Baton — API contract
 
+## P5 current implementation — supersedes free-form P2 tags
+
+Frozen interfaces: [P5_CONTRACT.md](P5_CONTRACT.md), `src/shared/p5-types.ts`. P4 pickup-only and removed-post visibility rules remain in force; historical P2/P4 sections below describe earlier contracts.
+
+| Method / path | Who / input | Result |
+|---|---|---|
+| GET `/api/mentors/me/expertise` | Mentor self |200 `{expertise}` |
+| PATCH `/api/mentors/me/expertise` | Mentor self; strict `{expertise}` |200 saved profile; zero to five unique fixed domains |
+| GET `/api/project-questions/:id/recommendations` | Staff |200 status/error, all five independent scores, up to three candidates, asOf |
+| POST `/api/project-questions/:id/analysis/retry` | asker or Staff; `{}` |202 queued status; asker receives no scores/candidates |
+| GET `/api/projects/:id/introduction` | owner |200 editor with private version5 draft, current publication, status/error/sources |
+| POST `/api/projects/:id/introduction/generate` | owner; `{}` |202 enqueued editor; no network request inside the business transaction |
+| PATCH `/api/projects/:id/introduction` | owner; `{draftId,sourceHash,sentences}` |200 confirmed introduction; labels copied only from the identified server draft |
+
+- Expertise is exactly `front-end/back-end/algorithm/database/brainstorming`. Score range0–100 is relevance, never success probability. Candidate score is the maximum of the Mentor's selected domains; order is score descending, current Awaiting reply ascending, then Mentor ID. Zero-score/unset profiles are omitted, scores below40 are labeled Low relevance. Manual referral and reason remain mandatory; AI never assigns or replaces a referral.
+- New project and pickup writes require a normalized public `https://github.com/owner/repo` URL in `codeUrl`. Legacy project edits may omit it. Repository ownership is the demo user's assertion, not OAuth verification. Manual `tags/topics/technologies` inputs are rejected; existing stored tags remain private historical data.
+- Introduction labels use fixed Topics1–3 and Technologies0–6. Drafts include actual repo/commit/read time/file/truncation provenance. Only current owner-confirmed version5 labels are public; stale/legacy/unconfirmed labels project to `[]`, and authored summary stays the fallback. Source-read failures do not undo project creation.
+- GitHub reads metadata, default-branch commit, languages, README and at most two root manifests (`package.json`, `pom.xml`, `requirements.txt`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `build.gradle`, `Dockerfile`, first two found). Files are pinned to the commit, responses capped64KiB, file text12,000 code points and combined text30,000, timeout10s, cache5minutes. No traversal or execution. Mock/simulation provenance is explicitly labeled and is not live GitHub evidence.
+- Durable tasks use `pending/processing/ready/failed/stale`. Source changes coalesce/invalidate; stale model responses cannot overwrite current content. New Mentor requests and explicit follow-ups enqueue automatically; ordinary discussions/comments do not. `AI_ANALYSIS_RUNNER_ENABLED=1` starts a separate continuous-Node loop every5s; model timeout30s, transient retries30s then120s, at most two automatic retries. Invalid output/config requires manual retry.
+- Publication freshness also checks the last observed repository snapshot (commit and actual supplied material, excluding read time). Reading changed sources hides old labels and rejects old-tab confirmation; a same-content cache refresh does not invalidate it. GitHub is re-read during generation after cache expiry, not watched continuously. Retry delays begin when the failed request finishes, so a slow failed read does not make its retry immediately due.
+- Pickup matching now uses both projects' valid confirmed version5 Topics only, never legacy manual tags. Historical invitations remain stored; new help invitations stay retired.
+
+See [P5_TEST_REPORT.md](P5_TEST_REPORT.md) and [P5_REPORT.md](P5_REPORT.md) for verification and remaining limits.
+
 ## P4 endpoints — independently accepted locally10/10, product acceptance pending
 
 Rules: [P4_CONTRACT.md](P4_CONTRACT.md). Types `src/shared/p4-types.ts`. Server: `src/server/inbox.ts` (Activity, listing, read), `src/server/invitations.ts` (eligibility, matching, limits, dispatch, responses, helpers, status), `src/server/invitation-runner.ts` + `src/instrumentation.ts` (runner). Tables (additive): `inbox_items` (UNIQUE `("recipientId","eventKey")`, CHECKs, recipient/target indexes), `inbox_preferences`, `invitation_dispatch_state` (singleton row = lock + last completed/failed).

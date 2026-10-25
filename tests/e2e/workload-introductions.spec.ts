@@ -28,118 +28,70 @@ async function noOverflow(page: Page) {
 const unavailable = { status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'AI_UNAVAILABLE', message: 'AI introductions are unavailable right now. Your project content is unchanged.' } }) };
 const card = (page: Page, title: string) => page.locator('.project-card').filter({ has: page.getByRole('link', { name: title, exact: true }) });
 
-test('owner generates, edits and confirms a browse introduction that falls back when stale', async ({ page, context }) => {
+test('owner reviews GitHub-derived async introduction, immutable labels, conflicts and stale fallback', async ({ page }) => {
   test.setTimeout(180_000);
-  await mkdir(evidenceDir, { recursive: true });
-  const title = 'Club Check-in Prototype';
   const projectPath = '/projects/project-v2-finished';
-  const authored = 'Fictional demo: a completed keyboard-friendly event check-in prototype';
-  await page.goto('/');
-  await identity(page, 'student-alex');
-  await page.goto(projectPath);
+  const title = 'Club Check-in Prototype';
+  const asOwner = { headers: { 'x-demo-user-id': 'student-alex' } };
+  const getEditor = async () => (await (await page.request.get(`/api${projectPath}/introduction`, asOwner)).json()).data;
+  const ready = async () => { await expect.poll(async () => (await getEditor()).status, { timeout: 45000 }).toBe('ready'); return getEditor(); };
+  await page.request.patch(`/api${projectPath}`, { ...asOwner, data: { codeUrl: 'https://github.com/example/check-in' } });
+  await ready();
+  await page.goto('/'); await identity(page, 'student-alex'); await page.goto(projectPath);
   const panel = page.getByRole('region', { name: 'Browse introduction' });
-  await expect(panel.getByText('Browse cards currently show your own summary and tags.')).toBeVisible();
-
-  // Upstream failure: clear message, nothing changes.
-  await page.route('**/introduction/generate', route => route.fulfill(unavailable), { times: 1 });
-  await panel.getByRole('button', { name: 'Generate introduction', exact: true }).click();
-  await expect(panel.getByRole('alert').filter({ hasText: 'AI introductions are unavailable right now.' })).toBeVisible();
-  await expect(panel.getByText('Browse cards currently show your own summary and tags.')).toBeVisible();
-
-  // One click sends one request even if clicked again while generating.
-  const generateCalls: string[] = [];
-  page.on('request', r => { if (r.url().endsWith('/introduction/generate')) generateCalls.push(r.method()); });
-  const button = panel.getByRole('button', { name: 'Generate introduction', exact: true });
-  await button.click();
-  await expect(panel.getByRole('button', { name: 'Generating…', exact: true })).toBeDisabled();
-  await panel.getByRole('button', { name: 'Generating…', exact: true }).click({ force: true }).catch(() => {});
   await expect(panel.getByText('Draft · only you can see this')).toBeVisible();
-  expect(generateCalls).toEqual(['POST']);
-  await expect(panel.getByLabel('Sentence 1', { exact: true })).toHaveValue(`${title} is a fictional student project shared on Buckeye Baton.`);
-
-  // The draft is not public.
-  await page.goto('/');
-  await expect(card(page, title)).toContainText(authored);
-  await expect(card(page, title).getByText('AI-assisted · owner-reviewed')).toHaveCount(0);
-
-  // Edit with visible validation, then confirm.
-  await page.goto(projectPath);
-  await panel.getByLabel('Sentence 2', { exact: true }).fill('Two sentences here. This breaks the rule.');
-  await expect(panel.getByRole('alert').filter({ hasText: 'Write exactly one sentence per line' })).toBeVisible();
-  const patches: string[] = [];
-  page.on('request', r => { if (r.url().endsWith('/introduction') && r.method() === 'PATCH') patches.push(r.url()); });
-  await panel.getByRole('button', { name: 'Confirm for browsing', exact: true }).click();
-  expect(patches).toHaveLength(0);
-  await panel.getByRole('button', { name: 'Remove sentence 2' }).click();
-  await panel.getByLabel('Sentence 1', { exact: true }).fill('A keyboard-friendly check-in prototype for student club events.');
-  await panel.getByLabel(/^Tags/).fill('Accessibility, events, events');
-  await panel.getByRole('button', { name: 'Confirm for browsing', exact: true }).click();
-  await expect(panel.getByText('Confirmed. Browse cards now show this introduction.')).toBeVisible();
-  await expect(panel.locator('.intro-published')).toContainText('A keyboard-friendly check-in prototype for student club events.');
-  await page.screenshot({ path: path.join(evidenceDir, 'introduction-editor-desktop.png'), fullPage: true });
-
-  // Mia browses: confirmed card, persisted after reload; original detail unchanged and no editor.
-  await identity(page, 'student-mia');
-  await page.reload();
-  const confirmed = card(page, title);
-  await expect(confirmed).toContainText('A keyboard-friendly check-in prototype for student club events.');
-  await expect(confirmed.getByText('AI-assisted · owner-reviewed')).toBeVisible();
-  await expect(confirmed.locator('.tags > span')).toHaveText(['accessibility', 'events']);
-  await page.screenshot({ path: path.join(evidenceDir, 'browse-card-confirmed-desktop.png') });
-  await page.goto(projectPath);
-  await expect(page.getByText(authored)).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Browse introduction' })).toHaveCount(0);
-  const publicList = await (await page.request.get('/api/projects')).json();
-  expect(JSON.stringify(publicList)).not.toContain('Draft');
-  expect(JSON.stringify(publicList)).not.toContain('e2e-mock-model');
-
-  // A second tab replaces the draft; the old tab's confirmation conflicts without overwriting.
-  await identity(page, 'student-alex');
-  await page.goto(projectPath);
+  await expect(panel.getByText('Browse cards show your original summary. Topics pending review.')).toBeVisible();
+  await expect(panel.getByLabel('Generated labels')).toContainText('front-end');
+  await expect(panel.locator('input').filter({ has: page.getByLabel(/^Tags/) })).toHaveCount(0);
+  await panel.getByText('Sources · mock evidence', { exact: true }).click();
+  await expect(panel.getByText('Mock evidence — this is not a live GitHub analysis.')).toBeVisible();
+  await expect(panel.getByText('README.md', { exact: true })).toBeVisible();
+  // Failure to enqueue preserves the private draft and authored project.
+  await page.route('**/introduction/generate', route => route.fulfill(unavailable), { times: 1 });
   await panel.getByRole('button', { name: 'Generate new draft', exact: true }).click();
-  await expect(panel.getByText('Draft ready.')).toBeVisible();
-  const other = await context.newPage();
-  await other.goto(projectPath);
-  await other.getByRole('region', { name: 'Browse introduction' }).getByRole('button', { name: 'Generate new draft', exact: true }).click();
-  await expect(other.getByText('Draft ready.')).toBeVisible();
-  await other.close();
+  await expect(panel.getByRole('alert')).toContainText('AI introductions are unavailable');
+  await panel.getByRole('button', { name: 'Generate new draft', exact: true }).click();
+  await expect(panel.getByRole('button', { name: 'Analysis in progress…', exact: true })).toBeDisabled();
+  const generated = await ready(); await page.reload();
+  await expect(panel.getByLabel('Sentence 1', { exact: true })).toHaveValue(`${title} is a fictional student project shared on Buckeye Baton.`);
+  await panel.getByLabel('Sentence 2', { exact: true }).fill('Two sentences here. This breaks the rule.');
+  await expect(panel.getByRole('alert')).toContainText('Write exactly one sentence per line');
+  await panel.getByRole('button', { name: 'Remove sentence 2' }).click();
+  await panel.getByLabel('Sentence 1', { exact: true }).fill('An owner-reviewed fictional accessible check-in prototype.');
+  await panel.getByRole('button', { name: 'Confirm for browsing', exact: true }).click();
+  await expect(panel.getByText(/^Confirmed\. Browse cards/)).toBeVisible();
+  // Confirmation refreshes the parent detail immediately, without a navigation/reload.
+  await expect(page.locator('.project-detail > .field-help').filter({ hasText: 'Topics pending review' })).toHaveCount(0);
+  await expect(page.locator('.project-detail > .tags')).toContainText('front-end');
+  await expect(page.locator('.project-detail > .ai-sources')).toBeVisible();
+  await identity(page, 'student-mia');
+  await expect(card(page, title)).toContainText('An owner-reviewed fictional accessible check-in prototype.');
+  await expect(card(page, title).getByText('AI-assisted · owner-reviewed')).toBeVisible();
+  await expect(card(page, title).locator('.tags').first()).toContainText('front-end');
+  await page.goto(projectPath); await expect(page.getByRole('region', { name: 'Browse introduction' })).toHaveCount(0);
+  // Replacing a draft in a different client must make this tab conflict without publishing old edits.
+  await identity(page, 'student-alex'); await page.goto(projectPath);
+  await expect(panel.getByLabel('Sentence 1', { exact: true })).toHaveValue(`${title} is a fictional student project shared on Buckeye Baton.`);
+  await page.request.post(`/api${projectPath}/introduction/generate`, { ...asOwner, data: {} });
+  const replacement = await ready(); expect(replacement.draft.id).not.toBe(generated.draft.id);
   await panel.getByLabel('Sentence 1', { exact: true }).fill('Old tab edit that must not be published.');
   await panel.getByRole('button', { name: 'Confirm for browsing', exact: true }).click();
-  await expect(panel.getByRole('alert').filter({ hasText: 'A newer draft replaced this one' })).toBeVisible();
+  await expect(panel.getByRole('alert')).toContainText('A newer draft replaced');
   await expect(panel.getByLabel('Sentence 1', { exact: true })).toHaveValue('Old tab edit that must not be published.');
-  await expect(panel.locator('.intro-published')).toContainText('A keyboard-friendly check-in prototype for student club events.');
-  await panel.getByRole('button', { name: 'Load the newer draft', exact: true }).click();
+  await panel.getByRole('button', { name: 'Load the newer draft' }).click();
   await expect(panel.getByLabel('Sentence 1', { exact: true })).toHaveValue(`${title} is a fictional student project shared on Buckeye Baton.`);
-
-  // Editing the project makes the confirmed introduction stale; browsing falls back to authored content.
   await page.getByRole('button', { name: 'Edit project', exact: true }).click();
-  await expect(page.getByRole('region', { name: 'Browse introduction' })).toHaveCount(0);
   await page.getByLabel('What did you set out to do?').fill('Fictional demo: an updated keyboard-friendly check-in prototype.');
   await page.getByRole('button', { name: 'Save changes', exact: true }).click();
-  await expect(panel.getByText('Your project changed after this introduction was confirmed.')).toBeVisible();
-  await expect(panel.getByText('Your project changed after this draft was generated.')).toBeVisible();
-  await expect(panel.getByRole('button', { name: 'Confirm for browsing', exact: true })).toBeDisabled();
-  await page.goto('/');
-  await expect(card(page, title)).toContainText('Fictional demo: an updated keyboard-friendly check-in prototype.');
+  await page.goto('/'); await expect(card(page, title)).toContainText('Fictional demo: an updated keyboard-friendly check-in prototype.');
   await expect(card(page, title).getByText('AI-assisted · owner-reviewed')).toHaveCount(0);
-
-  // Regenerate and confirm again.
-  await page.goto(projectPath);
-  await panel.getByRole('button', { name: 'Generate new draft', exact: true }).click();
-  await expect(panel.getByText('Draft ready.')).toBeVisible();
+  await expect(card(page, title)).toContainText('Topics pending review');
+  await ready(); await page.goto(projectPath);
   await panel.getByRole('button', { name: 'Confirm for browsing', exact: true }).click();
-  await expect(panel.getByText('Confirmed. Browse cards now show this introduction.')).toBeVisible();
-  await page.goto('/');
-  await expect(card(page, title).getByText('AI-assisted · owner-reviewed')).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await noOverflow(page);
-  await page.screenshot({ path: path.join(evidenceDir, 'browse-mobile.png'), fullPage: true });
-  await page.goto(projectPath);
-  await expect(panel.locator('.intro-published')).toBeVisible();
-  await noOverflow(page);
-  await page.screenshot({ path: path.join(evidenceDir, 'introduction-editor-mobile.png'), fullPage: true });
+  await expect(panel.getByText(/^Confirmed\. Browse cards/)).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 }); await noOverflow(page);
+  await mkdir(evidenceDir, { recursive: true }); await page.screenshot({ path: path.join(evidenceDir, 'p5-introduction-mobile.png'), fullPage: true });
 });
-
 test('Staff see Mentor Awaiting reply counts move with referrals, replies and follow-ups', async ({ page }) => {
   test.setTimeout(180_000);
   await mkdir(evidenceDir, { recursive: true });

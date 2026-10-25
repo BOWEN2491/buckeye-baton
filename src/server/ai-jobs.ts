@@ -1,0 +1,43 @@
+import { randomUUID } from 'node:crypto';
+import { z } from 'zod';
+import { database, type Sql } from './db';
+import { rows, one, ApiFailure } from './http';
+import { sourceHash, projectSource, questionSource, hashSource } from './recommendations';
+import { readGitHubSources, repositoryHash, currentRepositoryHash } from './github';
+import { structuredGeneration } from './ai';
+import { topicContentSchema } from '../shared/p5-validation';
+import { EXPERTISE, TECHNOLOGIES, expertiseScoresSchema } from '../shared/p5-types';
+export interface AIStorage extends Sql {transaction<T>(fn:(sql:Sql)=>Promise<T>):Promise<T>}
+export async function enqueue(sql:Sql,kind:'project'|'question',id:string,hash:string,force=false){
+ await sql.query('UPDATE ai_jobs SET status=\'stale\',"updatedAt"=clock_timestamp() WHERE kind=$1 AND "targetId"=$2 AND "sourceHash"<>$3 AND status<>\'stale\'',[kind,id,hash]);
+ await sql.query(`INSERT INTO ai_jobs(id,kind,"targetId","sourceHash",status) VALUES($1,$2,$3,$4,'pending') ON CONFLICT(kind,"targetId","sourceHash") DO UPDATE SET status=CASE WHEN ai_jobs.status='stale' OR ($5 AND ai_jobs.status NOT IN ('pending','processing')) THEN 'pending' ELSE ai_jobs.status END, attempts=CASE WHEN $5 THEN 0 ELSE ai_jobs.attempts END,error=CASE WHEN $5 THEN NULL ELSE ai_jobs.error END,"availableAt"=CASE WHEN $5 THEN clock_timestamp() ELSE ai_jobs."availableAt" END,"updatedAt"=clock_timestamp()`,[randomUUID(),kind,id,hash,force]);
+}
+export async function enqueueProject(sql:Sql,id:string,force=false){const p=await one(sql,'projects',id);if(p.codeUrl)await enqueue(sql,'project',id,sourceHash(p),force);for(const q of await rows(sql,'SELECT id FROM project_questions WHERE "projectId"=$1 AND "wantsMentor"',[id]))await enqueueQuestion(sql,q.id);}
+export async function enqueueQuestion(sql:Sql,id:string,force=false){const input=await questionSource(sql,id);if(input.question.wantsMentor)await enqueue(sql,'question',id,hashSource(input),force);}
+export async function recoverAIJobs(sql:Sql){await sql.query('UPDATE ai_jobs SET status=\'pending\',"availableAt"=clock_timestamp(),"startedAt"=NULL,"updatedAt"=clock_timestamp() WHERE status=\'processing\'');}
+const domain={type:'object',properties:{score:{type:'number',minimum:0,maximum:100},reason:{type:'string'}},required:['score','reason'],additionalProperties:false};
+const scoresSchema={type:'object',properties:Object.fromEntries(EXPERTISE.map(e=>[e,domain])),required:[...EXPERTISE],additionalProperties:false};
+const projectSchema={type:'object',properties:{sentences:{type:'array',items:{type:'string'},minItems:1,maxItems:3},topics:{type:'array',items:{type:'string',enum:[...EXPERTISE]},minItems:1,maxItems:3},technologies:{type:'array',items:{type:'string',enum:[...TECHNOLOGIES]},maxItems:6}},required:['sentences','topics','technologies'],additionalProperties:false};
+// Technology labels require a literal technology/language/manifest cue in supplied source material.
+const cues:Record<string,string[]>={javascript:['javascript','package.json'],typescript:['typescript','typescript'],cpp:['c++','cpp'],csharp:['c#','csharp'],nextjs:['next.js','"next"'],nodejs:['node.js','nodejs','package.json'],'spring-boot':['spring-boot'],postgresql:['postgresql','postgres'],aws:['aws','amazon web services']};
+export function validateTechnologyEvidence(labels:string[],snapshot:unknown){const text=JSON.stringify(snapshot).toLowerCase();return labels.every(label=>(cues[label]??[label]).some(c=>new RegExp(`(^|[^a-z0-9])${c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}([^a-z0-9]|$)`,'i').test(text)));}
+let running=false;
+let jobClock:(()=>Date)|null=null;
+export function setAIJobClock(clock:(()=>Date)|null){jobClock=clock;}
+const failureNow=()=>jobClock?.()??new Date();
+export async function runAnalysisStep(db?:AIStorage,asOf=new Date()){
+ if(running)return {processed:false};running=true;
+ try{const storage=db??await database();const token=new Date().toISOString();const job=await storage.transaction(async sql=>{const row=(await rows(sql,'SELECT * FROM ai_jobs WHERE status=\'pending\' AND "availableAt"<=$1 ORDER BY "createdAt",id LIMIT 1 FOR UPDATE SKIP LOCKED',[asOf]))[0];if(!row)return null;await sql.query('UPDATE ai_jobs SET status=\'processing\',"startedAt"=$2,"updatedAt"=clock_timestamp() WHERE id=$1',[row.id,token]);return row;});if(!job)return{processed:false};
+  try{let hash:string;let draft:Record<string,unknown>|null=null;let scores:unknown=null;let model:string;
+   if(job.kind==='project'){const project=await one(storage,'projects',job.targetId);hash=sourceHash(project);if(hash!==job.sourceHash)throw new ApiFailure(409,'SOURCE_STALE','Source changed.');const snapshot=await readGitHubSources(storage,project.codeUrl);const repoHash=repositoryHash(snapshot);const result=await structuredGeneration('project_topics',projectSchema,'Write 1 to 3 plain English sentences summarizing the saved project and its status, not invented outcomes. Choose 1 to 3 Topics and 0 to 6 Technologies only from the schema enums. Technologies require explicit evidence in repository languages, README or manifests. Omit technologies without evidence.',{...projectSource(project),repository:snapshot});const content=topicContentSchema.safeParse(result.output);if(!content.success||!validateTechnologyEvidence(content.success?content.data.technologies:[],snapshot))throw new ApiFailure(502,'AI_INVALID_OUTPUT','AI returned invalid labels or unsupported technology evidence.');model=result.model;draft={...content.data,tags:[...content.data.topics,...content.data.technologies],version:5,id:randomUUID(),sourceHash:hash,generatedAt:new Date().toISOString(),sources:snapshot.sources,repositoryHash:repoHash,model};
+   }else{const input=await questionSource(storage,job.targetId);hash=hashSource(input);if(hash!==job.sourceHash)throw new ApiFailure(409,'SOURCE_STALE','Source changed.');const result=await structuredGeneration('question_expertise',scoresSchema,'Classify this specific request for help. Score all five domains independently from 0 to 100 for relevance, not probability of success, and give a short grounded reason for each domain. Include the current explicit follow-ups and their preceding mentor reply.',input);const checked=expertiseScoresSchema.safeParse(result.output);if(!checked.success)throw new ApiFailure(502,'AI_INVALID_OUTPUT','AI returned invalid expertise scores.');scores=checked.data;model=result.model;}
+   await storage.transaction(async sql=>{const current=(await rows(sql,'SELECT * FROM ai_jobs WHERE id=$1 FOR UPDATE',[job.id]))[0];if(current?.status!=='processing'||new Date(current.startedAt).toISOString()!==token)return;const latest=job.kind==='project'?sourceHash(await one(sql,'projects',job.targetId)):hashSource(await questionSource(sql,job.targetId));if(latest!==hash){await sql.query('UPDATE ai_jobs SET status=\'stale\',"updatedAt"=clock_timestamp() WHERE id=$1',[job.id]);return;}
+    if(draft && await currentRepositoryHash(sql,(draft.sources as {repoUrl:string}).repoUrl,true)!==draft.repositoryHash){await sql.query('UPDATE ai_jobs SET status=\'stale\',"updatedAt"=clock_timestamp() WHERE id=$1',[job.id]);return;}
+    if(draft)await sql.query('INSERT INTO project_introductions("projectId",draft) VALUES($1,$2) ON CONFLICT("projectId") DO UPDATE SET draft=EXCLUDED.draft,"updatedAt"=clock_timestamp()',[job.targetId,JSON.stringify(draft)]);
+    else await sql.query('INSERT INTO question_analyses("questionId","sourceHash",scores,model) VALUES($1,$2,$3,$4) ON CONFLICT("questionId") DO UPDATE SET "sourceHash"=EXCLUDED."sourceHash",scores=EXCLUDED.scores,model=EXCLUDED.model,"updatedAt"=clock_timestamp()',[job.targetId,hash,JSON.stringify(scores),model]);
+    await sql.query('UPDATE ai_jobs SET status=\'ready\',error=NULL,"updatedAt"=clock_timestamp() WHERE id=$1',[job.id]);
+   });return{processed:true,id:job.id};
+  }catch(error){const failure=error instanceof ApiFailure?error:new ApiFailure(500,'AI_JOB_FAILED','Analysis could not be completed. Retry later.');const transient=['AI_NETWORK_ERROR','AI_TIMEOUT','AI_RATE_LIMITED','AI_UPSTREAM_FAILURE','GITHUB_UNAVAILABLE','GITHUB_RATE_LIMITED'].includes(failure.code);const retry=transient&&job.attempts<2;const status=failure.code==='SOURCE_STALE'?'stale':retry?'pending':'failed';await storage.query('UPDATE ai_jobs SET status=$2,attempts=attempts+1,error=$3,"availableAt"=$4,"updatedAt"=clock_timestamp() WHERE id=$1 AND status=\'processing\' AND "startedAt"=$5',[job.id,status,JSON.stringify({code:failure.code,message:failure.message}),new Date(failureNow().getTime()+(job.attempts===0?30000:120000)),token]);return{processed:true,id:job.id,status};}
+ }finally{running=false;}
+}
+export const runAIJob=runAnalysisStep;

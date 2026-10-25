@@ -43,7 +43,7 @@ test('the production runner sent invitations before any page was opened and keep
   const pickup = mia.find((i: any) => i.invitationKind === 'pickup' && i.projectId === 'p3-old-paused');
   expect(pickup).toBeTruthy();
   expect(pickup.status).toBe('pending');
-  expect(pickup.reason).toContain('You shared a finished project about maps');
+  expect(pickup.reason).toContain('You shared a finished project about front-end');
   expect(pickup.evidence.map((e: any) => e.projectId)).toEqual(['p4-mia-finished']);
   const sarah = (await inboxApi(request, 'mentor-sarah', '?filter=invitations')).items;
   expect(sarah).toEqual([]);
@@ -175,7 +175,7 @@ test('invitations: accept is only intent, only pickup invitations, manual Staff 
   await page.goto('/inbox');
   await page.getByRole('button', { name: 'Invitations', exact: true }).click();
   const pickup = page.getByRole('listitem', { name: 'A paused project could use your experience' }).filter({ hasText: 'Study Room Finder Pilot' });
-  await expect(pickup).toContainText('You shared a finished project about maps');
+  await expect(pickup).toContainText('You shared a finished project about front-end');
   await expect(pickup.getByText('Invitation', { exact: true })).toBeVisible();
   await expect(pickup.getByRole('link', { name: 'Campus Map Kiosk' })).toBeVisible();
   await page.screenshot({ path: path.join(evidenceDir, 'inbox-invitation-desktop.png'), fullPage: true });

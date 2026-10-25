@@ -24,7 +24,7 @@ test('pickups create linked Ongoing projects idempotently without changing the s
   assert.deepEqual(Object.keys(detail.data).sort(), ['lessons', 'project', 'source', 'successors']);
   assert.equal(detail.data.source, null); assert.deepEqual(detail.data.successors, []);
   const before = detail.data.project;
-  const input = { requestId: randomUUID(), pickupType: 'continue', title: '  Notification pilot  ', goal: 'Deliver one consent-aware reminder for a single event.' };
+  const input = { requestId: randomUUID(), pickupType: 'continue', title: '  Notification pilot  ', goal: 'Deliver one consent-aware reminder for a single event.', codeUrl: 'https://github.com/example/notification-pilot' };
   assert.equal((await request('pickups', 'project-v2-paused', 'POST', undefined, input)).status, 401);
   assert.equal((await request('pickups', 'project-v2-paused', 'POST', 'mentor-sarah', input)).status, 403);
   assert.equal((await request('pickups', 'project-v2-paused', 'POST', 'staff-kevin', input)).status, 403);
@@ -39,7 +39,7 @@ test('pickups create linked Ongoing projects idempotently without changing the s
   const p = created.data.project;
   assert.equal(p.ownerId, 'student-mia'); assert.equal(p.status, 'ongoing'); assert.equal(p.title, 'Notification pilot');
   assert.equal(p.summary, input.goal); assert.equal(p.courseOrClub, before.courseOrClub); assert.deepEqual(p.tags, before.tags);
-  assert.equal(p.codeUrl, null); assert.equal(p.demoUrl, null);
+  assert.equal(p.codeUrl, input.codeUrl); assert.equal(p.demoUrl, null);
   assert.deepEqual(p.reflection, { progress: '', outcomes: [], problems: [], nextTeam: '', whyPaused: '', ifAgain: [], reusable: [] });
   assert.equal(created.data.source.project.id, 'project-v2-paused'); assert.equal(created.data.source.owner.id, 'student-alex');
   assert.equal(created.data.source.pickupType, 'continue'); assert.equal(created.data.source.goal, input.goal);
@@ -57,7 +57,7 @@ test('pickups create linked Ongoing projects idempotently without changing the s
   assert.equal(alexOwn.status, 201); assert.equal(alexOwn.data.project.ownerId, 'student-alex');
 
   // Concurrent duplicates create one project.
-  const concurrentInput = { requestId: randomUUID(), pickupType: 'improve', title: 'Check-in improvements', goal: 'Improve focus styles.' };
+  const concurrentInput = { requestId: randomUUID(), pickupType: 'improve', title: 'Check-in improvements', goal: 'Improve focus styles.', codeUrl: 'https://github.com/example/check-in' };
   const concurrent = await Promise.all([1, 2, 3].map(() => request('pickups', 'project-v2-finished', 'POST', 'student-mia', concurrentInput)));
   assert.deepEqual(concurrent.map(r => r.status).sort(), [200, 200, 201]);
   assert.equal(new Set(concurrent.map(r => r.data.project.id)).size, 1);

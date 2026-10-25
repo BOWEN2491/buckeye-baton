@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { use, useRef, useState, type FormEvent } from "react";
 import type { PickupType, RelayProjectDetail } from "@/shared/relay-types";
 import { pickupTypes } from "@/shared/relay-types";
+import { githubUrlSchema } from "@/shared/p5-validation";
 import { api, errorText, readable, useResource } from "@/lib/client";
 import { useIdentity } from "@/components/app-shell";
 import { Feedback, Loading, PageHeading, Status } from "@/components/ui";
@@ -16,6 +17,7 @@ export default function PickUpPage({ params }: { params: Promise<{ id: string }>
   const { data, error, loading } = useResource<RelayProjectDetail>(`/projects/${id}`);
   const [pickupType, setPickupType] = useState<PickupType | "">("");
   const [title, setTitle] = useState("");
+  const [codeUrl, setCodeUrl] = useState("");
   const [goal, setGoal] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [failure, setFailure] = useState("");
@@ -35,7 +37,7 @@ export default function PickUpPage({ params }: { params: Promise<{ id: string }>
         : "";
 
   function cancel() {
-    if ((pickupType || title || goal) && !window.confirm("Discard what you entered?")) return;
+    if ((pickupType || title || goal || codeUrl) && !window.confirm("Discard what you entered?")) return;
     router.push(back);
   }
   async function submit(e: FormEvent) {
@@ -45,6 +47,7 @@ export default function PickUpPage({ params }: { params: Promise<{ id: string }>
     if (!pickupType) next.pickupType = "Choose how you’re picking it up.";
     if (!title.trim()) next.title = "Enter a project name.";
     if (!goal.trim()) next.goal = "Describe your team’s goal.";
+    if (!githubUrlSchema.safeParse(codeUrl).success) next.codeUrl = "Enter your own public GitHub repository URL (https://github.com/owner/repo).";
     setErrors(next);
     setFailure("");
     if (Object.keys(next).length) {
@@ -59,6 +62,7 @@ export default function PickUpPage({ params }: { params: Promise<{ id: string }>
         pickupType,
         title,
         goal,
+        codeUrl: codeUrl.trim(),
       });
       try {
         sessionStorage.setItem(flashKey, `Project created. You picked up ${source.title} (${readable(pickupType)}).`);
@@ -145,6 +149,11 @@ export default function PickUpPage({ params }: { params: Promise<{ id: string }>
                 Be specific: what will exist or be answered when you’re done? It also starts your project summary, which you can edit later.
               </span>
               {errors.goal && <span className="field-error">{errors.goal}</span>}
+            </label>
+            <label>GitHub repository
+              <input id="pickup-codeUrl" aria-label="GitHub repository" type="url" required value={codeUrl} readOnly={busy} aria-invalid={!!errors.codeUrl} onChange={(e) => setCodeUrl(e.target.value)} placeholder="https://github.com/owner/repo" />
+              <span className="field-help">Use your team’s own public repository, rather than the source project’s repository.</span>
+              {errors.codeUrl && <span className="field-error">{errors.codeUrl}</span>}
             </label>
             <p className="pickup-note">
               Your project will link back to {source.title}, and {source.title} will list your project under “Picked up by”. Its content and owner stay the same.
