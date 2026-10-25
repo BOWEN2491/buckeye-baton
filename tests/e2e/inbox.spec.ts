@@ -328,3 +328,62 @@ test('R2 Refresh: Mark as read removes the message from Unread and the count mat
   await expect(page.getByText(`${before - 1} unread ·`)).toBeVisible();
   await expect(page.getByRole('listitem', { name: label! }).filter({ hasText: context })).toHaveCount(0);
 });
+
+// R2-follow-up (docs/P4_RECHECK.md): a focus/interval refresh while Load more is in flight must release
+// its busy state; the stale page must not overwrite the refreshed list or cursor.
+for (const outcome of ['succeeds', 'fails'] as const)
+  test(`R2 follow-up: a refresh during Load more frees the button when the old request ${outcome}, then loads every item once`, async ({ page }) => {
+    test.setTimeout(150_000);
+    for (let i = 0; i < 25; i++) await miaAsks(page, `Race filler ${outcome} ${Date.now()} #${i}`);
+    const total = await alexTotal(page);
+    expect(total).toBeGreaterThan(20);
+    await page.goto('/');
+    await identity(page, 'student-alex');
+    await page.goto('/inbox');
+    await expect(page.locator('.inbox-item')).toHaveCount(20);
+    let release!: () => void;
+    const gate = new Promise<void>(resolve => { release = resolve; });
+    await page.route(/\/api\/inbox\?.*cursor=/, async route => {
+      await gate;
+      if (outcome === 'fails') await route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Inbox unavailable."}}' });
+      else await route.continue();
+    }, { times: 1 });
+    const delayed = page.waitForResponse(r => /\/api\/inbox\?.*cursor=/.test(r.url()));
+    await page.getByRole('button', { name: 'Load more', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Loading…', exact: true })).toBeDisabled();
+    // Window regains focus → automatic refresh of the loaded window completes first.
+    const refreshed = page.waitForResponse(r => /\/api\/inbox\?filter=all&limit=20$/.test(r.url()));
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await refreshed;
+    release();
+    await (await delayed).finished();
+    await expect(page.getByRole('button', { name: 'Loading…', exact: true })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Load more', exact: true })).toBeEnabled();
+    await expect(page.locator('.inbox-item')).toHaveCount(20);
+    await expect(page.getByRole('alert').filter({ hasText: /Couldn|unavailable/i })).toHaveCount(0); // a superseded request's failure is not shown as current
+    await loadAll(page);
+    await expect(page.locator('.inbox-item')).toHaveCount(total);
+    const keys = await page.locator('.inbox-item').evaluateAll(els => els.map(e => `${e.getAttribute('aria-label')}|${e.querySelector('h3 + p')?.textContent}|${e.querySelector('.metadata')?.textContent}`));
+    expect(new Set(keys).size).toBe(total);
+  });
+
+test('R2 follow-up: a Load more response that arrives after switching filters is discarded', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+  await identity(page, 'student-alex');
+  await page.goto('/inbox');
+  await expect(page.locator('.inbox-item')).toHaveCount(20);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route(/\/api\/inbox\?filter=all.*cursor=/, async route => { await gate; await route.continue(); }, { times: 1 });
+  const delayed = page.waitForResponse(r => /\/api\/inbox\?filter=all.*cursor=/.test(r.url()));
+  await page.getByRole('button', { name: 'Load more', exact: true }).click();
+  await page.getByRole('button', { name: 'Invitations', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Invitations', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  release();
+  await (await delayed).finished();
+  const invitations = (await inboxApi(page.request, 'student-alex', '?filter=invitations&limit=50')).items.length;
+  await expect(page.locator('.inbox-item.unread, .inbox-item').filter({ has: page.getByText('Activity', { exact: true }) })).toHaveCount(0);
+  await expect(page.locator('.inbox-item')).toHaveCount(Math.min(invitations, 20));
+  await expect(page.getByRole('button', { name: 'Loading…', exact: true })).toHaveCount(0);
+});

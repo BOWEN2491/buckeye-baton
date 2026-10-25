@@ -197,6 +197,9 @@ export default function InboxPageView() {
   const path = (limit: number, c?: string | null) => `/inbox?filter=${filter}&limit=${limit}${c ? `&cursor=${encodeURIComponent(c)}` : ""}`;
   // How many messages are on screen; Refresh re-reads that whole window, not just the first page.
   const loaded = useRef(0);
+  // Load more has its own request id, separate from the list generation, so a stale page never
+  // overwrites the list or cursor and never clears a newer request's busy state.
+  const moreRequest = useRef(0);
   useEffect(() => {
     loaded.current = items.length;
   }, [items]);
@@ -207,6 +210,9 @@ export default function InboxPageView() {
   // older filter/identity/refresh are discarded by the generation check.
   const loadWindow = useCallback(async (mode: "reset" | "refresh") => {
     const current = ++generation.current;
+    // A refresh supersedes any Load more in flight: its result will be discarded, so release its busy state now.
+    moreRequest.current++;
+    setMore({ loading: false, error: "" });
     setState((s) => ({ ...s, loading: true }));
     const target = mode === "reset" ? 20 : Math.max(20, loaded.current);
     try {
@@ -243,16 +249,21 @@ export default function InboxPageView() {
   async function loadMore() {
     if (!cursor || more.loading) return;
     const current = generation.current;
+    const request = ++moreRequest.current;
     setMore({ loading: true, error: "" });
+    let error = "";
     try {
       const page = await api<InboxPage>(path(20, cursor), userId);
-      if (current !== generation.current) return;
-      setItems((old) => [...old, ...page.items.filter((i) => !old.some((o) => o.id === i.id))]);
-      setCursor(page.nextCursor);
-      setUnread(page.unreadCount);
-      setMore({ loading: false, error: "" });
+      if (current === generation.current && request === moreRequest.current) {
+        setItems((old) => [...old, ...page.items.filter((i) => !old.some((o) => o.id === i.id))]);
+        setCursor(page.nextCursor);
+        setUnread(page.unreadCount);
+      }
     } catch (err) {
-      if (current === generation.current) setMore({ loading: false, error: errorText(err) });
+      error = errorText(err);
+    } finally {
+      // Only the current request releases busy; a superseded one was already released by the refresh.
+      if (request === moreRequest.current) setMore({ loading: false, error: current === generation.current ? error : "" });
     }
   }
   const replace = (next: InboxItem) => setItems((old) => old.map((i) => (i.id === next.id ? next : i)));
