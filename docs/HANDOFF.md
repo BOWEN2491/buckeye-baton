@@ -1,5 +1,7 @@
 # Buckeye Baton — 当前交接
 
+**最新P4：候选7b8a629独立验收7/10，需要返修。** 先读[P4_REVIEW.md](P4_REVIEW.md)的R1–R3；worker继续原实现分支并在最终SHA重跑。应用未集成、用户P4产品验收未开始、3000仍P3。下段0/10是任务准备时历史。
+
 2026-10-24。**P3产品验收通过，启动P4单Agent。** 当前入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)、[P4_CONTRACT.md](P4_CONTRACT.md)、[P4_START_PROMPT.md](P4_START_PROMPT.md)。P4应用尚未实施，独立0/10；任务书不是完成证据。
 
 ## 仓库与分支

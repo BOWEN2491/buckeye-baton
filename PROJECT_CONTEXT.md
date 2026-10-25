@@ -4,7 +4,9 @@
 
 ## 当前结论与执行入口
 
-**P3 用户产品验收通过，开始 P4 单 Agent 实施准备。** 本轮只交付任务书/契约/启动提示词；P4 应用尚未实现，总控独立验收 **0/10**。用户通过最终 Detail UI 后授权启动 P4，未授权合并 main。
+**最新：P4候选7b8a629已独立审查，7/10（70%），需R1–R3返修。** 见docs/P4_REVIEW.md和docs/evidence/P4_*PROBES.json。typecheck/build、backend17/17、e2e17/17独立通过，但补充探针确认Unread失效邀请、刷新分页/旧预览及runner初始化失败恢复有缺陷。未集成P4应用，3000保留P3，不合main。Worker继续原codex/p4-implementation返修，正常一次READY；以下任务准备记录为起始状态，不再表示尚无实现交付。
+
+**P3用户产品验收通过，P4由单Agent交付后返修。** P4初始基线1c3ed64，候选7b8a629；总控仅提交审查文档，尚不集成应用或替换预览，未授权合并main。
 
 - P4 基线：最新 origin/codex/p4-integration，含接受的应用38e4901及此前文档c1441fd；worker从它建立codex/p4-implementation，不能从旧main开发。
 - 任务书 docs/P4_AGENT_TASK.md；冻结契约 docs/P4_CONTRACT.md；启动提示词 docs/P4_START_PROMPT.md；总控进度 docs/EXECUTION_ROADMAP.md。
@@ -21,7 +23,7 @@ Honda HackOHI/O 2026 项目。面向OSU学生的项目交接、经验传承和�
 
 P3最新规则详见docs/P3_PRODUCT_REVISION.md；它覆盖旧P3_CONTRACT里的期限/UI规则。Paused零后续每完整周5分最多20，待处理问题每完整等待日5分最多30，项目只加单个最高问题分、最多50。同分精确微秒排序、正式回复/追问/删除口径保持。
 
-## P4 新范围（待实现）
+## P4 候选范围（待返修验收）
 
 所有角色统一Inbox：楼主收到新问题/回复、提问者收到引荐/回复、指定Mentor收到引荐/明确追问、引荐Staff收到正式回复。事件按收件人去重并排除自己，通知与业务同事务，删除帖子不泄露预览。Inbox不取代工作台。
 

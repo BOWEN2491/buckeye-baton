@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P3产品修订及Detail交互已获用户验收；P4统一Inbox/自动邀请契约、单Agent任务书与启动词已准备",
-  "nextUp": "以origin/codex/p4-integration启动外部worker；P4应用未实施、独立0/10；保留3000/P3和旧数据，不合main",
+  "lastCompleted": "P4候选7b8a629独立四项检查均通过；补充探针复现R1–R3，验收7/10，证据已保存",
+  "nextUp": "原worker集中返修Unread/刷新窗口/runner初始化恢复，再一次READY；候选未集成，保留3000/P3和main",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 7, "featuresTotal": 8}
 }
@@ -166,11 +166,11 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0–P3已通过产品验收，包含年龄排序、按状态表单及Detail交互38e4901。P4单Agent任务书/契约已准备，应用未实现，独立0/10。3000保留P3；main不在本轮合并。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P3已通过产品验收，3000仍为38e4901。P4候选7b8a629独立7/10，Unread、刷新分页与runner初始化失败恢复需返修；应用未集成、不合main。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>P3最终产品修订通过typecheck/build、后端13/13和浏览器14/14；Detail另测类型/构建/实际点击/键盘/390px。P4仅文档校验，不冒称新功能通过。真实PostgreSQL多连接、云端和真实认证未验证。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>P4精确提交独立通过typecheck/build、backend17/17、e2e17/17及正常无页面自动检查。补充后端/生产页面探针仍复现R1–R3；原套件通过不表示产品已全过。真实pg/Neon/AWS/多实例未验证。</p></div>
 <!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
@@ -188,7 +188,7 @@
 <div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">产品验收通过</span></h3><p>所有者确认AI浏览简介/标签、Mentor Awaiting reply、作者/项目所有者评论删除。main合并尚无最新授权。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3 <span class="badge done">产品修订验收通过</span></h3><p>可解释年龄排序，Suggestions原入口与收起Detail说明，状态对应表单。无deadline评分/日期UI，微秒稳定排序与历史保持；当前3000应用38e4901。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>P4 <span class="badge planned">契约已准备 · 功能0/10</span></h3><p>所有角色Activity Inbox，楼主/提问者/Mentor/引荐Staff消息；真实经验匹配自动邀请、限频/永久去重、接受忽略及设置。应用尚未实施。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P4 <span class="badge planned">候选待返修 · 7/10</span></h3><p>所有角色Activity Inbox，楼主/提问者/Mentor/引荐Staff消息；真实经验匹配自动邀请、限频/永久去重、接受忽略及设置。候选7b8a629已交付，R1–R3待返修，未集成。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。</p></div>
 <!-- claude:features:end -->
   </section>
@@ -233,7 +233,9 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
-<div class="card" data-updated="2026-10-24"><h3>P4单Agent当前入口</h3><p><a href="../docs/P4_AGENT_TASK.md">统一任务书与K1–K10</a> · <a href="../docs/P4_CONTRACT.md">Inbox/事件/邀请冻结契约</a> · <a href="../docs/P4_START_PROMPT.md">启动提示词</a>。协调基线codex/p4-integration；worker分支codex/p4-implementation，功能独立0/10。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P4当前独立审查：7/10</h3><p><a href="../docs/P4_REVIEW.md">R1–R3与复现工具</a>：现有四项检查均通过，补充Unread/刷新/初始化恢复失败；候选7b8a629待返修，不替换3000。</p></div>
+
+<div class="card" data-updated="2026-10-24"><h3>P4单Agent当前入口</h3><p><a href="../docs/P4_AGENT_TASK.md">统一任务书与K1–K10</a> · <a href="../docs/P4_CONTRACT.md">Inbox/事件/邀请冻结契约</a> · <a href="../docs/P4_START_PROMPT.md">启动提示词</a>。协调基线codex/p4-integration；worker分支codex/p4-implementation，候选独立7/10，修复以P4_REVIEW为准。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3产品反馈修订</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前规则与复验重点</a>：Suggestions for your project保留入口；状态表单只显示对应内容且历史保留；无期限加分/日期界面，旧数据兼容。原P3期限规则为历史。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3当前预览</h3><p><a href="../docs/P3_PREVIEW.md">3000最新运行说明</a>：应用38e4901位于p3-detail，原数据库及真实配置仍在p3-review，旧P1/P2库保留；本轮不重启或调用模型。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3产品验收通过</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前产品规则</a>覆盖旧期限用例；年龄排序、状态表单、Suggestions与Detail已由用户验收。</p></div>
@@ -335,6 +337,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P4候选独立审查需要返修</h3><p>7b8a629类型/生产构建、后端17/17和浏览器17/17通过；补充探针确认Unread含失效邀请、刷新窗口不完整及初始化失败终止runner。验收7/10，报告/JSON/虚构截图及复现工具保存。真实AI调用0，3000和main不变。</p></div>
+
 <div class="card" data-updated="2026-10-24"><h3>P3产品验收通过，准备P4统一Inbox与自动邀请</h3><p>用户接受最终Detail交互并启动P4，又补充四角色事件消息；合并进单Agent契约/任务书/启动词，K1–K10独立0/10。仅文档/分支准备，3000、数据库和main不变。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>系统建议说明按需展开</h3><p>Suggestions for your project标题旁增加Detail按钮，默认隐藏说明，点击展开/收起；建议与原操作入口不变。仅页面交互，不变更数据库或推荐规则。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3产品反馈三项修订通过本地回归</h3><p>Suggestions for your project保留入口，解释系统建议；表单随状态显示且输入/历史保留；日期输入/编辑和期限分移除，旧dueAt不改动且不参与排序。类型/生产构建、13/13后端、14/14浏览器通过，无真实模型调用。</p></div>

@@ -1,0 +1,16 @@
+{
+  "pagination": {
+    "visible": 20,
+    "loadMoreVisible": 0
+  },
+  "unread": {
+    "visible": 1,
+    "text": "0 unread · Refresh",
+    "empty": 0
+  },
+  "olderDeletion": {
+    "visible": 25,
+    "deletedPreviewStillVisible": 1,
+    "removedLabel": 0
+  }
+}
