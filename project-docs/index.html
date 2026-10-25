@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P2其余功能用户验收通过；新增评论删除完成，后端9/9、浏览器11/11通过",
-  "nextUp": "3001已运行d97920f，用户确认评论删除后再决定合并；P1和5项目/4问题/5评论及AI内容保留",
+  "lastCompleted": "P2含评论删除的总控及用户全部验收通过；交接文档记录版本、环境与数据保护",
+  "nextUp": "P3规则与单Agent契约/任务书规划；PR #3待明确合并授权；保留3000/3001服务与原数据",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -171,11 +171,11 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0 与 P1：三状态项目与总结编辑、接棒关系、项目问题、人工引荐和多轮指导已实现。P1 十项独立本地验收及用户产品验收通过，PR #2 已合入 main；P2已在协调分支通过总控10/10，待用户验收合并。云端与P3/P4未完成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0/P1已合入main；P2含评论删除已通过总控及用户全部验收，PR #3待明确合并授权。P3规则推荐进入规划，尚未实现；P4与云端未完成。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>清理后类型检查、后端 3/3、生产构建和浏览器 5/5（10.4 秒）已通过；保留原有四个项目。桌面与 390px 布局已有自动化覆盖，云端与完整接棒仍未验证。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>P2删除补充最终代码通过类型检查、生产构建/启动、后端9/9与浏览器11/11，含四身份和390px。本地使用隔离PGlite与mock；既有真实AI证据另存。真实PostgreSQL多连接、云端和真实认证未验证。</p></div>
 <!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
@@ -191,7 +191,8 @@
 <div class="card" data-updated="2026-10-24"><h3>v2 第一轮 <span class="badge done">本地通过</span></h3><p>项目搜索和状态筛选、三状态总结、所有者表单编辑、状态校验与历史保留；旧经验以 Historical experience 内联展示。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>项目接棒与导师连接 <span class="badge done">done · local</span></h3><p>三种接棒、来源/后续关系、问题日期、平铺讨论、Staff 引荐、指定 Mentor 多轮回复和工作台已接通真实本地 SQL。独立本地验收10/10，真实 pg 与云端未验证。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>独立 Lesson 页面重定向来源项目；采用界面、数字与响应字段已删除，采用写接口返回 410。旧数据库记录保留，经验只在项目内展示；旧完整旅程不等于新版接棒。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI、真实认证、上传、代码 fork、复杂关系图和通知。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">用户验收通过</span></h3><p>所有者确认的AI浏览简介/标签、Staff的Mentor Awaiting reply负载，以及项目所有者/评论作者删除评论。PR #3尚未合并。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图和通知；P3规则推荐规划中。</p></div>
 <!-- claude:features:end -->
   </section>
 
@@ -235,6 +236,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>主控交接快照</h3><p><a href="../docs/COORDINATOR_HANDOFF.md">版本、分支、产品规则及环境保护</a>：P2全部验收通过；3000保留P1、3001运行d97920f真实模型预览；P2配置和数据库位于p2-review，不能清理。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>评论删除补充</h3><p><a href="../docs/COMMENT_DELETION.md">权限、API和验收</a>：项目所有者可删任意评论，作者可删自己的；增量审计字段与共用有效帖子读取保持Mentor负载一致。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 独立验收：10/10</h3><p><a href="../docs/P2_ACCEPTANCE.md">最终验收依据</a>：R1–R3及真实AI既有证据均通过；已集成codex/p2-integration，main未合并。3000仍运行P1。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 单Agent交付入口</h3><p><a href="../docs/P2_AGENT_TASK.md">任务书与启动提示词</a>；<a href="../docs/P2_CONTRACT.md">数据/API契约</a>。AI草稿/确认与负载统计已在协调分支实现，H1–H10独立验收通过；main未合并，任务书保留为交付依据。</p></div>
@@ -328,6 +330,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>P2全部产品验收结束与上下文交接</h3><p>用户确认评论删除补充通过；保存主控交接快照并同步当前状态，PR #3待明确合并授权。P3进入规划，未实现。仅更新文档，未调用AI、变更数据或重启预览。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>按产品验收新增评论删除</h3><p>用户确认P2其余功能通过，新增普通评论、追问与正式导师回复的删除权限、确认和失败提示；数据库保留审计记录，工作台按剩余有效帖子计算。typecheck/build、后端9/9和浏览器11/11通过，真实AI调用0次，main未合并。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 df5f050复验通过</h3><p>独立typecheck/build/start、后端8/8、浏览器10/10，原JSON/错误探针通过，双表单刷新回归通过；E1既有真实AI记录和截图已核对，无新增真实调用。H1–H10通过，待用户产品验收，main未合并，P1预览不变。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 677a1d7 总控审查</h3><p>独立typecheck/build通过，后端7/7、浏览器9/9通过；补充探针复现3项原测试缺口，H6/H8未通过；H3等待已有真实证据，合计7/10。未调用真实模型、未集成或合并、未影响P1预览。</p></div>

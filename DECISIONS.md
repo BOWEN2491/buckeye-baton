@@ -1,7 +1,7 @@
 # Decisions
 
 ### Project owners and post authors can remove discussion posts
-**Date:** 2026-10-24 · **Status:** User-authorized addition; implemented and locally tested
+**Date:** 2026-10-24 · **Status:** Implemented, locally tested and product accepted by user; main merge pending
 **Files:** docs/COMMENT_DELETION.md, src/server/relay.ts, db/schema.sql
 
 In the context of the user accepting the rest of P2 and requesting comment deletion by the project owner or comment author, facing existing history-retention rules and state derived from Mentor replies/follow-ups, we decided for server-authorized soft deletion and the same filtered post stream for discussions and queues, to achieve immediate removal with consistent workload counts, accepting retained private audit rows and no restore UI. This supersedes P1/P2's earlier exclusion of post deletion only; questions, referral records and post editing remain outside this addition.
@@ -10,7 +10,7 @@ In the context of the user accepting the rest of P2 and requesting comment delet
 **Date:** 2026-10-24 · **Status:** Implemented on P2 branch and independently accepted locally; main merge pending
 **Files:** docs/P2_AGENT_TASK.md, docs/P2_CONTRACT.md, docs/EXECUTION_ROADMAP.md
 
-In the context of the user requesting the same single-agent handoff as P1, facing AI text overwriting authored experience and workload counts drifting from existing follow-up rules, we decided for separate draft/published introductions with source hashes and owner confirmation, plus Staff-only question counts reusing P1 thread state, to achieve reviewable AI browsing content and consistent manual referrals, accepting additional metadata and a required live AI verification gate. Provider/key decisions precede API implementation; no credentials or calls are authorized by writing the task. P2 remains 0/10 until independent acceptance.
+In the context of the user requesting the same single-agent handoff as P1, facing AI text overwriting authored experience and workload counts drifting from existing follow-up rules, we decided for separate draft/published introductions with source hashes and owner confirmation, plus Staff-only question counts reusing P1 thread state, to achieve reviewable AI browsing content and consistent manual referrals, accepting additional metadata and a required live AI verification gate. Provider/key decisions precede API implementation; no credentials or calls were authorized by writing the task. Subsequent independent acceptance is 10/10 and all user product acceptance, including comment deletion, passed; PR #3 remains unmerged.
 
 ### P1 single-agent delivery supersedes the two-worker split
 **Date:** 2026-10-24 · **Status:** Accepted by user

@@ -2,7 +2,7 @@
 
 2026-10-24产品验收补充：项目所有者及评论作者的删除权限见[COMMENT_DELETION.md](COMMENT_DELETION.md)，取代旧的帖子删除排除；其他历史保留规则不变。
 
-更新：2026-10-24。状态：**v2 第一轮实现：首页与三状态项目交互；完整接棒与项目引荐仍未实现。** 本轮验证状态见 PHASE1_ACCEPTANCE.md。
+更新：2026-10-24。当前状态：**P0/P1已合入main；P2含评论删除已通过总控及用户全部验收，PR #3待明确合并授权；P3进入规划。** 本文下方“第一轮/本轮/占位/不做AI”等保留早期分阶段规格，以P1_CONTRACT、P2_CONTRACT、COMMENT_DELETION和各阶段最终验收为当前实现依据；勿据历史措辞撤回已验收功能。运行与版本见COORDINATOR_HANDOFF.md。
 
 本文件保留完整 v2 目标，取代以独立 Lesson 与采用反馈为中心的旧规格。第一轮仅实现下列范围；后续目标不可作为本轮已完成能力。旧规格保存在 legacy/MVP_SPEC_LESSON_V1.md，旧验收在 legacy/ACCEPTANCE_LESSON_V1.md。
 

@@ -2,9 +2,9 @@
 
 ## P2已通过总控验收
 
-用户已确认其余产品功能通过；评论删除补充已实现并通过后端9/9、浏览器11/11，3001已更新为d97920f，使用原P2数据库/配置，等待用户确认删除交互。权限/队列语义见COMMENT_DELETION.md。main未合并，P1服务及已有数据保留。
+用户已确认P2全部产品功能通过，包括评论删除补充；后端9/9、浏览器11/11。3001运行d97920f，真实OpenAI/gpt-6-luna，使用原P2数据库/配置。权限/队列语义见COMMENT_DELETION.md。PR #3未合并，尚需明确授权；P1服务及已有数据保留。详细接手说明与关键路径见[COORDINATOR_HANDOFF.md](COORDINATOR_HANDOFF.md)。P3进入规划。
 
-P2实现分支codex/p2-implementation交付df5f050，R1–R3及E1已关闭，总控独立验收10/10并集成codex/p2-integration。依据P2_ACCEPTANCE.md；P2_REVIEW.md保留前次历史。main未合并，待提供产品预览、用户验收/授权。当前3000的P1服务和数据库保持不动。
+P2实现分支codex/p2-implementation交付df5f050，R1–R3及E1已关闭，总控独立验收10/10并集成codex/p2-integration，之后增加d97920f评论删除。依据P2_ACCEPTANCE.md；P2_REVIEW.md保留前次历史。用户产品验收已通过，main等待明确合并授权。3000的P1服务和数据库保持不动。
 
 ## 已完成的P1
 
@@ -21,7 +21,7 @@ C:/Users/23678/.codex/workspaces/buckeye-baton
 
 ## 今后如何协作
 
-- 开始任务前更新 main 并检查工作区，再按具体任务建立短期 codex/ 分支；不保留永久前端/后端预备分支。
+- 开始任务前核对远程和工作区，再按任务建立短期 codex/ 分支。P2未合并前，P3须以包含d97920f的最新P2集成提交为基础，不能从旧main丢弃P2；P2合并后再统一main。不保留永久前端/后端预备分支。
 - 只有确实同时修改代码时才为任务建立独立工作目录。页面与后端共用类型、接口、迁移必须先协调。
 - 用户主要负责开发，队友负责设计、文案和试用；协调方审查集成与验收。
 - 前端负责 pages/components/client/styles，后端负责 API/server/database/scripts。任务完成通过 PR 合入 main，再清理分支与临时工作目录。
@@ -29,7 +29,7 @@ C:/Users/23678/.codex/workspaces/buckeye-baton
 
 ## 当前及下一轮
 
-已完成项目浏览、三状态详情与所有者总结编辑，以及 P1 接棒关系、项目问题、Staff 引荐、Mentor 多轮回复和角色工作台。P2的AI简介/标签和Mentor负载已在协调分支通过总控验收，下一步是用户产品验收后再合并PR。不要恢复独立 Lesson 或逐条采用 UI。
+已完成项目浏览、三状态详情与所有者总结编辑，以及P1接棒、问题、引荐、多轮回复和工作台。P2的AI简介/标签、Mentor负载和评论删除已通过总控与用户验收，PR #3等待明确合并授权；下一阶段规划P3规则推荐。不要恢复独立Lesson或逐条采用UI。
 
 ## 运行与验证
 

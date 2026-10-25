@@ -1,10 +1,10 @@
 # P2 总控最终验收
 
-产品验收补充（2026-10-24）：用户确认其余功能通过，要求项目所有者/评论作者可以删除评论。新增实现与独立测试结果为typecheck/build、后端9/9、浏览器11/11；规则见[COMMENT_DELETION.md](COMMENT_DELETION.md)。下文保留df5f050基础P2的验收证据；main仍等待用户明确授权。
+产品验收最终确认（2026-10-24）：用户确认P2全部通过，包括项目所有者/评论作者删除评论。新增实现d97920f与独立测试结果为typecheck/build、后端9/9、浏览器11/11；规则见[COMMENT_DELETION.md](COMMENT_DELETION.md)。下文保留df5f050基础P2的验收证据；PR #3仍等待用户明确合并授权。
 
 日期：2026-10-24。复验提交：`df5f050685482a8c479710f2a5897ce4ac36b47d`。
 
-结论：**P2 本地演示范围 H1–H10 全部通过，10/10（100%）**，R1/R2/R3与E1全部关闭。代码已集成到codex/p2-integration；main未合并，用户手动产品验收仍待进行。此结论不代表PostgreSQL多连接、云端或生产认证通过。
+结论：**P2 本地演示范围 H1–H10 全部通过，10/10（100%）**，R1/R2/R3与E1全部关闭。代码已集成到codex/p2-integration；用户手动产品验收（包括删除补充）已通过，main未合并。此结论不代表PostgreSQL多连接、云端或生产认证通过。
 
 ## 独立环境与结果
 
@@ -60,4 +60,4 @@
 
 本次总控mock截图在 `C:/Users/23678/AppData/Local/Temp/buckeye-baton-coordinator-p2-df5f050/`，不提交；包括introduction-editor-desktop/mobile.png、browse-card-confirmed-desktop.png、staff-workload-desktop/mobile.png。真实AI既有证据已在docs/evidence中，内容为虚构演示资料。
 
-真实PostgreSQL/Neon/AWS/公开部署/多实例均Not run。生成锁仍为单进程；PGlite串行事务不证明真实多连接竞争。真实上游失败场景仅mock验证。演示身份仍非真实认证。下一步是提供P2产品预览供用户手动验收；未经用户授权不合并main、不进入P3。
+真实PostgreSQL/Neon/AWS/公开部署/多实例均Not run。生成锁仍为单进程；PGlite串行事务不证明真实多连接竞争。真实上游失败场景仅mock验证。演示身份仍非真实认证。用户现已在3001通过全部产品验收，P3进入规划；PR #3未获明确合并授权。

@@ -11,15 +11,15 @@ P1 已实现真实接棒与双向来源关系、项目问题及期望回复日�
 
 P2在codex/p2-integration已实现AI浏览简介/标签（所有者编辑确认、源变化回退）及Staff的Mentor Awaiting reply计数；df5f050总控验收10/10，未合并main。证据见docs/P2_ACCEPTANCE.md。
 
-用户产品验收：P2其余功能通过，新增评论删除已实现并测试，待用户确认。项目所有者可删任意项目评论，评论作者可删自己的普通评论/追问/导师回复；问题与引荐保留，删除按有效帖子重算队列。见docs/COMMENT_DELETION.md。
+用户产品验收：P2全部通过，包括新增评论删除。项目所有者可删任意项目评论，评论作者可删自己的普通评论/追问/导师回复；问题与引荐保留，删除按有效帖子重算队列。见docs/COMMENT_DELETION.md。PR #3仍未合并，需明确合并授权；P3进入规划，尚未实现。运行环境与版本详见docs/COORDINATOR_HANDOFF.md。
 
 ## 技术与验证
 Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 为单进程持久 SQL，托管 pg 需 DATABASE_URL。Project.reflection 为可空 JSONB，增量迁移不重置记录。
 最近总控独立验证：typecheck、生产 build/start、后端 9/9、浏览器 11/11 通过（P2评论删除补充），含四身份主线与390px。使用临时 PGlite，未操作用户数据。真实 PostgreSQL 多连接、真实认证、Neon/AWS、公网部署未验证。
 
 ## 设计与下一轮
-P2任务书/契约为docs/P2_AGENT_TASK.md与docs/P2_CONTRACT.md。返修提交df5f050已独立验收10/10，R1–R3与E1均关闭，集成到codex/p2-integration，待用户手动产品验收与main合并授权。既有OpenAI真实调用结果与截图已核对，本轮未新增调用或配置凭据；不要假设总控预览已配置AI。当前3000仍运行P1，未重启或改数据。
-实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；单 Agent 全栈任务书：docs/P1_AGENT_TASK.md。任务分支 codex/p1-implementation 已交付；用户手动产品验收通过并授权合并，PR #2 已合入 main（合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4）。P1 本地功能验收 10/10。P2已通过总控验收，待用户产品验收；P3–P4未开始，规则推荐、自动限频站内邀请按后续级别实现。deadline 属于具体求助期望回复日期。产品文案英文，待回复显示 Awaiting reply。
+P2任务书/契约为docs/P2_AGENT_TASK.md与docs/P2_CONTRACT.md。返修提交df5f050已独立验收10/10，R1–R3与E1均关闭；评论删除补充d97920f通过全部回归及用户验收。集成到codex/p2-integration，待main合并授权。3001运行d97920f，使用真实OpenAI/gpt-6-luna；配置及数据库位于p2-review目录，不可清理。既有真实调用证据已核对，本次未新增调用。3000仍运行P1，未重启或改数据。
+实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；单 Agent 全栈任务书：docs/P1_AGENT_TASK.md。任务分支 codex/p1-implementation 已交付；用户手动产品验收通过并授权合并，PR #2 已合入 main（合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4）。P1 本地功能验收 10/10。P2已通过总控及用户全部验收；P3进入规划，P4未开始，规则推荐、自动限频站内邀请按后续级别实现。deadline 属于具体求助期望回复日期。产品文案英文，待回复显示 Awaiting reply。
 
 队友设计已收进 design/。relay 原型补齐接棒、来源对照、问题—引荐—回复及工作台；不再等待草图。
 design/README.md 列出原型与批准需求的差异。共同所有者、Ongoing 接棒、自动延续 Mentor、选择性带入内容、帖子编辑等仍待统一；帖子删除已按用户验收补充实现。现有保留历史/单所有者/人工引荐规则继续有效，AI浏览内容已在P2实现；AI导师推荐与Feed等仍暂缓。
