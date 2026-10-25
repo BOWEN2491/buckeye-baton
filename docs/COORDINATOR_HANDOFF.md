@@ -1,5 +1,7 @@
 # Buckeye Baton — 新账号主控交接
 
+**当前入口已更新：以下主体保留为P2结束时的历史快照，不能作为运行/阶段现况。** P3含产品反馈与Detail38e4901已通过用户验收，当前准备P4（应用未实现，独立0/10）。请先读PROJECT_CONTEXT.md、EXECUTION_ROADMAP.md和P4_AGENT_TASK/P4_CONTRACT。当前3000为p3-detail应用，数据/真实配置仍在p3-review，3001已停；具体见P3_PREVIEW顶部及runtime manifest。main未获最新合并授权，原库/worktree不可清理。
+
 更新：2026-10-24。本文供没有任何聊天历史的新 Codex 主控使用。记录经过核对的事实与已批准方向；不是实施 P3 或合并 PR 的授权。后续用户指令优先。运行进程和分支属于此时快照，操作前重新核对。
 
 后续进展：用户已完成上下文承接，不再需要新主控启动词。本交接快照保留；P3契约和任务书随后写入P3_CONTRACT.md、P3_AGENT_TASK.md、P3_START_PROMPT.md，协调分支现为codex/p3-integration。下文“尚无任务书/规则未冻结”描述的是交接时状态，以新P3文档为当前计划；应用仍未实施/验收。

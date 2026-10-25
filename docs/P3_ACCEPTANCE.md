@@ -1,5 +1,11 @@
 # P3 总控最终独立验收
 
+## 最新结论：产品验收通过，启动P4
+
+2026-10-24。用户已明确确认“验收通过 我们启动P4”，包括产品修订93359a4及Detail UI38e4901。系统建议名称/原入口、按状态显示且保留历史的表单、仅年龄排序、Detail展开交互均不再待复验。当前3000预览与数据保留；没有新增main合并授权。
+
+原4839e77独立J1–J10证据保留于下文；其中日期界面/期限评分已由[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md)覆盖。修订全量typecheck/build、backend13/13、e2e14/14通过；Detail另测类型/构建/实际点击/键盘/390px，不把此前全套测试说成Detail后重新全跑。P4任务入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)。下方服务/PID和“尚未启动预览”均是初次验收时历史，现况以[P3_PREVIEW.md](P3_PREVIEW.md)顶部为准。
+
 产品反馈修订：原10/10是4839e77版本技术证据。用户随后要求改名系统提示、按状态编辑及取消期限计分，本轮范围与验证见[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md)；旧日期用例不能作为新要求。
 
 2026-10-24。复验精确提交：**4839e770f2f95130ac1409f5cfaa980583469452**（codex/p3-implementation）。

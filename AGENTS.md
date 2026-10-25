@@ -1,21 +1,24 @@
 # Buckeye Baton — agent entry
 
-Current P3 product revision supersedes deadline-based rules: read docs/P3_PRODUCT_REVISION.md. Preserve system suggestions/actions under “Suggestions for your project”; show only selected status fields but retain all reflection state; retire reply-date UI and ignore legacy dueAt in priority/advice. Retain date data/compatibility API and exact microsecond ordering. Read the latest docs/P3_PREVIEW.md/runtime manifest before touching port3000 or any active .next/.data.
+Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md and docs/PROJECT_OVERVIEW.md before changes. Current execution: **P4 single full-stack Agent**, docs/P4_AGENT_TASK.md + docs/P4_CONTRACT.md + docs/P4_START_PROMPT.md. Implementation baseline is latest origin/codex/p4-integration; use codex/p4-implementation in your own clone/worktree. Do not start from old main, which does not contain accepted P2/P3.
 
-Read PROJECT_CONTEXT.md, docs/MVP_SPEC.md, docs/API_CONTRACT.md, docs/ACCEPTANCE.md, DECISIONS.md, and project-docs/index.html before changes.
+P0/P1 are accepted and merged. P2 including comment deletion is product accepted; P3 including age-only priority, conditional project status form and the suggestion Detail toggle is now product accepted. Latest accepted app source is 38e4901b3b975fe222984ca05d6b03cdd63375a7; c1441fd adds preview documentation. P4 is specified, **not implemented or accepted (0/10)**. Main merge/PR #3 has not been authorized by the latest acceptance; do not merge it.
 
-Start with docs/PROJECT_OVERVIEW.md for the consolidated scope. Main is the shared baseline after the user-authorized PR #1 merge. Use short-lived task branches; old permanent frontend/backend preparation branches were removed. Design references are in design/; unresolved prototype additions are not automatically approved requirements. Historical planning notes live in docs/legacy/planning/.
+## Active rules
+- Project-centered app; embedded experience, not independent Lesson adoption. Old adoption writes stay410; stored history remains.
+- student / mentor / staff, four fictional switchable identities through x-demo-user-id. This is demo identity, not real authentication. Product UI is English.
+- Keep authored summary/tags/reflection and all historical status content. Only the owner edits a project. Status form shows only selected status fields while retaining hidden/unsaved reflection.
+- Staff manually refers one Mentor per question. Only that Mentor gives formal replies. Shared valid-post thread state controls workbenches, Awaiting reply and priority.
+- Project owners may delete all project posts; post authors their own. Soft-deleted bodies must never appear through Inbox. Questions/referrals remain.
+- P3_PRODUCT_REVISION.md supersedes deadline scoring/UI. Rank by project publication age / pending request age only; legacy dueAt remains stored/author-only compatibility API but has no score/advice effect. Keep exact microsecond ordering.
+- Suggestions for your project remains system-generated, with original Edit project / question actions; its Detail explanation is collapsed by default.
+- P4 adds all-role Activity Inbox and bounded automatic invitations. Notification and business writes must share transactions; acceptance does not assign Mentor or create a pickup. Automatic invitation opt-out does not mute activity. Follow the frozen P4 contract, no AI matching or fictional solved counts.
 
-This is the Honda HackOHI/O 2026 competition app: Next.js 15 / TypeScript / Node 22 / Tailwind / PostgreSQL. Source is now at repository root. Historical React/Vite, FastAPI, Streamlit and optional AI rehearsal code was removed at the user’s request; recover it from Git history if needed.
-
-- P1 is accepted and merged. P2 uses one full-stack Agent: follow docs/P2_AGENT_TASK.md and docs/P2_CONTRACT.md; the former Worker A/B split is superseded. Contract and dependency changes remain coordinated with the controller. Report once at final delivery, except necessary credential decisions or genuine blockers.
-- Use separate codex/ branches and worktrees. Do not force-push or overwrite teammate changes.
-- Run npm run typecheck, npm run test:backend, npm run build; npm run test:e2e uses an isolated local SQL database after build.
-- Do not commit .env.local, credentials, local databases, node_modules or build artifacts.
-- Demo identity is deliberately switchable, not production authentication. Use fictional content. Hosted pg requires DATABASE_URL; explicit PGlite mode is a single-process local demo.
-- Update documentation and decision records after meaningful changes. Never claim Neon/AWS/public deployment passed based only on local checks.
-- P2 including comment deletion passed user product acceptance. Independent base acceptance is on df5f050 (docs/P2_ACCEPTANCE.md), with deletion regression on d97920f; integrated on codex/p2-integration. PR #3 is open; main merge has not been explicitly authorized. Read docs/COORDINATOR_HANDOFF.md for exact branches, live previews, configuration and data paths before operations. Preserve authored summary/tags/reflections. AI mentor shortlists remain deferred; Staff makes the final referral decision. Never expose secrets or initiate model calls for P3 rule planning.
-
-- Product acceptance addition: project owners may delete any project discussion post; post authors may delete their own. Questions/referrals remain. Soft-deleted posts are excluded by the common thread/queue query; see docs/COMMENT_DELETION.md. This supersedes the old exclusion of post deletion.
-
-- P3 final4839e77 passed independent local acceptance10/10 (docs/P3_ACCEPTANCE.md), integrated in codex/p3-integration; user product acceptance is pending. At the user's explicit request, old P1/P2 services were stopped; **3000 now runs P3** from buckeye-baton-p3-review, with a separate persistent manual database and no AI credentials/model/mock; 3001 is stopped. Read docs/P3_PREVIEW.md and the runtime manifest before process/worktree operations. Preserve old databases/env and the active preview's .next/.data; never build in its directory while running. Do not merge main or enter P4 without authorization.
+## Environment and collaboration
+- Preserve existing work; no reset/force-push or unrequested dependency changes. Report normally only once at complete READY; genuine blockers may add BLOCKED. Do not autonomously merge main or deploy.
+- Current3000 preview is P3, app/build directory C:/Users/23678/.codex/workspaces/buckeye-baton-p3-detail; its database and user configuration are in buckeye-baton-p3-review. Read docs/P3_PREVIEW.md and the runtime manifest before any process operation. Do not build in an active service directory or touch its .next/.data/env. Old P1/P2 databases also remain protected. 3001 was stopped; recheck port occupancy.
+- Coordinator checkout C:/Users/23678/.codex/workspaces/buckeye-baton is not the worker implementation directory. Own clone/build/ports/test database required.
+- Next15.5.28 / TS / Node22 / Tailwind / pg. Explicit PGlite mode is single-process: never connect a second worker/CLI to the active directory.
+- Run npm run typecheck, npm run test:backend, npm run build and npm run test:e2e as appropriate. NEXT_TELEMETRY_DISABLED=1 may be required locally. P4 real model calls0; existing P2 regressions use mock, do not read/copy keys.
+- No .env.local, secrets, databases, node_modules or build artifacts in Git. Update project-docs via markers and record material decisions. Do not call local PGlite checks real PostgreSQL/Neon/AWS/public deployment verification.
+- Historical rehearsal and old frontend/backend preparation branches were removed at user request. Recover old code from Git history if needed; design/ is reference, unapproved prototype features are not requirements.

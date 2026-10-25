@@ -1,14 +1,20 @@
 # Decisions
 
+### Specify one Inbox for role activity and bounded automatic invitations
+**Date:** 2026-10-24 · **Status:** Specification recorded on codex/p4-integration; application not implemented or accepted
+**Files:** docs/P4_CONTRACT.md, docs/P4_AGENT_TASK.md, docs/P4_START_PROMPT.md
+
+In the context of starting P4 after P3 product acceptance and the user's request for all-role messages, facing separate invitation and discussion notification flows, we decided for one private Inbox with transactional activity events and explicit invitation responses, to achieve consistent navigation and role-specific awareness, accepting a larger P4 slice. Automatic invitations use verifiable related contributions, persistent caps and conservative lifetime target/recipient dedup; accepting never assigns a Mentor. The specified local runner requires a persistent Node process; cloud scheduling is unverified. These are documented implementation requirements, not a claim that the app already sends messages.
+
 ### Retain clearly named system suggestions and use age-only help priority
-**Date:** 2026-10-24 · **Status:** User-requested product revision implemented; local type/build, backend13/13 and e2e14/14 passed; manual recheck pending
+**Date:** 2026-10-24 · **Status:** Implemented, locally checked and product accepted by user, including Detail toggle38e4901; main merge pending
 **Supersedes:** Deadline scoring/UI and simultaneous status fields from the initial P3 specification
 **Files:** docs/P3_PRODUCT_REVISION.md, src/server/priority.ts, src/components/project-form.tsx
 
 In the context of manual product feedback, facing an editable-sounding system advice label, an overloaded form and an unnecessary reply-date variable, we decided for Suggestions for your project with unchanged action links, conditional state-specific fields backed by the same retained reflection state, and publication/wait-age-only priority, to achieve clearer authorship and fewer inputs, accepting retained legacy dueAt data/API that no longer influence ranking. Ordinary comments remain outside the help queue, and a follow-up starts its own unanswered request age after a formal reply.
 
 ### Specify explainable P3 priority with existing publication age and reply cycles
-**Date:** 2026-10-24 · **Status:** Implemented on 4839e77 and independently accepted locally 10/10; user product acceptance/main merge pending
+**Date:** 2026-10-24 · **Status:** Initial4839e77 independently accepted10/10; deadline/UI portions superseded by the product revision above, now product accepted; main merge pending
 **Files:** docs/P3_CONTRACT.md, docs/P3_AGENT_TASK.md, docs/P3_START_PROMPT.md
 
 In the context of the user starting P3 after all P2 product acceptance, facing missing pause timestamps, conflicting queue clocks and an unactionable suggestion to extend reply dates, we decided for deterministic request-time scores using actual project publication age and the common valid-post reply cycle, opt-in API sorting with stable ties and compatible default shapes, plus question-author-only dueAt updates, to achieve explainable discovery and actionable advice, accepting hand-tuned weights and no measured exposure guarantees. This contract adds no schema or AI/invitations; P4 retains rate-limited in-app invitations. P3 branches from the accepted P2 integration because main has not yet received P2.

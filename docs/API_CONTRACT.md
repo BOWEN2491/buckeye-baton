@@ -1,10 +1,16 @@
 # Buckeye Baton — API contract
 
+## Current status and planned P4
+
+P3 product revisions, including age-only priority and the Detail toggle38e4901, have passed user acceptance. Current P3 UI has no deadline inputs or scoring; the age-only addendum below overrides the original deadline descriptions. Main merge remains pending explicit authorization; current3000 runs P3, not P1.
+
+**P4 is specified, not implemented.** [P4_CONTRACT.md](P4_CONTRACT.md) freezes the planned private Inbox/read/preferences/respond/interested-helpers/runner-status endpoints, role Activity events and automatic invitations. Do not treat those endpoints as available until the implementation report records them. P4 acceptance starts at0/10. The worker must replace this planned status with exact implemented shapes/results after delivery.
+
 ## P3 product revision — age-only priority
 
 See[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md). Priority reasons now only `no_pickup` / `waiting_for_reply`, advice codes only `improve_handoff` / `narrow_question`. Legacy dueAt is retained in storage/responses and author-only PATCH for compatibility, but has **zero effect on scores, ordering and advice**. Current UI creates questions with dueAt:null and has no reply-date input/editor/display. Maximum question score30, project50; all other opt-in shapes, exact tie-breaks and P1 permissions stay unchanged. Old deadline-based descriptions below refer to the first P3 version and are superseded by this addendum.
 
-## P3 endpoints — independently accepted locally, product acceptance pending
+## P3 endpoints — independently and product accepted locally
 
 Final4839e77 is integrated on codex/p3-integration, with coordinator J1–J10 passing; see[P3_ACCEPTANCE.md](P3_ACCEPTANCE.md). main is unmerged. Exact microsecond tie-break keys stay internal; public ISO dates and response shapes remain unchanged.
 
@@ -20,10 +26,10 @@ Rules: [P3_CONTRACT.md](P3_CONTRACT.md). Types `src/shared/p3-types.ts`; the onl
 | PATCH `/api/project-questions/:id` | asking Student | `{dueAt: future ISO Z \| null}` strict → 200 `QuestionThread`; 401 / 404 / 403 (incl. project owner) / 400 |
 
 - Unsupported `sort` (including empty) → 400 `INVALID_INPUT`. Project detail keeps its four keys; question GET/write responses keep `QuestionThread`.
-- Points: no-pickup Paused (no relation at all) `min(20, 5 × full weeks since createdAt)`; pending question (`needs_referral`/`awaiting_reply`) `min(30, 5 × full days since pendingSince)` + reply date passed 50 / ≤24h 35 / ≤72h 20; a project adds only its single highest question. Reasons are listed in that order and always sum to the score.
+- Points: no-pickup Paused (no relation at all) `min(20, 5 × full weeks since createdAt)`; pending question (`needs_referral`/`awaiting_reply`) `min(30, 5 × full days since pendingSince)`; a project adds only its single highest question, maximum50. No dueAt points. Reasons always sum to the score.
 - pendingSince: question.createdAt while no valid mentor reply; otherwise the first valid follow-up after the last valid mentor reply (shared SQL order).
-- Advice: `improve_handoff` (Paused, no pickup, shared ≥14 days), `narrow_question` (pending ≥3 days), `review_reply_date` (pending, reply date ≤ asOf+24h).
-- Pages: Explore Recommended/Newest with reasons, Updated/Refresh and rules; workbench Priority/Oldest first; project "Recommended because" panel with owner advice; author-only "Edit reply date".
+- Advice: `improve_handoff` (Paused, no pickup, shared ≥14 days), `narrow_question` (pending ≥3 days). No date advice.
+- Pages: Explore Recommended/Newest with reasons, Updated/Refresh and rules; workbench Priority/Oldest first; project "Recommended because" and "Suggestions for your project" with collapsed Detail explanation and original action links. No reply-date editor/display.
 
 ## Product acceptance addendum: project comment deletion
 
@@ -33,7 +39,7 @@ The UI confirms deletion. Comments, explicit follow-ups and formal Mentor replie
 
 ## P2 endpoints — independently and product accepted locally, main merge pending
 
-P2提交df5f050已通过总控H1–H10验收，集成于codex/p2-integration；证据见[P2_ACCEPTANCE.md](P2_ACCEPTANCE.md)。main及现有3000预览仍为P1，真实PostgreSQL/云端未验证。
+P2提交df5f050已通过总控H1–H10验收，集成于codex/p2-integration；证据见[P2_ACCEPTANCE.md](P2_ACCEPTANCE.md)。main包含P0/P1，后续协调线包含已验收P2/P3；当前3000为P3。真实PostgreSQL/云端未验证。
 
 Rules: [P2_CONTRACT.md](P2_CONTRACT.md). Types `src/shared/p2-types.ts`; shared Zod `src/shared/p2-validation.ts` (model output, confirmation and client editor); handlers `src/server/introductions.ts`, `src/server/ai.ts`, `mentorWorkload` in `src/server/relay.ts`.
 
