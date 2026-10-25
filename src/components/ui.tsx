@@ -69,9 +69,11 @@ export function Tags({ tags }: { tags: string[] }) {
 export function ProjectCard({
   project,
   introduction,
+  recommended = false,
 }: {
   project: Project;
   introduction?: PublishedIntroduction | null;
+  recommended?: boolean;
 }) {
   // A confirmed introduction replaces the authored summary/tags on the card only while it is current.
   const candidate = introduction as P5PublishedIntroduction | null | undefined;
@@ -79,7 +81,10 @@ export function ProjectCard({
   return (
     <article className="project-card">
       <div className="card-top">
-        <Status status={project.status} />
+        <div className="card-badges">
+          <Status status={project.status} />
+          {recommended && <span className="recommend-badge">Recommend</span>}
+        </div>
         <Link
           href={`/projects/${project.id}`}
           className="quiet-link"

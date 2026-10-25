@@ -2,7 +2,7 @@
 
 User requested three interface changes and a read-only explanation of current AI browsing introductions.
 
-- Explore keeps Recommended ordering but cards no longer render recommendation scores/reasons.
+- Explore keeps Recommended ordering; positive-score cards display a compact Recommend badge. Scores and reasons stay off cards. Newest mode does not display the badge.
 - Project detail keeps Recommended because as a native details/summary disclosure, closed initially and keyboard accessible. Owner suggestions keep their existing placement and actions.
 - Shared date/time formatting uses en-US regardless of browser locale, keeping the existing local timezone behavior.
 - Staff and Mentor workspace groups use question creation time, newest first. No Priority/Oldest controls or per-task score explanations are displayed. A new sort=newest API preserves exact database timestamp ordering. Legacy priority and oldest API requests remain compatible.

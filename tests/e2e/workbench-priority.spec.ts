@@ -43,6 +43,8 @@ test('Explore Recommended explains its order; Newest, search and status still re
   await expect(page.getByRole('button', { name: 'Recommended', exact: true })).toHaveAttribute('aria-pressed', 'true');
   const first = page.locator('.project-card').first();
   await expect(first.getByRole('link', { name: fixtureTitle, exact: true })).toBeVisible();
+  await expect(first.getByText('Recommend', { exact: true })).toBeVisible();
+  await expect(card(page, 'Club Check-in Prototype').getByText('Recommend', { exact: true })).toHaveCount(0);
   await expect(page.getByLabel('Why recommended')).toHaveCount(0);
   await expect(page.getByText(/^Updated /).first()).toBeVisible();
   await expect(page.getByText(/probab|likely to|guarantee/i)).toHaveCount(0);
@@ -51,6 +53,7 @@ test('Explore Recommended explains its order; Newest, search and status still re
   await page.screenshot({ path: path.join(evidenceDir, 'explore-recommended-desktop.png'), fullPage: true });
   await page.getByRole('button', { name: 'Newest', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Newest', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.recommend-badge')).toHaveCount(0);
   await expect(page.getByLabel('Why recommended')).toHaveCount(0);
   await expect(page.locator('.project-card')).toHaveCount(recommendedCount);
   await page.getByLabel('Search projects', { exact: true }).fill('Study Room');
