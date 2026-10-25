@@ -1760,6 +1760,19 @@ nav {
 .owner-advice h3 {
   font-size: 14px;
 }
+.suggestions-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.suggestions-heading h3 {
+  margin-bottom: 0;
+}
+.suggestions-heading .text-button {
+  flex-shrink: 0;
+}
 .owner-advice ul {
   list-style: none;
   margin: 0;

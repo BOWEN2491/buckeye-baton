@@ -5,6 +5,7 @@
 ## 批准的行为
 
 - 保留原系统建议区，名称改为 **Suggestions for your project**，说明这些提示由系统按项目/讨论状态生成，不是作者可编辑内容。原Edit project及Go to the question入口不变；不新增“编辑建议”或作者Advice字段。
+- 后续界面精简：标题旁提供 **Detail** 按钮，说明文字默认收起，点击展开/收起；建议列表与原操作入口一直显示。按钮用aria-expanded/aria-controls关联说明，支持键盘。
 - 项目编辑基本资料和状态选择始终可见。Ongoing仅显示Current progress；Finished仅显示成果、问题反思与For the next team；Paused仅显示原因、重做建议和可复用材料。
 - 切状态只控制显示，完整reflection仍保留在表单state并随保存提交，保留未保存输入及历史。服务端权限/必填规则不变；未显示的表单元素不留在DOM触发浏览器URL校验。
 - 页面移除提问日期输入、日期编辑、日期显示和延长期限建议。新页面创建问题传dueAt:null。旧数据库列、已有日期、只作者修改旧日期的兼容API保留，不删除历史；**dueAt不再参与任何优先分或建议**。
