@@ -2,9 +2,11 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { ProjectStatus, User } from "@/shared/types";
 import type { ProjectPostKind, QuestionThread } from "@/shared/relay-types";
+import type { QuestionRecommendations } from "@/shared/p5-types";
 import { ApiRequestError, api, errorText, formatDate, formatDateTime, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
+import { MentorRecommendations } from "./mentor-recommendations";
 import { MentorSelect, invalidateMentorWorkload } from "./mentor-workload";
 import type { QuestionPriority } from "@/shared/p3-types";
 import { PriorityReasons, invalidateProjectPriority, useProjectPriority } from "./priority";
@@ -151,11 +153,14 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
           Refresh question
         </button>
       )}
+      <MentorRecommendations questionId={thread.question.id} selected={mentorId} disabled={busy || conflict} onSelect={setMentorId} />
+      <div id={`all-mentors-${thread.question.id}`}>
       {mentors.length ? (
         <MentorSelect mentors={mentors} value={mentorId} disabled={busy} onChange={setMentorId} />
       ) : (
         <p className="subtle-empty">No mentors in the directory yet. The question stays under “Needs referral”.</p>
       )}
+      </div>
       <label>
         Why this mentor fits
         <textarea rows={3} value={reason} maxLength={300} readOnly={busy} onChange={(e) => setReason(e.target.value)} />
@@ -225,6 +230,24 @@ function Composer({ thread, onPosted }: { thread: QuestionThread; onPosted: () =
       </div>
     </div>
   );
+}
+
+function AnalysisRetry({ questionId }: { questionId: string }) {
+  const { userId } = useIdentity();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  async function retry() {
+    setBusy(true); setError(""); setSuccess("");
+    try {
+      const result = await api<QuestionRecommendations>(`/project-questions/${questionId}/analysis/retry`, userId, {});
+      if (result.status === "failed") setError(result.error?.message || "Analysis failed. You can retry, and Staff can still refer manually.");
+      else setSuccess(result.status === "ready" ? "Analysis is ready for Staff to review. Your question and referral stay unchanged." : result.status === "processing" ? "Analysis is processing. Staff can review suggestions when ready." : "Analysis queued. Staff can review suggestions when ready; your question and referral stay unchanged.");
+    }
+    catch (err) { setError(errorText(err)); }
+    finally { setBusy(false); }
+  }
+  return <div className="analysis-retry"><p className="field-help">Questions requesting a mentor are analyzed automatically. If analysis is unavailable, retry it here. Staff can always refer a mentor manually.</p><button type="button" className="text-button" disabled={busy} onClick={() => void retry()}>{busy ? "Queuing…" : "Retry mentor analysis"}</button><Feedback error={error} success={success} /></div>;
 }
 
 const kindLabel: Record<ProjectPostKind, string> = { comment: "Comment", follow_up: "Follow-up", mentor_reply: "Referred mentor reply" };
@@ -303,6 +326,7 @@ function Thread({ thread, projectOwnerId, priority, highlighted, onChanged }: { 
         </ol>
       )}
       <Feedback success={success} error={deleteError} />
+      {user?.id === q.authorId && q.wantsMentor && <AnalysisRetry questionId={q.id} />}
       {user?.role === "staff" && (
         <ReferralPanel
           thread={thread}

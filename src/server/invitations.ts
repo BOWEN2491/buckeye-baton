@@ -1,3 +1,4 @@
+import { browseProjects } from './introductions';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { Sql } from './db';
@@ -30,7 +31,7 @@ async function successorCounts(sql: Sql, ids: string[]) {
 }
 const projectsSql = `SELECT *, (extract(epoch FROM "createdAt") * 1000000)::bigint::text AS "createdAtUs" FROM projects`;
 async function eligibleTargets(sql: Sql, now: Date): Promise<Target[]> {
- const projects = await rows(sql, projectsSql);
+ const projects = await browseProjects(sql, await rows(sql, projectsSql));
  const succ = await successorCounts(sql, projects.map(p => p.id));
  const targets: Target[] = [];
  for (const p of projects) {
@@ -46,7 +47,7 @@ async function eligibleTargets(sql: Sql, now: Date): Promise<Target[]> {
 interface Candidate { user: User; matchedTags: string[]; evidence: { projectId: string; kind: MatchEvidence['kind'] }[] }
 const hasReflection = (r: Row | null) => !!r && ((r.outcomes?.length ?? 0) > 0 || !!String(r.progress ?? '').trim() || (r.problems?.length ?? 0) > 0 || !!String(r.nextTeam ?? '').trim());
 async function candidates(sql: Sql, target: Target): Promise<Candidate[]> {
- const tags = normalizeTags(target.project.tags);
+ const tags = normalizeTags(target.project.introduction?.topics);
  if (!tags.length) return [];
  const users = new Map((await rows(sql, 'SELECT * FROM users')).map(u => [u.id, u as User]));
  const prefsOff = new Set((await rows(sql, 'SELECT "userId" FROM inbox_preferences WHERE "automaticInvitations"=false')).map(r => r.userId));
@@ -58,8 +59,8 @@ async function candidates(sql: Sql, target: Target): Promise<Candidate[]> {
   shared.forEach(t => entry.tags.add(t)); entry.evidence.set(projectId, kind); found.set(userId, entry);
  };
  // Students: own Finished projects with real reflection content or retained historical lessons.
- for (const p of await rows(sql, `SELECT p.id, p."ownerId", p.tags, p.reflection, (SELECT count(*) FROM lessons l WHERE l."projectId"=p.id)::int AS lessons FROM projects p JOIN users u ON u.id=p."ownerId" WHERE p.status='finished' AND u.role='student'`))
-  if (hasReflection(p.reflection) || p.lessons > 0) add(p.ownerId, p.id, p.tags, 'shared_experience');
+ for (const p of await browseProjects(sql,await rows(sql, `SELECT p.*, (SELECT count(*) FROM lessons l WHERE l."projectId"=p.id)::int AS lessons FROM projects p JOIN users u ON u.id=p."ownerId" WHERE p.status='finished' AND u.role='student'`)))
+  if (hasReflection(p.reflection) || p.lessons > 0) add(p.ownerId, p.id, p.introduction?.topics, 'shared_experience');
  const excluded = new Set([target.project.ownerId]);
  return [...found.entries()]
   .filter(([id]) => users.has(id) && !excluded.has(id) && !prefsOff.has(id) && users.get(id)!.role === 'student')
@@ -70,9 +71,9 @@ async function candidates(sql: Sql, target: Target): Promise<Candidate[]> {
 // ---- Effective status (computed on read; persisted only by dispatch and related writes). ----
 async function validity(sql: Sql, items: Row[]) {
  const projectIds = [...new Set(items.map(i => i.projectId))];
- const projects = new Map((await rows(sql, 'SELECT id, status FROM projects WHERE id = ANY($1::text[])', [projectIds])).map(p => [p.id, p]));
+ const projects = new Map((await browseProjects(sql,await rows(sql, 'SELECT * FROM projects WHERE id = ANY($1::text[])', [projectIds]))).map(p => [p.id, p]));
  const succ = await successorCounts(sql, projectIds);
- return (i: Row) => i.invitationKind === 'pickup' && projects.get(i.projectId)?.status === 'paused' && !(succ.get(i.projectId) ?? 0);
+ return (i: Row) => i.invitationKind === 'pickup' && projects.get(i.projectId)?.status === 'paused' && (projects.get(i.projectId)?.introduction?.topics?.length ?? 0)>0 && !(succ.get(i.projectId) ?? 0);
 }
 export async function effectiveStatuses(sql: Sql, items: Row[], now: Date): Promise<Map<string, InvitationStatus>> {
  const out = new Map<string, InvitationStatus>();

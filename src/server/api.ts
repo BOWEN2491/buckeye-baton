@@ -1,3 +1,6 @@
+import * as recommendations from './recommendations';
+import { enqueueProject, enqueueQuestion } from './ai-jobs';
+import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { database } from './db';
 import * as v from './validation';
@@ -38,6 +41,15 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    return json({comments:await Promise.all(comments.map(async c=>({...c,author:await one(db,'users',c.authorId)}))),referrals:await Promise.all(referrals.map(async r=>({...r,mentor:await one(db,'users',r.mentorId),staff:await one(db,'users',r.staffId)})))});
   }
   const user=await actor(req,db);
+  if(resource==='mentorExpertise'&&(method==='GET'||method==='PATCH'))return await recommendations.profile(req,db,user);
+  if(resource==='questionRecommendations'&&method==='GET')return json(await recommendations.recommendations(db,user,id!));
+  if(resource==='questionAnalysisRetry'&&method==='POST'){
+   const question=await one(db,'project_questions',id!);
+   if(user.role!=='staff'&&question.authorId!==user.id)fail(403,'FORBIDDEN','Only the asker or Staff can retry analysis');
+   if(!question.wantsMentor)fail(409,'MENTOR_NOT_REQUESTED','This is an open discussion');
+   await parse(req,z.object({}).strict());await db.transaction(sql=>enqueueQuestion(sql,id!,true));
+   return json(await recommendations.recommendations(db,user,id!,true),202);
+  }
   if(resource==='pickups'&&method==='POST') return await relay.pickup(req,db,user,id!);
   if(resource==='projectQuestions'&&method==='POST') return await relay.askQuestion(req,db,user,id!);
   if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
@@ -58,8 +70,8 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='introductionGenerate'&&method==='POST') return await intro.generate(req,db,user,id!);
   if(resource==='projects'&&method==='POST') {
    role(user,'student'); const input=await parse(req,v.projectInput);
-   const data=validateProject({codeUrl:null,demoUrl:null,...input,status:input.status??'ongoing',reflection:{...v.emptyReflection(),...input.reflection}});
-   return json(await insert(db,'projects',{id:randomUUID(),ownerId:user.id,...data}),201);
+   const data=validateProject({tags:[],demoUrl:null,...input,status:input.status??'ongoing',reflection:{...v.emptyReflection(),...input.reflection}});
+   const saved=await db.transaction(async sql=>{const project=await insert(sql,'projects',{id:randomUUID(),ownerId:user.id,...data});await enqueueProject(sql,project.id);return project;});return json((await intro.browseProjects(db,[saved]))[0],201);
   }
   if(resource==='project'&&method==='PATCH') {
    const input=await parse(req,v.projectInput.partial());
@@ -71,9 +83,10 @@ export async function handle(req: Request, resource: string, id?: string): Promi
     const {title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl}=current;
     const data=validateProject({title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl,...input,reflection:{...v.emptyReflection(),...current.reflection,...input.reflection}});
     const saved=await update(sql,'projects',id!,data);
+    if(recommendations.sourceHash(current)!==recommendations.sourceHash(saved))await enqueueProject(sql,id!);
     await invitations.settlePickup(sql,id!); // leaving Paused ends pending pickup invitations
     return saved;
-   }); return json(project);
+   }); return json((await intro.browseProjects(db,[project]))[0]);
   }
   if(resource==='projectLessons'&&method==='POST') {await ownProject(db,id!,user);return json(await insert(db,'lessons',{id:randomUUID(),projectId:id,authorId:user.id,...await parse(req,v.lessonInput)}),201);}
   if(resource==='lesson'&&method==='PATCH') {const lesson=await one(db,'lessons',id!);await ownProject(db,lesson.projectId,user);return json(await update(db,'lessons',id!,await parse(req,v.lessonInput.partial())));}

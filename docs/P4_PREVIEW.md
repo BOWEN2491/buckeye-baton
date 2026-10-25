@@ -58,3 +58,7 @@ The following is historical setup evidence for the previous372646c preview; use 
 应用`.data/p4-preview-runtime.json`保存URL、实际SHA、BuildID、数据库、进程与启动时间，并复制到总控目录`.data/p4-preview-runtime.json`。同目录`start-p4-preview.ps1`为无秘密启动脚本，stdout/stderr日志留在.data；这些均被Git忽略。
 
 3000仍监听原P3 PID38224，应用p3-detail与数据库/配置p3-review均未改。P4服务会持续运行供用户验收；本次不合main、不部署公网，真实pg/Neon/AWS/多实例验证仍未进行。
+
+## 2026-10-25 status update
+
+The P4 app was stopped after the user approved the P5 preview upgrade. P5 now runs on port3001 using this same persistent database and the protected `.env.local`; the database has an independently verified pre-upgrade backup and the additive migration plus simulation import are recorded in [P5_PREVIEW.md](P5_PREVIEW.md). The old P4 app/build directory remains available but is not the active preview. Port3000/P3 remains unchanged. P5 is awaiting manual product acceptance; no P5 merge or public deployment has occurred.

@@ -1,5 +1,11 @@
 # Decisions
 
+### Add AI-ranked Mentor guidance and GitHub-sourced project labels
+**Date:** 2026-10-25 · **Status:** Implemented on `codex/p5-implementation`; technical and product acceptance pending
+**Files:** `docs/P5_CONTRACT.md`, `src/server/ai-jobs.ts`, `src/server/github.ts`, `src/server/recommendations.ts`, `src/shared/p5-types.ts`
+
+In the context of the user approving P5, facing manual Staff referrals without a quick expertise/load comparison and free-form project tags without verifiable context, we decided for persistent, versioned AI analysis behind an opt-in sustained-Node worker, a bounded public-GitHub reader, owner-confirmed constrained labels, and a live top-three shortlist that preserves manual referral, to achieve traceable suggestions without automatic assignment, accepting provider/network failures that leave authored content intact and that real multi-instance PostgreSQL behavior remains unverified.
+
 ### Implement P4 Inbox and invitations on the existing transaction and thread services
 **Date:** 2026-10-24 · **Status:** Implemented on372646c and independently accepted locally10/10 on2026-10-25; product acceptance/main merge pending
 **Files:** db/schema.sql, src/server/inbox.ts, src/server/invitations.ts, src/server/invitation-runner.ts, src/instrumentation.ts, src/app/inbox/page.tsx

@@ -1,6 +1,7 @@
 // Runs before `next start` in Playwright only: adds fictional rows with dates relative to now into the
 // isolated e2e database, so priority rules can be shown without waiting days. Production seeds are unchanged.
 import { closeDatabase, database } from '../../src/server/db';
+import { confirmedTopics } from '../p5-helpers';
 
 const day = 24 * 3_600_000;
 const ago = (days: number) => new Date(Date.now() - days * day).toISOString();
@@ -23,6 +24,12 @@ async function main() {
     ['p4-history-ref', 'p4-history-q', 'staff-kevin', 'mentor-sarah', 'Fictional referral for test data.', ago(54)]);
   await db.query('INSERT INTO project_posts (id,"questionId","authorId",body,kind,"createdAt") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT (id) DO NOTHING',
     ['p4-history-reply', 'p4-history-q', 'mentor-sarah', 'Fictional reply: label the data time on screen.', 'mentor_reply', ago(53)]);
+  // P5 requires current owner-confirmed Topics on both sides; old authored maps tags cannot qualify.
+  await confirmedTopics(db, 'p3-old-paused', ['front-end']);
+  await confirmedTopics(db, 'p4-mia-finished', ['front-end']);
+  for (const [id, name] of [['p5-mentor-ava', 'Ava Mock'], ['p5-mentor-ben', 'Ben Mock'], ['p5-mentor-chloe', 'Chloe Mock']]) {
+    await db.query('INSERT INTO users(id,name,role,headline,tags) VALUES($1,$2,\'mentor\',\'Fictional P5 browser test mentor\',\'[]\') ON CONFLICT(id) DO NOTHING', [id, name]);
+  }
   await closeDatabase();
   console.log('P3/P4 e2e fixtures ready');
 }

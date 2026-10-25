@@ -64,6 +64,7 @@ test('four identities complete pickup, question, referral, replies, follow-up an
   await page.getByRole('radio', { name: /^Continue/ }).check();
   await page.getByLabel('New project name').fill(newTitle);
   await page.getByLabel('Your team’s goal').fill(goal);
+  await page.getByLabel('GitHub repository', { exact: true }).fill('https://github.com/example/relay-journey');
   await page.screenshot({ path: path.join(evidenceDir, 'pickup-form-desktop.png'), fullPage: true });
 
   // A failed request keeps the input; the retry reuses the same requestId.
@@ -83,7 +84,7 @@ test('four identities complete pickup, question, referral, replies, follow-up an
   await expect(page.getByRole('region', { name: 'Project source' })).toContainText(goal);
   await expect(page.locator('.project-title-row .status.ongoing')).toBeVisible();
   // The same request ID returns the same project instead of creating another one.
-  const replay = await page.request.post(`/api${source}/pickups`, { headers: { 'x-demo-user-id': 'student-mia' }, data: { requestId: pickupBodies[0].requestId, pickupType: 'continue', title: newTitle, goal } });
+  const replay = await page.request.post(`/api${source}/pickups`, { headers: { 'x-demo-user-id': 'student-mia' }, data: { requestId: pickupBodies[0].requestId, pickupType: 'continue', title: newTitle, goal, codeUrl: 'https://github.com/example/relay-journey' } });
   expect(replay.status()).toBe(200);
   expect((await replay.json()).data.project.id).toBe(projectId);
 

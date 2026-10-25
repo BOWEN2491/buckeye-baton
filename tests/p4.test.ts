@@ -6,6 +6,7 @@ import path from 'node:path';
 import { handle } from '../src/server/api';
 import { closeDatabase, database, setup } from '../src/server/db';
 import { seed } from '../src/server/seed';
+import { confirmedTopics } from './p5-helpers';
 import { setInvitationClock, dispatchInvitations } from '../src/server/invitations';
 import { runInvitationCheck, startInvitationRunner, stopInvitationRunner } from '../src/server/invitation-runner';
 import { register } from '../src/instrumentation';
@@ -27,6 +28,9 @@ async function fresh(name: string) { process.env.DATABASE_MODE = 'pglite'; proce
 async function project(db: Db, id: string, owner: string, status: string, tags: string[], createdOffset: number, reflection: Record<string, unknown> | null = null) {
  const r = { progress: '', outcomes: [], problems: [], nextTeam: '', whyPaused: status === 'paused' ? 'Fictional pause.' : '', ifAgain: status === 'paused' ? ['Start smaller.'] : [], reusable: [], ...(reflection ?? {}) };
  await db.query('INSERT INTO projects (id,"ownerId",title,summary,"courseOrClub",term,tags,status,reflection,"createdAt","updatedAt") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$10)', [id, owner, `Project ${id}`, 'Fictional P4 test project.', 'OSU', 'Spring 2027', JSON.stringify(tags), status, JSON.stringify(r), at(createdOffset)]);
+ const topicMap: Record<string, 'front-end'|'back-end'|'database'|'algorithm'> = { maps: 'front-end', web: 'back-end', transit: 'database', quantum: 'algorithm' };
+ const topics = [...new Set(tags.map(t => topicMap[t.trim().toLowerCase()]).filter(Boolean))];
+ if (topics.length) await confirmedTopics(db, id, topics);
 }
 async function question(db: Db, id: string, projectId: string, author: string, createdOffset: number) {
  await db.query('INSERT INTO project_questions (id,"projectId","authorId",title,body,"wantsMentor","dueAt","createdAt") VALUES ($1,$2,$3,$4,$5,true,NULL,$6)', [id, projectId, author, `Question ${id}`, 'Fictional.', at(createdOffset)]);
@@ -197,8 +201,8 @@ test('P4 invitations: eligibility boundaries, evidence matching, limits, permane
   let zoe = await invitations('student-zoe');
   assert.equal(zoe.length, 1);
   assert.equal(zoe[0].invitationKind, 'pickup'); assert.equal(zoe[0].projectId, 'old-paused'); assert.equal(zoe[0].status, 'pending'); assert.equal(zoe[0].actionable, true);
-  assert.deepEqual(zoe[0].matchedTags, ['maps', 'web']);
-  assert.equal(zoe[0].reason, 'You shared a finished project about maps, web. This project uses maps, web too.');
+  assert.deepEqual(zoe[0].matchedTags, ['front-end', 'back-end']);
+  assert.equal(zoe[0].reason, 'You shared a finished project about front-end, back-end. This project uses front-end, back-end too.');
   assert.deepEqual(zoe[0].evidence.map((e: any) => [e.projectId, e.kind]), [['zoe-done', 'shared_experience']]);
   assert.equal(zoe[0].expiresAt, at(7 * D));
   assert.ok(!/solved|expert|probab|likely/i.test(JSON.stringify(zoe)));
@@ -206,6 +210,7 @@ test('P4 invitations: eligibility boundaries, evidence matching, limits, permane
   assert.deepEqual(await invitations('student-alex'), []); // owner excluded
   assert.ok(!(await db.query(`SELECT 1 FROM inbox_items WHERE "eventKey"='invite:pickup:young-paused'`)).rows.length); // 1 s short of 14 days
   assert.equal((await inbox('student-zoe')).unreadCount, 1);
+  await db.query(`DELETE FROM project_introductions WHERE "projectId"='young-paused'`);
   await db.query(`DELETE FROM projects WHERE id='young-paused'`);
   // Per-target 24 h sliding window, then the next best candidate; permanent per person + target.
   now = A + D - 1000; assert.equal((await dispatchInvitations(db)).created, 0);
@@ -228,7 +233,7 @@ test('P4 invitations: eligibility boundaries, evidence matching, limits, permane
   // Mia ignores; a real pickup later makes the accepted invitation non-actionable without rewriting the choice.
   const miaInvite = (await invitations('student-mia'))[0].id;
   assert.equal((await request('invitationRespond', miaInvite, 'POST', 'student-mia', { action: 'ignore' })).data.status, 'ignored');
-  assert.equal((await request('pickups', 'old-paused', 'POST', 'student-zoe', { requestId: '00000000-0000-4000-8000-000000000001', pickupType: 'continue', title: 'Zoe continues', goal: 'Fictional goal.' })).status, 201);
+  assert.equal((await request('pickups', 'old-paused', 'POST', 'student-zoe', { requestId: '00000000-0000-4000-8000-000000000001', pickupType: 'continue', title: 'Zoe continues', goal: 'Fictional goal.', codeUrl: 'https://github.com/example/zoe-continues' })).status, 201);
   zoe = await invitations('student-zoe');
   assert.equal(zoe[0].status, 'accepted'); assert.equal(zoe[0].actionable, false);
   assert.equal((await invitations('student-mia'))[0].status, 'ignored');

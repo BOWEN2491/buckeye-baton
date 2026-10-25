@@ -1,3 +1,5 @@
+import { enqueueProject, enqueueQuestion } from './ai-jobs';
+import { browseProjects } from './introductions';
 import { randomUUID } from 'node:crypto';
 import type { Sql } from './db';
 import * as v from './validation';
@@ -17,12 +19,12 @@ const iso = (value: unknown) => value instanceof Date ? value.toISOString() : va
 const isUniqueViolation = (error: unknown) => (error as { code?: string })?.code === '23505';
 
 async function link(sql: Sql, relation: Row, projectId: string): Promise<RelayLink> {
- const project = await one(sql, 'projects', projectId);
+ const project = (await browseProjects(sql,[await one(sql, 'projects', projectId)]))[0];
  return { project: project as never, owner: await one(sql, 'users', project.ownerId) as never, pickupType: relation.pickupType, goal: relation.goal, pickedUpAt: iso(relation.createdAt) };
 }
 
 export async function projectDetail(sql: Sql, id: string): Promise<RelayProjectDetail> {
- const project = await one(sql, 'projects', id);
+ const project = (await browseProjects(sql,[await one(sql, 'projects', id)]))[0];
  const lessons = await rows(sql, 'SELECT * FROM lessons WHERE "projectId"=$1 ORDER BY "createdAt"', [id]);
  const source = (await rows(sql, 'SELECT * FROM project_relations WHERE "projectId"=$1', [id]))[0];
  const successors = await rows(sql, 'SELECT * FROM project_relations WHERE "sourceProjectId"=$1 ORDER BY "createdAt", id', [id]);
@@ -42,8 +44,9 @@ export async function pickup(req: Request, db: Storage, user: User, sourceId: st
   const source = (await rows(sql, 'SELECT * FROM projects WHERE id=$1 FOR SHARE', [sourceId]))[0] ?? fail(404, 'NOT_FOUND', 'Record not found');
   if (source.status === 'ongoing') fail(409, 'SOURCE_ONGOING', 'Only Finished or Paused projects can be picked up');
   const projectId = randomUUID();
-  await insert(sql, 'projects', { id: projectId, ownerId: user.id, title: input.title, summary: input.goal, courseOrClub: source.courseOrClub, term: source.term, tags: source.tags, codeUrl: null, demoUrl: null, status: 'ongoing', reflection: v.emptyReflection() });
+  await insert(sql, 'projects', { id: projectId, ownerId: user.id, title: input.title, summary: input.goal, courseOrClub: source.courseOrClub, term: source.term, tags: [], codeUrl: input.codeUrl, demoUrl: null, status: 'ongoing', reflection: v.emptyReflection() });
   await insert(sql, 'project_relations', { id: randomUUID(), sourceProjectId: sourceId, projectId, ownerId: user.id, requestId: input.requestId, pickupType: input.pickupType, title: input.title, goal: input.goal });
+  await enqueueProject(sql,projectId);
   await settlePickup(sql, sourceId); // a successor ends pending pickup invitations for the source
   return { created: await projectDetail(sql, projectId) };
  });
@@ -52,7 +55,7 @@ export async function pickup(req: Request, db: Storage, user: User, sourceId: st
  catch (error) { if (!isUniqueViolation(error)) throw error; result = await attempt(); } // a concurrent retry won the insert
  if (result.created) return json(result.created, 201);
  const e = result.existing!;
- if (e.sourceProjectId !== sourceId || e.pickupType !== input.pickupType || e.title !== input.title || e.goal !== input.goal)
+ if (e.sourceProjectId !== sourceId || e.pickupType !== input.pickupType || e.title !== input.title || e.goal !== input.goal || (await one(db,'projects',e.projectId)).codeUrl !== input.codeUrl)
   fail(409, 'REQUEST_CONFLICT', 'This pickup request was already submitted with different details. Reload the form to start a new pickup.');
  return json(await projectDetail(db, e.projectId), 200);
 }
@@ -104,6 +107,7 @@ export async function askQuestion(req: Request, db: Storage, user: User, project
   await lockDispatch(sql);
   const project = (await rows(sql, 'SELECT id, "ownerId" FROM projects WHERE id=$1', [projectId]))[0] ?? fail(404, 'NOT_FOUND', 'Record not found');
   await insert(sql, 'project_questions', { id, projectId, authorId: user.id, title: input.title, body: input.body, wantsMentor: input.wantsMentor, dueAt: input.dueAt });
+  await enqueueQuestion(sql,id);
   await notify(sql, { event: 'question_created', eventKey: `question:${id}`, actorId: user.id, projectId, questionId: id, recipients: [[project.ownerId, 'project_owner']] });
   return thread(sql, id);
  }), 201);
@@ -123,6 +127,7 @@ export async function addPost(req: Request, db: Storage, user: User, questionId:
   const recipients: [string | undefined, 'project_owner' | 'question_author' | 'assigned_mentor' | 'referring_staff'][] = [[question.projectOwnerId, 'project_owner'], [question.authorId, 'question_author']];
   if (input.kind === 'follow_up') recipients.push([referral?.mentorId, 'assigned_mentor']);
   if (input.kind === 'mentor_reply') recipients.push([referral?.staffId, 'referring_staff']);
+  if(input.kind==='follow_up')await enqueueQuestion(sql,questionId);
   await notify(sql, { event: 'post_created', eventKey: `post:${postId}`, actorId: user.id, projectId: question.projectId, questionId, postId, recipients });
   return thread(sql, questionId);
  }), 201);
@@ -157,6 +162,7 @@ export async function deletePost(db: Storage, user: User, postId: string) {
    fail(403, 'FORBIDDEN', 'Only the comment author or project owner can delete this comment');
   // Keep the original record for history, but exclude it from discussions and queue state.
   if (!post.deletedAt) await sql.query('UPDATE project_posts SET "deletedAt"=clock_timestamp(), "deletedBy"=$2 WHERE id=$1', [postId, user.id]);
+  if(!post.deletedAt && (post.kind==='follow_up'||post.kind==='mentor_reply'))await enqueueQuestion(sql,post.questionId);
   return thread(sql, post.questionId);
  }));
 }

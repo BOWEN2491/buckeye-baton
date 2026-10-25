@@ -94,7 +94,12 @@ function InboxNavLink({ userId, active }: { userId: string; active: boolean }) {
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: users = [] } = useResource<User[]>("/users");
+  const { data: users = [], reload: reloadUsers } = useResource<User[]>("/users");
+  useEffect(() => {
+    const refresh = () => void reloadUsers();
+    window.addEventListener("buckeye-baton:expertise-updated", refresh);
+    return () => window.removeEventListener("buckeye-baton:expertise-updated", refresh);
+  }, [reloadUsers]);
   const { data: health } = useResource<{ databaseMode: string }>("/health");
   const [userId, setUserId] = useState("student-mia");
   useEffect(() => {
@@ -129,6 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Icon name="folder" />
               My workspace
             </Link>
+            {user?.role === "mentor" && <Link className={pathname === "/profile" ? "nav-link active" : "nav-link"} href="/profile"><Icon name="book" />My expertise</Link>}
             <InboxNavLink key={userId} userId={userId} active={pathname === "/inbox"} />
           </nav>
           <div className="sidebar-note">

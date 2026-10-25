@@ -34,7 +34,7 @@ test('owned reflections save across ongoing, finished and paused without losing 
   await page.getByLabel('What did you set out to do?').fill('A fictional team tests accessible campus notifications.');
   await page.getByLabel('Course or club').fill('E2E team');
   await page.getByLabel('Term', { exact: true }).fill('Autumn 2026');
-  await page.getByLabel('Topics').fill('testing, accessibility');
+  await page.getByLabel('GitHub repository', { exact: true }).fill('https://github.com/example/state-journey');
   await page.getByRole('button', { name: 'Publish project', exact: true }).click();
   await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible();
   const projectPath = new URL(page.url()).pathname;

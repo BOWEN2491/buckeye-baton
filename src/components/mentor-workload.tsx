@@ -60,6 +60,7 @@ export function MentorWorkloadPanel() {
                 <span>
                   <strong>{i.mentor.name}</strong>
                   <span className="metadata"> · {i.mentor.headline}</span>
+                  <span className="field-help">{i.mentor.expertise?.length ? i.mentor.expertise.join(" · ") : "Expertise not set"}</span>
                 </span>
                 <span className="workload-count">Awaiting reply: {i.awaitingReply}</span>
               </li>
@@ -86,7 +87,7 @@ export function MentorSelect({ mentors, value, disabled, onChange }: { mentors: 
           <option value="">Choose a mentor</option>
           {mentors.map((m) => (
             <option key={m.id} value={m.id}>
-              {m.name} · {m.headline}
+              {m.name} · {m.expertise?.length ? m.expertise.join(", ") : "Expertise not set"}
               {counts?.has(m.id) ? ` · Awaiting reply: ${counts.get(m.id)}` : ""}
             </option>
           ))}

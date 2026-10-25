@@ -205,6 +205,7 @@ test('age-only Priority, system suggestions, referral/reply/follow-up/delete rec
   await page.getByRole('radio', { name: /^Continue/ }).check();
   await page.getByLabel('New project name').fill(`Room finder one building ${stamp}`);
   await page.getByLabel('Your team’s goal').fill('Show free rooms in one building from the official export.');
+  await page.getByLabel('GitHub repository', { exact: true }).fill('https://github.com/example/room-lookup');
   await page.getByRole('button', { name: 'Create project', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Project source' })).toContainText(`Picked up from ${fixtureTitle}`);
   await page.goto(fixturePath);

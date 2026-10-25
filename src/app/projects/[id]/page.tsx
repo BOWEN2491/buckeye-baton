@@ -9,6 +9,7 @@ import { Feedback, Loading, PageHeading, Status, Tags } from "@/components/ui";
 import { ProjectForm } from "@/components/project-form";
 import { ProjectQuestions } from "@/components/project-questions";
 import { IntroductionPanel } from "@/components/introduction-panel";
+import { AISources } from "@/components/ai-sources";
 import { PriorityPanel } from "@/components/priority-panel";
 import { flashKey, SourceLine, Successors } from "@/components/relay-links";
 function Text({ value, empty }: { value?: string; empty: string }) {
@@ -246,7 +247,8 @@ export default function ProjectPage({
           )}
         </div>
       </div>
-      <Tags tags={p.tags} />
+      {p.tags.length ? <Tags tags={p.tags} /> : <p className="field-help">Topics pending review</p>}
+      {p.introduction?.version === 5 && !p.introduction.stale && <AISources sources={p.introduction.sources} />}
       {source && <SourceLine source={source} />}
       <Feedback error={error} success={success} />
       {editing ? (
@@ -309,7 +311,7 @@ export default function ProjectPage({
                 ))}
               </section>
             )}
-            {mine && <IntroductionPanel key={p.updatedAt} projectId={p.id} />}
+            {mine && <IntroductionPanel key={p.updatedAt} projectId={p.id} onConfirmed={reload} />}
             <ProjectQuestions projectId={p.id} projectOwnerId={p.ownerId} status={p.status} />
             <Successors successors={successors} />
           </div>

@@ -25,3 +25,8 @@ CREATE INDEX IF NOT EXISTS inbox_items_invitation_target_idx ON inbox_items("eve
 CREATE TABLE IF NOT EXISTS inbox_preferences ("userId" text PRIMARY KEY REFERENCES users(id), "automaticInvitations" boolean NOT NULL DEFAULT true, "updatedAt" timestamptz NOT NULL DEFAULT clock_timestamp());
 CREATE TABLE IF NOT EXISTS invitation_dispatch_state (id text PRIMARY KEY CHECK(id='singleton'), "lastCompletedAt" timestamptz, "lastFailureAt" timestamptz, error text CHECK(error IS NULL OR error='DISPATCH_FAILED'));
 INSERT INTO invitation_dispatch_state (id) VALUES ('singleton') ON CONFLICT (id) DO NOTHING;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS expertise jsonb NOT NULL DEFAULT '[]';
+CREATE TABLE IF NOT EXISTS ai_jobs (id text PRIMARY KEY, kind text NOT NULL CHECK(kind IN ('project','question')), "targetId" text NOT NULL, "sourceHash" text NOT NULL, status text NOT NULL CHECK(status IN ('pending','processing','ready','failed','stale')), attempts integer NOT NULL DEFAULT 0, "availableAt" timestamptz NOT NULL DEFAULT clock_timestamp(), "startedAt" timestamptz, error jsonb, "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp(), "updatedAt" timestamptz NOT NULL DEFAULT clock_timestamp(), UNIQUE(kind,"targetId","sourceHash"));
+CREATE INDEX IF NOT EXISTS ai_jobs_queue_idx ON ai_jobs(status,"availableAt");
+CREATE TABLE IF NOT EXISTS question_analyses ("questionId" text PRIMARY KEY REFERENCES project_questions(id), "sourceHash" text NOT NULL, scores jsonb, model text, "updatedAt" timestamptz NOT NULL DEFAULT clock_timestamp());
+CREATE TABLE IF NOT EXISTS github_source_cache ("repoUrl" text PRIMARY KEY, snapshot jsonb NOT NULL, "expiresAt" timestamptz NOT NULL);
