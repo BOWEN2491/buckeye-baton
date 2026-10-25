@@ -43,6 +43,8 @@ export default defineConfig({
         OPENAI_API_KEY: 'e2e-mock-key-not-real',
         OPENAI_PROJECT_INTRO_MODEL: 'e2e-mock-model',
         OPENAI_BASE_URL: `http://127.0.0.1:${mockPort}/v1`,
+        // P4 runner: proves automatic invitations without any browser page (only this temporary database).
+        INVITATION_RUNNER_ENABLED: '1',
       },
     },
   ],

@@ -1,8 +1,8 @@
 # Buckeye Baton — 当前交接
 
-**最新P4（2026-10-25）：2ad5607独立9/10，只余R2-follow-up。** 先读[P4_RECHECK.md](P4_RECHECK.md)：原R1/R3与三个R2场景通过，但分页被focus刷新打断后Loading不释放。四项检查、backend20/20、e2e20/20通过；应用未集成、3000保留P3，main不动。
+**最新P4（2026-10-25）：372646c独立技术验收10/10。** 见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)，四项检查/backend20/e2e23及原竞态探针通过，全部返修关闭。已集成P4协调分支，下一步独立P4预览与用户产品验收；3000继续P3，main未合并。
 
-2026-10-24。**P3产品验收通过，启动P4单Agent。** 当前入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)、[P4_CONTRACT.md](P4_CONTRACT.md)、[P4_START_PROMPT.md](P4_START_PROMPT.md)。P4应用尚未实施，独立0/10；任务书不是完成证据。
+2026-10-24。**P3产品验收通过，启动P4单Agent。** 当前入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)、[P4_CONTRACT.md](P4_CONTRACT.md)、[P4_START_PROMPT.md](P4_START_PROMPT.md)。原任务准备时为0/10，现以P4_ACCEPTANCE的10/10为准；任务书保留交付规格。
 
 ## 仓库与分支
 仓库 https://github.com/BOWEN2491/buckeye-baton 。main含P0/P1，P2/P3已通过验收但尚无本次main合并授权。P4以最新origin/codex/p4-integration为协调基线，含38e4901及P4文档；worker用独立clone/worktree上的codex/p4-implementation。不得从旧main丢失P2/P3，不合PR #3、不强推、不覆盖现有工作。

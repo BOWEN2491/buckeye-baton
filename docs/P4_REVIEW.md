@@ -1,5 +1,7 @@
 # P4 总控独立验收：需要返修
 
+**最终状态：372646c本地技术验收10/10，全部返修关闭。** 见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)。下文保留首轮和中途失败，不代表当前仍待返修；用户产品验收/main合并未进行。
+
 **最新复验（2026-10-25）：** 2ad5607已独立通过四项检查、backend20/20/e2e20/20，R1/R3关闭，原R2三场景通过；但Load more被focus刷新打断后busy不释放，尚需R2-follow-up。当前9/10（90%），详见[P4_RECHECK.md](P4_RECHECK.md)。下文7/10和R1–R3是首轮历史。
 
 2026-10-24（America/New_York）。审查精确提交 **7b8a629151847d25f0a17b3e4cb15b7c32a86664**，基线1c3ed64181097806a2d0eca700e6c64d464d33e6。独立worktree：`C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review`。本报告覆盖worker自报，不代表产品验收通过。

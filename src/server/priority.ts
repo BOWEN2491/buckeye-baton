@@ -23,14 +23,14 @@ const fromIso = (iso: string) => BigInt(Date.parse(iso)) * 1000n;
 
 // The event that starts the current wait, following the shared thread order (SQL createdAt, id;
 // deleted posts already excluded): the question itself, or the first follow-up after the last reply.
-function pendingEvent(thread: QuestionThread) {
+export function pendingEvent(thread: QuestionThread) {
  let lastReply = -1;
  thread.posts.forEach((post, index) => { if (post.kind === 'mentor_reply') lastReply = index; });
  const followUp = lastReply < 0 ? undefined : thread.posts.slice(lastReply + 1).find(post => post.kind === 'follow_up');
  return followUp ? { iso: followUp.createdAt, postId: followUp.id } : { iso: thread.question.createdAt, postId: null };
 }
 export const pendingSince = (thread: QuestionThread) => pendingEvent(thread).iso;
-function exactKeys(thread: QuestionThread) {
+export function exactKeys(thread: QuestionThread) {
  const times = exactTimes.get(thread);
  const event = pendingEvent(thread);
  const created = times?.question ?? fromIso(thread.question.createdAt);
@@ -61,7 +61,7 @@ function byQuestionPriority(a: Scored, b: Scored) {
 }
 
 export interface ProjectFacts { id: string; status: string; createdAt: string | Date }
-function noPickup(project: ProjectFacts, successorCount: number, asOf: Date) {
+export function noPickup(project: ProjectFacts, successorCount: number, asOf: Date) {
  if (project.status !== 'paused' || successorCount > 0) return null;
  const hours = hoursSince(project.createdAt, asOf);
  return { hours, days: Math.floor(hours / 24), points: Math.min(20, 5 * Math.floor(hours / 168)) };

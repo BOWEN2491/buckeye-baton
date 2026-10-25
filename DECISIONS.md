@@ -1,10 +1,16 @@
 # Decisions
 
+### Implement P4 Inbox and invitations on the existing transaction and thread services
+**Date:** 2026-10-24 · **Status:** Implemented on372646c and independently accepted locally10/10 on2026-10-25; product acceptance/main merge pending
+**Files:** db/schema.sql, src/server/inbox.ts, src/server/invitations.ts, src/server/invitation-runner.ts, src/instrumentation.ts, src/app/inbox/page.tsx
+
+In the context of the frozen P4 contract asking for role Activity, automatic invitations and a browserless runner, facing lost notifications, duplicate sends and stale invitations under concurrent writes, we decided for Activity rows inserted inside each business transaction, invitations keyed by recipient plus kind/target with database limits, a singleton dispatch row taken first by every eligibility-changing write, and an opt-in Node runner via Next.js instrumentation reusing the app's database singleton, to achieve atomic, private, rate-limited delivery without new services, accepting serialized demo-scale writes and that only PGlite (single connection) was exercised; real multi-connection Postgres and cloud scheduling remain unverified.
+
 ### Specify one Inbox for role activity and bounded automatic invitations
-**Date:** 2026-10-24 · **Status:** Specification recorded on codex/p4-integration; application not implemented or accepted
+**Date:** 2026-10-24 · **Status:** Specification implemented; final372646c independently accepted locally10/10, user product acceptance pending
 **Files:** docs/P4_CONTRACT.md, docs/P4_AGENT_TASK.md, docs/P4_START_PROMPT.md
 
-In the context of starting P4 after P3 product acceptance and the user's request for all-role messages, facing separate invitation and discussion notification flows, we decided for one private Inbox with transactional activity events and explicit invitation responses, to achieve consistent navigation and role-specific awareness, accepting a larger P4 slice. Automatic invitations use verifiable related contributions, persistent caps and conservative lifetime target/recipient dedup; accepting never assigns a Mentor. The specified local runner requires a persistent Node process; cloud scheduling is unverified. These are documented implementation requirements, not a claim that the app already sends messages.
+In the context of starting P4 after P3 product acceptance and the user's request for all-role messages, facing separate invitation and discussion notification flows, we decided for one private Inbox with transactional activity events and explicit invitation responses, to achieve consistent navigation and role-specific awareness, accepting a larger P4 slice. Automatic invitations use verifiable related contributions, persistent caps and conservative lifetime target/recipient dedup; accepting never assigns a Mentor. The specified local runner requires a persistent Node process; cloud scheduling is unverified. The initial specification was implemented on372646c and independently accepted locally; the user preview still runs P3 until a separate P4 preview is prepared.
 
 ### Retain clearly named system suggestions and use age-only help priority
 **Date:** 2026-10-24 · **Status:** Implemented, locally checked and product accepted by user, including Detail toggle38e4901; main merge pending

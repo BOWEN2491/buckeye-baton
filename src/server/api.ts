@@ -4,6 +4,8 @@ import * as v from './validation';
 import { ApiFailure, fail, json, rows, one, actor, role, ownProject, parse, validateProject, insert, update } from './http';
 import * as relay from './relay';
 import * as intro from './introductions';
+import * as inbox from './inbox';
+import * as invitations from './invitations';
 export { ApiFailure };
 // An absent sort keeps the original response; any present but unsupported value (even empty) is rejected.
 function sortParam<T extends string>(search: URLSearchParams, allowed: T[]): T | undefined {
@@ -43,6 +45,13 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
   if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user,sortParam(search,['priority','oldest']));
   if(resource==='projectQuestion'&&method==='PATCH') return await relay.updateDueAt(req,db,user,id!);
+  if(resource==='inbox'&&method==='GET') return await inbox.listInbox(req,db,user);
+  if(resource==='inboxItem'&&method==='PATCH') return await inbox.markRead(req,db,user,id!);
+  if(resource==='inboxPreferences'&&method==='GET') return await inbox.getPreferences(db,user);
+  if(resource==='inboxPreferences'&&method==='PATCH') return await invitations.setPreferences(req,db,user);
+  if(resource==='invitationRespond'&&method==='POST') return await invitations.respond(req,db,user,id!);
+  if(resource==='interestedHelpers'&&method==='GET') return await invitations.interestedHelpers(db,user,id!);
+  if(resource==='invitationStatus'&&method==='GET') return await invitations.runnerStatus(db,user);
   if(resource==='mentorWorkload'&&method==='GET') return await relay.mentorWorkload(db,user);
   if(resource==='introduction'&&method==='GET') return await intro.getEditor(db,user,id!);
   if(resource==='introduction'&&method==='PATCH') return await intro.publish(req,db,user,id!);
@@ -56,11 +65,14 @@ export async function handle(req: Request, resource: string, id?: string): Promi
    const input=await parse(req,v.projectInput.partial());
    if (!Object.keys(input).length) fail(400,'INVALID_INPUT','Provide at least one field');
    const project=await db.transaction(async sql=> {
+    await inbox.lockDispatch(sql);
     const current=(await rows(sql,'SELECT * FROM projects WHERE id=$1 FOR UPDATE',[id]))[0]??fail(404,'NOT_FOUND','Record not found');
     role(user,'student'); if(current.ownerId!==user.id) fail(403,'FORBIDDEN','Only the project owner can edit this project');
     const {title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl}=current;
     const data=validateProject({title,summary,courseOrClub,term,tags,status,codeUrl,demoUrl,...input,reflection:{...v.emptyReflection(),...current.reflection,...input.reflection}});
-    return update(sql,'projects',id!,data);
+    const saved=await update(sql,'projects',id!,data);
+    await invitations.settlePickup(sql,id!); // leaving Paused ends pending pickup invitations
+    return saved;
    }); return json(project);
   }
   if(resource==='projectLessons'&&method==='POST') {await ownProject(db,id!,user);return json(await insert(db,'lessons',{id:randomUUID(),projectId:id,authorId:user.id,...await parse(req,v.lessonInput)}),201);}

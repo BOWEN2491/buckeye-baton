@@ -10,6 +10,8 @@ import {
 } from "react";
 import type { User } from "@/shared/types";
 import { useResource } from "@/lib/client";
+import type { InboxPage } from "@/shared/p4-types";
+import { useLiveRefresh } from "./inbox-shared";
 const IdentityContext = createContext<{
   user?: User;
   users: User[];
@@ -35,6 +37,12 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
     ),
     arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
     plus: <path d="M12 5v14M5 12h14" />,
+    inbox: (
+      <>
+        <path d="M4 13h4l2 3h4l2-3h4" />
+        <path d="M5 5h14l1 8v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-5Z" />
+      </>
+    ),
     relay: (
       <>
         <circle cx="6" cy="5" r="2" />
@@ -63,6 +71,24 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
     >
       {paths[name] || paths.book}
     </svg>
+  );
+}
+// Unread count for the current identity only; the resource key includes the identity, so a previous
+// identity's late response is discarded. On failure no number is shown (never a fake 0).
+function InboxNavLink({ userId, active }: { userId: string; active: boolean }) {
+  const { data, error, reload } = useResource<InboxPage>("/inbox?limit=1", userId);
+  useLiveRefresh(reload);
+  const unread = !error ? data?.unreadCount ?? 0 : 0;
+  return (
+    <Link className={active ? "nav-link active" : "nav-link"} href="/inbox">
+      <Icon name="inbox" />
+      Inbox
+      {unread > 0 && (
+        <span className="nav-badge" aria-label={`${unread} unread`}>
+          {unread > 99 ? "99+" : unread}
+        </span>
+      )}
+    </Link>
   );
 }
 export function AppShell({ children }: { children: ReactNode }) {
@@ -103,6 +129,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Icon name="folder" />
               My workspace
             </Link>
+            <InboxNavLink key={userId} userId={userId} active={pathname === "/inbox"} />
           </nav>
           <div className="sidebar-note">
             <Icon name="relay" />

@@ -1,0 +1,24 @@
+{
+  "pagination": {
+    "visible": 20,
+    "loadMoreVisible": 1
+  },
+  "unread": {
+    "visible": 0,
+    "text": "0 unread · Refresh",
+    "empty": 1
+  },
+  "olderDeletion": {
+    "visible": 25,
+    "deletedPreviewStillVisible": 0,
+    "removedLabel": 1
+  },
+  "overlappingRefresh": {
+    "visible": 20,
+    "loadMoreVisible": 1,
+    "stuckLoading": 0,
+    "stuckDisabled": false,
+    "afterRetryCount": 25,
+    "uniquePreviews": 25
+  }
+}

@@ -1,8 +1,8 @@
 # Buckeye Baton — agent entry
 
-Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md and docs/PROJECT_OVERVIEW.md before changes. Current execution: **P4 single full-stack Agent**, docs/P4_AGENT_TASK.md + docs/P4_CONTRACT.md + docs/P4_START_PROMPT.md. Implementation baseline is latest origin/codex/p4-integration; use codex/p4-implementation in your own clone/worktree. Do not start from old main, which does not contain accepted P2/P3.
+Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md and docs/PROJECT_OVERVIEW.md before changes. P4 is now integrated in codex/p4-integration and independently accepted locally10/10 on372646c; next is user product acceptance in a separate preview. See docs/P4_ACCEPTANCE.md. P4_AGENT_TASK/P4_CONTRACT remain delivery references. Do not start from old main, which lacks P2/P3/P4.
 
-P4 revised candidate2ad5607 is independently reviewed9/10, not accepted or integrated. R1/R3 and the three original R2 scenarios pass, but R2-follow-up (Load more interrupted by automatic refresh leaves loading stuck) remains. Read docs/P4_RECHECK.md; continue codex/p4-implementation from2ad5607 and repair only this request coordination. Original baseline remains1c3ed64; coordinator commits add review documents only.
+P4 application372646c passed typecheck/build, backend20/20, production e2e23/23 and the original refresh/Load-more race probe. R1/R2/R3 and R2-follow-up are closed. Product acceptance is pending; do not reopen historical failures from P4_REVIEW/P4_RECHECK or claim cloud/real PostgreSQL verification. Current3000 remains P3, not P4; no main merge authorization.
 
 P0/P1 are accepted and merged. P2 including comment deletion is product accepted; P3 including age-only priority, conditional project status form and the suggestion Detail toggle is product accepted. Latest accepted app source is38e4901; c1441fd adds preview documentation. Main merge/PR #3 has not been authorized by the latest acceptance; do not merge it.
 

@@ -1,5 +1,7 @@
 # P4 返修独立复验：9/10，R2剩余一个请求竞态
 
+**最终状态更新（2026-10-25）：372646c已独立验收10/10，R2-follow-up关闭。** typecheck/build、backend20/20、e2e23/23及原竞态探针通过；见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)。下文为2ad5607的历史失败证据。
+
 2026-10-25（America/New_York）。精确提交 **2ad5607285701bfcd0b451d871a822d0932fdd1b**；独立目录 `C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review`。此前7b8a629审查记录保留在[P4_REVIEW.md](P4_REVIEW.md)。
 
 **R1、R3关闭；R2原三个场景通过，但刷新与Load more并发时仍会卡住。** 当前K1–K10为9/10（90%），仅K4未通过。候选未集成、不启动P4用户产品验收、不替换3000或合main。

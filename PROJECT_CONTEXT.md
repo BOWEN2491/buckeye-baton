@@ -4,11 +4,11 @@
 
 ## 当前结论与执行入口
 
-**最新（2026-10-25）：P4返修2ad5607独立9/10（90%），只余R2-follow-up。** 见docs/P4_RECHECK.md。typecheck/build、backend20/20、e2e20/20通过，原R1/R3及三个R2串行场景关闭；补充探针复现Load more未完成时focus自动刷新导致busy卡死。尚不集成P4、不替换3000或合main。Worker继续原分支只修该处，再一次READY。
+**最新（2026-10-25）：P4最终372646c独立技术验收10/10（100%）。** typecheck/build、backend20/20、e2e23/23与原竞态探针通过，R1/R2/R3及follow-up全部关闭。已集成codex/p4-integration；详见docs/P4_ACCEPTANCE.md。下一步独立P4预览与用户产品验收，尚不合main；3000仍运行原P3，数据不变。
 
-**P3用户产品验收通过，P4由单Agent交付后返修。** P4初始基线1c3ed64，候选7b8a629；总控仅提交审查文档，尚不集成应用或替换预览，未授权合并main。
+**P3用户产品验收通过，P4由单Agent交付并完成总控独立验收。** P4初始基线1c3ed64，最终372646c，已集成协调分支；用户尚未产品验收或授权合main。
 
-- P4 基线：最新 origin/codex/p4-integration，含接受的应用38e4901及此前文档c1441fd；worker从它建立codex/p4-implementation，不能从旧main开发。
+- 当前P4协调分支origin/codex/p4-integration包含接受的372646c及验收文档；原worker分支codex/p4-implementation保留交付历史。main仍缺P2–P4，后续工作不能从旧main丢弃新功能。
 - 任务书 docs/P4_AGENT_TASK.md；冻结契约 docs/P4_CONTRACT.md；启动提示词 docs/P4_START_PROMPT.md；总控进度 docs/EXECUTION_ROADMAP.md。
 - 工作方式：一个外部全栈Agent连续实施、自测、push；通常只回传一次READY，用户转交短块。总控独立检查后安排用户产品验收，不自动合main或发布。
 
@@ -23,7 +23,7 @@ Honda HackOHI/O 2026 项目。面向OSU学生的项目交接、经验传承和�
 
 P3最新规则详见docs/P3_PRODUCT_REVISION.md；它覆盖旧P3_CONTRACT里的期限/UI规则。Paused零后续每完整周5分最多20，待处理问题每完整等待日5分最多30，项目只加单个最高问题分、最多50。同分精确微秒排序、正式回复/追问/删除口径保持。
 
-## P4 候选范围（待返修验收）
+## P4 已实现（技术验收通过，待用户产品验收）
 
 所有角色统一Inbox：楼主收到新问题/回复、提问者收到引荐/回复、指定Mentor收到引荐/明确追问、引荐Staff收到正式回复。事件按收件人去重并排除自己，通知与业务同事务，删除帖子不泄露预览。Inbox不取代工作台。
 

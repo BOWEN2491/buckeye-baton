@@ -13,10 +13,10 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P4返修2ad5607四项检查通过，backend20/20、e2e20/20；R1/R3关闭，只余R2自动刷新与分页竞态，独立9/10",
-  "nextUp": "原Agent只修P4_RECHECK的R2-follow-up后一次READY；保留3000/P3、数据和main，候选未集成",
+  "lastCompleted": "P4最终372646c独立技术验收10/10，R1/R2/R3及follow-up全部关闭；backend20/20、e2e23/23与原探针通过，已集成协调分支",
+  "nextUp": "准备独立P4预览与用户产品验收；3000仍P3、原数据/配置保留，main与云端尚未处理",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
-  "health": {"featuresDone": 7, "featuresTotal": 8}
+  "health": {"featuresDone": 8, "featuresTotal": 8}
 }
 </script>
 <!-- claude:meta:end -->
@@ -166,11 +166,11 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P4返修2ad5607独立9/10。R1/R3关闭、原R2三场景通过，Load more被自动刷新打断后卡住仍待修；不集成候选、不合main，3000继续P3。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P4最终372646c已独立技术验收10/10并集成P4协调分支，全部返修关闭。用户产品验收尚未开始；3000仍P3，main不合并。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-25"><h3>验证边界</h3><p>2ad5607独立typecheck/build、backend20/20和生产e2e20/20通过，含390px与无页面自动派发。补充延迟分页/focus探针仍失败；真实pg/云端未验证，真实模型调用0。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>验证边界</h3><p>372646c独立typecheck/build、backend20/20、生产e2e23/23和原Load more/focus探针通过，含四身份、390px及无页面自动派发。真实pg多连接、Neon/AWS/云端未验证，真实模型调用0。</p></div>
 <!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
@@ -188,7 +188,7 @@
 <div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">产品验收通过</span></h3><p>所有者确认AI浏览简介/标签、Mentor Awaiting reply、作者/项目所有者评论删除。main合并尚无最新授权。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3 <span class="badge done">产品修订验收通过</span></h3><p>可解释年龄排序，Suggestions原入口与收起Detail说明，状态对应表单。无deadline评分/日期UI，微秒稳定排序与历史保持；当前3000应用38e4901。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>P4 <span class="badge planned">候选待返修 · 9/10</span></h3><p>所有角色Activity Inbox，楼主/提问者/Mentor/引荐Staff消息；真实经验匹配自动邀请、限频/永久去重、接受忽略及设置。返修2ad5607独立9/10，只余自动刷新打断分页的R2-follow-up，未集成。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4 <span class="badge done">技术10/10 · 待产品验收</span></h3><p>全角色Activity Inbox、事务通知、未读/分页/刷新、经验匹配自动邀请、持久限频去重、接受/忽略/设置与持续Node runner。372646c所有返修关闭，用户预览仍为P3。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。</p></div>
 <!-- claude:features:end -->
   </section>
@@ -214,7 +214,8 @@
 <!-- claude:design:spacing:end -->
 
     <!-- claude:design:screenshots:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">桌面，更新于 2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">390px 手机，更新于 2026-10-24</p></div></div></div>
+<div class="card" data-updated="2026-10-24"><h3>预览与验收截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">现有P3预览桌面，2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">现有P3预览390px，2026-10-24</p></div></div></div>
+<p class="muted">P4独立生产页面验收：<a href="../docs/evidence/p4-final-loadmore-recovered.png">Inbox分页恢复截图（虚构数据，2026-10-25）</a>；手机与四身份结果见P4_ACCEPTANCE。3000仍保留P3。</p>
 <!-- claude:design:screenshots:end -->
 
     <!-- claude:design:end -->
@@ -233,11 +234,13 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
-<div class="card" data-updated="2026-10-25"><h3>P4返修独立复验：9/10</h3><p><a href="../docs/P4_RECHECK.md">R1/R3关闭与R2剩余竞态</a>：原套件20/20通过，延迟Load more/focus探针失败；原worker继续只修该处。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4最终独立验收10/10</h3><p><a href="../docs/P4_ACCEPTANCE.md">372646c最终验收与限制</a> · <a href="../docs/P4_MANUAL_ACCEPTANCE.md">独立预览与用户手动剧本</a> · <a href="../docs/API_CONTRACT.md">已实现接口</a>。协调分支已集成，main和3000尚未切换。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4中途复验（历史）：9/10</h3><p><a href="../docs/P4_RECHECK.md">R1/R3关闭与R2剩余竞态</a>：原套件20/20通过，延迟Load more/focus探针失败；原worker继续只修该处。</p></div>
 
 <div class="card" data-updated="2026-10-24"><h3>P4首轮独立审查（历史）：7/10</h3><p><a href="../docs/P4_REVIEW.md">R1–R3与复现工具</a>：现有四项检查均通过，补充Unread/刷新/初始化恢复失败；候选7b8a629待返修，不替换3000。</p></div>
 
-<div class="card" data-updated="2026-10-24"><h3>P4单Agent当前入口</h3><p><a href="../docs/P4_AGENT_TASK.md">统一任务书与K1–K10</a> · <a href="../docs/P4_CONTRACT.md">Inbox/事件/邀请冻结契约</a> · <a href="../docs/P4_START_PROMPT.md">启动提示词</a>。协调基线codex/p4-integration；worker分支codex/p4-implementation，当前候选独立9/10，以P4_RECHECK为准。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P4单Agent当前入口</h3><p><a href="../docs/P4_AGENT_TASK.md">统一任务书与K1–K10</a> · <a href="../docs/P4_CONTRACT.md">Inbox/事件/邀请冻结契约</a> · <a href="../docs/P4_START_PROMPT.md">启动提示词</a>。协调基线codex/p4-integration；worker分支codex/p4-implementation，最终独立10/10，以P4_ACCEPTANCE为准。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3产品反馈修订</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前规则与复验重点</a>：Suggestions for your project保留入口；状态表单只显示对应内容且历史保留；无期限加分/日期界面，旧数据兼容。原P3期限规则为历史。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3当前预览</h3><p><a href="../docs/P3_PREVIEW.md">3000最新运行说明</a>：应用38e4901位于p3-detail，原数据库及真实配置仍在p3-review，旧P1/P2库保留；本轮不重启或调用模型。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3产品验收通过</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前产品规则</a>覆盖旧期限用例；年龄排序、状态表单、Suggestions与Detail已由用户验收。</p></div>
@@ -268,11 +271,11 @@
 <!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
-<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 使用可空 reflection JSONB；P1 新增 project_relations、project_questions、project_posts、project_referrals，增量迁移保留旧表。接棒事务与唯一约束保证去重，引荐每问题一条。历史保留，种子只补缺失 ID；真实 pg 多连接未验证。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>数据库</h3><p>Project.reflection与原P1关系/问题/帖子/引荐及P2简介保留。P4增量新增inbox_items、inbox_preferences、invitation_dispatch_state；通知与业务同事务，持久唯一约束和共用行锁约束邀请。迁移重跑不重置旧历史；真实pg多连接未验证。</p></div>
 <!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
-<div class="card" data-updated="2026-10-24"><h3>环境变量</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>。本地 .env.local 和 .data 被 Git 忽略；不得提交真实连接信息。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>环境变量（仅名称）</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>；P2服务端使用<code>OPENAI_API_KEY</code>、<code>OPENAI_PROJECT_INTRO_MODEL</code>和可选<code>OPENAI_BASE_URL</code>。P4的<code>INVITATION_RUNNER_ENABLED</code>显式启用持续Node检查，默认关闭，构建不派发。真实.env.local和.data不进Git；P4测试无需真实key。</p></div>
 <!-- claude:architecture:env:end -->
 
     <!-- claude:architecture:commands:start -->
@@ -286,7 +289,7 @@ npm start</pre></div>
 <!-- claude:architecture:commands:end -->
 
     <!-- claude:architecture:decisions:start -->
-<div class="card" data-updated="2026-10-24"><h3>P4消息与邀请共用Inbox（待实施）</h3><p>事务内生成角色动态，收件人去重/排除自己；邀请明确接受，不绕过Staff引荐。持续Node runner依赖数据库限额与锁，云调度未验证。任务书已记录，应用未实现。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P4统一Inbox（已本地技术验收）</h3><p>事务内生成角色动态，收件人去重/排除自己；邀请明确接受，不绕过Staff引荐。持续Node runner依赖数据库限额与锁，云调度未验证。372646c已实现并独立验收10/10；用户产品验收待进行。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>仓库收敛</h3><p>用户授权 PR #1 合入 main，作为唯一共享基线。无独立修改的前后端预备分支及空闲工作目录已删除；以后按任务开短期分支。设计原型仅作参考，不自动采纳共同所有者、自动延续导师等新增规则。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 旧采用功能退役</h3><p>按用户要求删除独立经验与采用界面，旧链接转到来源项目。采用写接口返回 410，数据库历史保留，避免新旧两种主流程并存。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 分阶段交付</h3><p>先实现真实项目总结与状态交互，接棒与连接使用不写数据的占位。可空 JSONB 与旧经验内联保护历史，完整接棒留待下一轮。</p></div>
@@ -339,6 +342,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4最终10/10并集成协调分支</h3><p>372646c四项检查通过：backend20/20、生产e2e23/23及原竞态探针通过；请求隔离修复关闭R2-follow-up，全部返修结束。只解决两份文档的集成冲突，应用与被测SHA一致；3000/用户数据/main保持不变，下一步独立P4产品验收。</p></div>
+
 <div class="card" data-updated="2026-10-25"><h3>P4返修复验9/10</h3><p>2ad5607类型/构建、backend20/20、e2e20/20通过；原R1/R3关闭，R2串行刷新场景通过。补充发现Load more被focus刷新打断后busy不释放，单项返修证据已保存；3000/main不变。</p></div>
 
 <div class="card" data-updated="2026-10-24"><h3>P4候选独立审查需要返修</h3><p>7b8a629类型/生产构建、后端17/17和浏览器17/17通过；补充探针确认Unread含失效邀请、刷新窗口不完整及初始化失败终止runner。验收7/10，报告/JSON/虚构截图及复现工具保存。真实AI调用0，3000和main不变。</p></div>

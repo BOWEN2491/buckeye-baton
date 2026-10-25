@@ -1787,3 +1787,130 @@ nav {
 .owner-advice .text-button {
   margin-top: 4px;
 }
+
+/* P4: inbox, invitations and interested helpers */
+.nav-badge {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+.inbox-page {
+  max-width: 900px;
+}
+.inbox-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.inbox-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.inbox-item.unread {
+  border-left: 3px solid var(--accent);
+  background: #fffafb;
+}
+.inbox-item h3 {
+  font-size: 15px;
+  margin: 6px 0 2px;
+}
+.inbox-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.inbox-kind,
+.inbox-unread {
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #eef1f5;
+  color: #4a5568;
+}
+.inbox-kind.invitation {
+  background: #f1ecfb;
+  color: #5b4b8a;
+}
+.inbox-unread {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.inbox-preview {
+  margin-top: 6px;
+  color: #374151;
+  white-space: pre-wrap;
+}
+.inbox-invitation {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.inbox-item .inline-actions {
+  margin-top: 10px;
+}
+.inbox-item .inline-actions .text-button {
+  margin-top: 0;
+}
+.inbox-more {
+  margin-top: 14px;
+}
+.inbox-settings {
+  margin-top: 24px;
+}
+.inbox-settings h2 {
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+.choice-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.choice-row input {
+  width: auto;
+  min-height: 0;
+}
+.interested-helpers {
+  border: 1px solid #d9d2ec;
+  background: #f7f5fc;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+.interested-helpers ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.interested-helpers li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.interested-helpers .text-button {
+  margin-top: 0;
+}
