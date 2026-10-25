@@ -9,7 +9,8 @@ export function PriorityPanel({ projectId, isOwner, onEdit }: { projectId: strin
   const detailId = useId();
   return (
     <section className="panel contextual-panel priority-panel" aria-label="Project priority">
-      <p className="eyebrow">Recommended because</p>
+      <details className="recommendation-details">
+        <summary className="eyebrow">Recommended because</summary>
       {error && !data ? (
         <p className="workload-unavailable" role="status">
           Priority unavailable.{" "}
@@ -27,7 +28,10 @@ export function PriorityPanel({ projectId, isOwner, onEdit }: { projectId: strin
           {error && <p className="workload-unavailable">Couldn’t refresh. Showing the last result.</p>}
           <UpdatedRefresh asOf={data.priority.asOf} loading={loading} onRefresh={() => void reload()} />
           <PriorityRules />
-          {isOwner && (
+        </>
+      )}
+      </details>
+      {data && isOwner && (
             <div className="owner-advice" aria-label="Suggestions for your project">
               <div className="suggestions-heading">
                 <h3>Suggestions for your project</h3>
@@ -57,8 +61,6 @@ export function PriorityPanel({ projectId, isOwner, onEdit }: { projectId: strin
                 <p className="field-help">No suggestions right now.</p>
               )}
             </div>
-          )}
-        </>
       )}
     </section>
   );

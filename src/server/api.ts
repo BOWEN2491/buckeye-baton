@@ -55,7 +55,7 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
   if(resource==='projectPost'&&method==='DELETE') return await relay.deletePost(db,user,id!);
   if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
-  if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user,sortParam(search,['priority','oldest']));
+  if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user,sortParam(search,['priority','oldest','newest']));
   if(resource==='projectQuestion'&&method==='PATCH') return await relay.updateDueAt(req,db,user,id!);
   if(resource==='inbox'&&method==='GET') return await inbox.listInbox(req,db,user);
   if(resource==='inboxItem'&&method==='PATCH') return await inbox.markRead(req,db,user,id!);

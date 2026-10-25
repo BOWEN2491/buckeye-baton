@@ -78,7 +78,7 @@ export default function Explore() {
         ) : data?.length ? (
           <div className="project-grid">
             {data.map((p) => (
-              <ProjectCard key={p.id} project={p} introduction={p.introduction} priority={sort === "recommended" ? p.priority : undefined} />
+              <ProjectCard key={p.id} project={p} introduction={p.introduction} recommended={sort === "recommended" && (p.priority?.score ?? 0) > 0} />
             ))}
           </div>
         ) : (

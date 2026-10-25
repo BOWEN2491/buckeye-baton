@@ -63,10 +63,10 @@ export function readable(value: string) {
   return value.replaceAll("_", " ").replace(/^./, (v) => v.toUpperCase());
 }
 export function formatDate(value: string) {
-  return new Date(value).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 export function formatDateTime(value: string) {
-  return new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  return new Date(value).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 export function errorText(error: unknown) {
   return error instanceof Error ? error.message : "Something went wrong.";

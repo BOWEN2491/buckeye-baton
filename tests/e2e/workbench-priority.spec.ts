@@ -43,26 +43,24 @@ test('Explore Recommended explains its order; Newest, search and status still re
   await expect(page.getByRole('button', { name: 'Recommended', exact: true })).toHaveAttribute('aria-pressed', 'true');
   const first = page.locator('.project-card').first();
   await expect(first.getByRole('link', { name: fixtureTitle, exact: true })).toBeVisible();
-  const why = first.getByLabel('Why recommended');
-  await expect(why).toContainText('+20');
-  await expect(why).toContainText('Shared 40 days ago · no pickup yet');
-  await expect(why).toContainText('+30');
-  await expect(why).toContainText('Waiting 10 days for a reply');
-  await expect(why.getByRole('link', { name: 'Waiting 10 days for a reply' })).toHaveAttribute('href', /\/projects\/p3-old-paused#q-p3-old-question$/);
+  await expect(first.getByText('Recommend', { exact: true })).toBeVisible();
+  await expect(card(page, 'Club Check-in Prototype').getByText('Recommend', { exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Why recommended')).toHaveCount(0);
   await expect(page.getByText(/^Updated /).first()).toBeVisible();
   await expect(page.getByText(/probab|likely to|guarantee/i)).toHaveCount(0);
   const recommendedCount = await page.locator('.project-card').count();
-  await expect(page.locator('.project-card').filter({ hasText: 'No priority boost' }).first()).toBeVisible();
+  await expect(page.locator('.project-card .card-priority')).toHaveCount(0);
   await page.screenshot({ path: path.join(evidenceDir, 'explore-recommended-desktop.png'), fullPage: true });
   await page.getByRole('button', { name: 'Newest', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Newest', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.recommend-badge')).toHaveCount(0);
   await expect(page.getByLabel('Why recommended')).toHaveCount(0);
   await expect(page.locator('.project-card')).toHaveCount(recommendedCount);
   await page.getByLabel('Search projects', { exact: true }).fill('Study Room');
   await page.getByRole('button', { name: 'Paused', exact: true }).click();
   await expect(page.locator('.project-card')).toHaveCount(1);
   await page.getByRole('button', { name: 'Recommended', exact: true }).click();
-  await expect(card(page, fixtureTitle).getByLabel('Why recommended')).toContainText('no pickup yet');
+  await expect(card(page, fixtureTitle).getByLabel('Why recommended')).toHaveCount(0);
   await page.getByRole('button', { name: 'Finished', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'No matches yet', exact: true })).toBeVisible();
   // Identity switch returns to the unfiltered home with the default sort.
@@ -85,24 +83,18 @@ test('age-only Priority, system suggestions, referral/reply/follow-up/delete rec
   const asked = await page.request.post('/api/projects/project-events/questions', { headers: { 'x-demo-user-id': 'student-mia' }, data: { title: dueSoonTitle, body: '', wantsMentor: true, dueAt: new Date(Date.now() + 12 * 3600000).toISOString() } });
   expect(asked.status()).toBe(201);
 
-  // Kevin: Priority puts the near reply date first; Oldest first keeps creation order.
+  // Staff uses newest question creation first, with no Priority mode.
   await identity(page, 'staff-kevin');
   await page.goto('/workspace');
-  await expect(page.getByRole('button', { name: 'Priority', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  const titles = () => page.locator('.workbench-item .workbench-title').allInnerTexts();
-  await expect(page.locator('.workbench-item').first()).toContainText(fixtureQuestion);
-  await expect(page.locator('.workbench-item').first().getByLabel('Priority')).toContainText('Waiting 10 days');
-  const fixtureItem = page.locator('.workbench-item', { hasText: fixtureQuestion });
-  await expect(fixtureItem.getByLabel('Priority')).toContainText('Waiting 10 days for a reply');
-  const priorityOrder = await titles();
-  expect(priorityOrder.indexOf(fixtureQuestion)).toBeLessThan(priorityOrder.indexOf(dueSoonTitle));
-  await page.screenshot({ path: path.join(evidenceDir, 'staff-workbench-priority-desktop.png'), fullPage: true });
-  await page.getByRole('button', { name: 'Oldest first', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Oldest first', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText('Newest questions first', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Priority', exact: true })).toHaveCount(0);
   await expect(page.locator('.workbench-item .card-priority')).toHaveCount(0);
-  const oldest = await titles();
-  expect(oldest.indexOf(fixtureQuestion)).toBeLessThan(oldest.indexOf(dueSoonTitle));
-  expect([...oldest].sort()).toEqual([...priorityOrder].sort());
+  const titles = await page.locator('.workbench-item .workbench-title').allInnerTexts();
+  expect(titles.indexOf(dueSoonTitle)).toBeLessThan(titles.indexOf(fixtureQuestion));
+  const response = await page.request.get('/api/workbench?sort=newest', { headers: { 'x-demo-user-id': 'staff-kevin' } });
+  expect(response.status()).toBe(200);
+  const dates = (await response.json()).data.needsReferral.map((t: { question: { createdAt: string } }) => Date.parse(t.question.createdAt));
+  expect(dates).toEqual([...dates].sort((a: number, b: number) => b - a));
 
   // Reply-date inputs are retired; old stored dates do not affect age-based priority.
   await identity(page, "student-mia");
@@ -150,8 +142,8 @@ test('age-only Priority, system suggestions, referral/reply/follow-up/delete rec
 
   await identity(page, 'mentor-sarah');
   await page.goto('/workspace');
-  await expect(page.getByRole('button', { name: 'Priority', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.workbench-item', { hasText: fixtureQuestion }).getByLabel('Priority')).toContainText('Waiting 10 days');
+  await expect(page.getByText('Newest questions first', { exact: true })).toBeVisible();
+  await expect(page.locator('.workbench-item .card-priority')).toHaveCount(0);
   await expect(page.locator('.workbench-item', { hasText: dueSoonTitle })).toHaveCount(0);
   await page.screenshot({ path: path.join(evidenceDir, 'mentor-workbench-priority-desktop.png'), fullPage: true });
   await page.locator('.workbench-item', { hasText: fixtureQuestion }).getByRole('link', { name: fixtureQuestion }).click();
@@ -215,7 +207,7 @@ test('age-only Priority, system suggestions, referral/reply/follow-up/delete rec
   await expect(thread.locator('.post')).toHaveCount(3); // reply, thanks, follow-up (second reply deleted)
   expect(await projectScore()).toBe(0);
   await page.goto('/');
-  await expect(card(page, fixtureTitle).getByLabel('Why recommended')).not.toContainText('no pickup yet');
+  await expect(card(page, fixtureTitle).getByLabel('Why recommended')).toHaveCount(0);
 
   // 390px views.
   await page.setViewportSize({ width: 390, height: 844 });
@@ -225,7 +217,7 @@ test('age-only Priority, system suggestions, referral/reply/follow-up/delete rec
   await page.screenshot({ path: path.join(evidenceDir, 'project-priority-mobile.png'), fullPage: true });
   await identity(page, 'staff-kevin');
   await page.goto('/workspace');
-  await expect(page.getByRole('button', { name: 'Priority', exact: true })).toBeVisible();
+  await expect(page.getByText('Newest questions first', { exact: true })).toBeVisible();
   await noOverflow(page);
   await page.screenshot({ path: path.join(evidenceDir, 'staff-workbench-priority-mobile.png'), fullPage: true });
 });
@@ -236,15 +228,42 @@ test('priority panel and workbench show Retry on failed loads', async ({ page })
   await page.route(failing, route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Unavailable"}}' }));
   await page.goto(fixturePath);
   const panel = page.getByRole('region', { name: 'Project priority' });
+  await expect(panel.locator('details.recommendation-details')).not.toHaveAttribute('open', '');
+  await panel.getByText('Recommended because', { exact: true }).click();
   await expect(panel.getByText('Priority unavailable.')).toBeVisible();
   await expect(page.getByRole('article', { name: fixtureQuestion, exact: true })).toBeVisible();
   await page.unroute(failing);
   await panel.getByRole('button', { name: 'Retry', exact: true }).click();
   await expect(panel.getByText(/^Updated /)).toBeVisible();
   await identity(page, 'staff-kevin');
-  await page.route('**/api/workbench?sort=priority', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Workbench unavailable."}}' }), { times: 1 });
+  await page.route('**/api/workbench?sort=newest', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":{"code":"UNAVAILABLE","message":"Workbench unavailable."}}' }), { times: 1 });
   await page.goto('/workspace');
   await expect(page.getByRole('alert').filter({ hasText: 'Workbench unavailable.' })).toBeVisible();
   await page.getByRole('button', { name: 'Retry', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Priority', exact: true })).toBeVisible();
+  await expect(page.getByText('Newest questions first', { exact: true })).toBeVisible();
+});
+
+
+test('English dates and collapsed reasons work with a Chinese browser locale', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'zh-CN', viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  try {
+    await page.goto('/');
+    await expect(page.getByLabel('Why recommended')).toHaveCount(0);
+    await page.goto(fixturePath);
+    const details = page.locator('details.recommendation-details');
+    await expect(details).not.toHaveAttribute('open', '');
+    await expect(details.getByText(/^Updated /)).not.toBeVisible();
+    await details.getByText('Recommended because', { exact: true }).focus();
+    await page.keyboard.press('Enter');
+    await expect(details).toHaveAttribute('open', '');
+    await expect(details.getByText(/^Updated /)).toBeVisible();
+    const updated = await details.getByText(/^Updated /).innerText();
+    expect(updated).toMatch(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/);
+    expect(updated).not.toMatch(/[年月日]/);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: path.join(evidenceDir, 'collapsed-reasons-english-date-mobile.png'), fullPage: true });
+    await details.getByText('Recommended because', { exact: true }).click();
+    await expect(details).not.toHaveAttribute('open', '');
+  } finally { await context.close(); }
 });

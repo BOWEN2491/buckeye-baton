@@ -1,3 +1,5 @@
+> Latest preview (2026-10-25): user-requested UI refinement runs on3001 from `C:/Users/23678/.codex/workspaces/buckeye-baton-demo-ui`, application SHA `56c61dbd55b60e50e253b59706a0bcc8116597bd`, build `-c6pnNww7xXiQXnxiIeNg`. Same P4-held database/config, pre-restart backup `p5-before-demo-ui-20261025`. Do not rebuild the active `.next` or open its database from a second process. PR6 is unmerged; P5 itself is accepted/merged. See docs/DEMO_UI_REFINEMENT.md and the active app `.data/demo-ui-preview-runtime.json`. This supersedes older3001 runtime notes below.
+
 # P5 local preview and preserved data
 
 Updated 2026-10-25 (America/New_York). P5 is available for manual product acceptance; it is not merged to `main` and is not deployed publicly.

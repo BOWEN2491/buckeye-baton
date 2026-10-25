@@ -1,3 +1,5 @@
+> Latest preview (2026-10-25): user-requested UI refinement runs on3001 from `C:/Users/23678/.codex/workspaces/buckeye-baton-demo-ui`, application SHA `56c61dbd55b60e50e253b59706a0bcc8116597bd`, build `-c6pnNww7xXiQXnxiIeNg`. Same P4-held database/config, pre-restart backup `p5-before-demo-ui-20261025`. Do not rebuild the active `.next` or open its database from a second process. PR6 is unmerged; P5 itself is accepted/merged. See docs/DEMO_UI_REFINEMENT.md and the active app `.data/demo-ui-preview-runtime.json`. This supersedes older3001 runtime notes below.
+
 > Current product override (2026-10-25): see [P4_PRODUCT_REVISION.md](docs/P4_PRODUCT_REVISION.md). Automatic invitations are pickup-only. Removed-post notifications are hidden from recipients other than the remover.
 
 # Buckeye Baton — 当前项目状态
