@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P3最终4839e77独立验收10/10；后端13/13、浏览器14/14；R1两个原失败探针通过并集成协调分支",
-  "nextUp": "按P3_MANUAL_ACCEPTANCE清单准备独立预览及虚构样例后手动验收；原3000/P1与3001/P2保持；main不合并、P4未开始",
+  "lastCompleted": "按用户要求停止P1/P2旧服务，3000启动P3最终4839e77；独立验收样例及只读健康/页面检查完成，旧库保留",
+  "nextUp": "用户在3000按P3_MANUAL_ACCEPTANCE验收；AI生成未启用、3001已停；main不合并、P4未开始",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -171,7 +171,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0/P1已合入main；P2含评论删除已通过总控及用户全部验收，PR #3待明确合并授权。P3规则推荐进入规划，尚未实现；P4与云端未完成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P2全部产品验收通过；P3最终4839e77已总控10/10，现运行于3000供手动验收，独立虚构样例已备齐，未启用AI生成。3001已按用户要求停止，旧库保留；main不合并，P4与云端未完成。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -237,6 +237,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>P3当前预览</h3><p><a href="../docs/P3_PREVIEW.md">3000运行版本、PID与数据路径</a>：4839e77、独立持久验收库、虚构样例已准备，无模型/mock；旧P1/P2服务按用户要求停止，3001空闲。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3手动产品验收</h3><p><a href="../docs/P3_MANUAL_ACCEPTANCE.md">TC01–TC10与分数速查</a>：推荐/筛选、作者日期、引荐/回复/追问/删除、接棒、手机及失败恢复。需独立P3预览和明确虚构老数据；当前3000/3001仍为P1/P2，本清单未执行。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3最终本地验收10/10</h3><p><a href="../docs/P3_ACCEPTANCE.md">4839e77独立复验</a>：类型/构建、后端13/13、浏览器14/14及原R1两种探针通过。已集成协调分支，待用户产品验收；原3000/3001保持，不合并main。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3独立审查</h3><p><a href="../docs/P3_REVIEW.md">R1复现及验收8/10</a>：已有11/11后端、14/14浏览器通过；两种跨问题微秒排序探针失败。<a href="../docs/evidence/P3_TIMESTAMP_PROBE.json">探针结果</a>已保存，候选应用未集成。</p></div>
@@ -335,6 +336,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>3000切换为P3手动验收预览</h3><p>核对并停止旧25596/31004，启动4839e77生产构建；仅独立库添加老项目与临期问题，只读检查推荐50分及队列35/30顺序、页面无异常。原库/配置保留，未调用AI或合并main。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3手动产品验收清单</h3><p>整理TC01–TC10、身份动作、相对顺序、分数变化及一次反馈模板；明确独立预览与老项目样例前置条件。仅文档准备，未启动服务、修改数据或代替用户验收。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3返修验收通过并集成</h3><p>4839e77按内部精确微秒比较同分问题，R1关闭；独立13/13后端、14/14浏览器及原探针通过，J1–J10全部通过。只合入P3协调分支，原数据/服务不动，用户产品验收待进行。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P3候选独立验收8/10</h3><p>2977e4d类型/构建、后端11/11和浏览器14/14通过。额外临时SQL探针确认同毫秒不同微秒造成优先排序和原因来源错误，集中返修R1；原服务/数据保留，无真实模型调用。</p></div>

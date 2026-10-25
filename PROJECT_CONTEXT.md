@@ -19,7 +19,7 @@ Next.js 15 / React / TypeScript / Node 22 / Tailwind / pg。当前本地 PGlite 
 
 ## 设计与下一轮
 
-P3最终交付4839e77已通过总控独立J1–J10验收10/10（100%）：typecheck/build/start、后端13/13、浏览器14/14，R1两个原失败微秒排序探针均通过，内部精度键未泄露API。实现已集成codex/p3-integration，证据见docs/P3_ACCEPTANCE.md；docs/P3_REVIEW.md保留历史8/10。待用户P3产品验收，未合并main、不进入P4。3000/3001仍分别为原P1/P2版本，本次未启动P3产品预览。
+P3最终交付4839e77已总控独立验收10/10（100%）：typecheck/build/start、后端13/13、浏览器14/14及原R1探针通过。已集成codex/p3-integration，证据见docs/P3_ACCEPTANCE.md。用户已要求停止旧P1/P2并将3000用于P3：当前http://127.0.0.1:3000实际运行4839e77，独立持久验收库已准备虚构老项目/临期问题，AI生成未启用（无mock/真实调用）；3001停止，旧库及配置保留。详情见docs/P3_PREVIEW.md，待用户产品验收，未合并main、不进入P4。
 P2任务书/契约为docs/P2_AGENT_TASK.md与docs/P2_CONTRACT.md。返修提交df5f050已独立验收10/10，R1–R3与E1均关闭；评论删除补充d97920f通过全部回归及用户验收。集成到codex/p2-integration，待main合并授权。3001运行d97920f，使用真实OpenAI/gpt-6-luna；配置及数据库位于p2-review目录，不可清理。既有真实调用证据已核对，本次未新增调用。3000仍运行P1，未重启或改数据。
 实施协调入口：docs/EXECUTION_ROADMAP.md；P1 冻结契约：docs/P1_CONTRACT.md；单 Agent 全栈任务书：docs/P1_AGENT_TASK.md。任务分支 codex/p1-implementation 已交付；用户手动产品验收通过并授权合并，PR #2 已合入 main（合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4）。P1 本地功能验收 10/10。P2已通过总控及用户全部验收；P3进入规划，P4未开始，规则推荐、自动限频站内邀请按后续级别实现。deadline 属于具体求助期望回复日期。产品文案英文，待回复显示 Awaiting reply。
 

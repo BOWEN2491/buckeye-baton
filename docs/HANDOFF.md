@@ -1,5 +1,9 @@
 # Buckeye Baton — 协作与目录约定
 
+## 当前运行状态（优先于下方历史快照）
+
+用户已明确要求停止旧P1/P2服务，现3000为P3最终4839e77，3001已停；独立持久验收库已准备，无模型/mock或key加载。旧库/配置保留。运行应用在buckeye-baton-p3-review，不能清理其.next/.data；完整版本/PID/路径见[P3_PREVIEW.md](P3_PREVIEW.md)。
+
 ## P2已通过总控验收
 
 用户已确认P2全部产品功能通过，包括评论删除补充；后端9/9、浏览器11/11。3001运行d97920f，真实OpenAI/gpt-6-luna，使用原P2数据库/配置。权限/队列语义见COMMENT_DELETION.md。PR #3未合并，尚需明确授权；P1服务及已有数据保留。详细接手说明与关键路径见[COORDINATOR_HANDOFF.md](COORDINATOR_HANDOFF.md)。P3进入规划。
