@@ -1,5 +1,17 @@
 # P3 当前手动验收预览
 
+## 产品修订后当前状态（优先于下方启动历史）
+
+- 3000现运行 **93359a4eadf511629cef4102ea0ab5abdca02a9c**，BuildID `B8UeIqEWMCMjJXOnwSITn`，PID28852。
+- 应用/构建目录为 `C:/Users/23678/.codex/workspaces/buckeye-baton-p3-product-revision`；保持其.next不重建。
+- **继续使用同一个p3-review目录下原验收数据库**（下方路径不变），不添加/覆盖样例，不重置用户操作。新运行清单位于product-revision/.data/p3-preview-runtime.json，也同步到主控和p3-review的.data。
+- 启动前发现3000已被重新启动且新增p3-review/.env.local配置，旧PID27868已失效。重新核对旧进程29756、旧构建与相同数据库后才升级；保留该原配置文件，通过--env-file加载，不打印/复制/修改key，本次真实模型调用0次。不能继续把该预览描述为未配置key；本次没有验证真实模型请求。
+- 停止后备份数据库到 `C:/Users/23678/AppData/Local/Temp/buckeye-baton-before-product-revision-c5a155354cc14a18bc9ac0a9c2b0e759`；启动读取后再次核对11张表的有序记录哈希，与升级前完全一致，6项目/4问题/3帖子及所有原文、关系、AI内容均保留。
+- 实际浏览器只读检查：系统建议改名且原入口存在，状态选项仅渲染对应字段，日期UI消失；390px无溢出、pageerror0、AI请求0。未保存表单或提交评论/接棒来改变验收数据。
+- 用户只需复验[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md)三项变更；其他功能已被用户确认通过。main不合并、P4未开始。3001仍停止。
+
+下方是初次4839e77启动历史，其中PID、应用目录与模型未配置说明已被上述现况替代；数据库路径仍有效。
+
 2026-10-24（本地时间）。用户明确要求停止旧3000/P1、3001/P2，并将3000用于P3。下列为启动时快照；今后操作进程前重新核对端口/PID。
 
 - 地址：**http://127.0.0.1:3000**。3001已停止。
