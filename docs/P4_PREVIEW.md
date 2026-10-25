@@ -1,5 +1,7 @@
 # P4 独立手动验收预览
 
+AI配置准备（2026-10-25）：用户要求自行填写key，已在P4应用目录创建被Git忽略的`.env.local`，只有空白OPENAI_API_KEY、既有模型gpt-6-luna及官方base URL。尚未读取用户key、调用模型或重启服务；当前运行进程仍未启用模型。用户填好后，只重启3001加载该文件，保留同一P4数据库与3000/P3。该env不包含DATABASE_MODE/PGLITE_DATA_DIR，不得因此改用默认数据库。
+
 2026-10-25（America/New_York）。用户授权启动独立P4预览；**3000/P3及原有数据保留，main未合并**。端口/PID为本次启动快照，今后操作前重新核对runtime manifest和端口，不凭旧PID停进程。
 
 ## 当前运行

@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P4独立预览3001已启动：372646c、新演示库、runner开启，Mia/Sarah邀请已生成；桌面/390px检查通过",
-  "nextUp": "用户直接在3001做P4产品验收；3000/P3、旧数据与配置保留，main不合并",
+  "lastCompleted": "为P4创建忽略的.env.local空白key模板，沿用gpt-6-luna；尚未加载、重启或调用模型",
+  "nextUp": "用户填写P4 key后只重启3001并保留同库；3000/P3和main不变，继续P4产品验收",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 8, "featuresTotal": 8}
 }
@@ -346,6 +346,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4 AI本地配置模板</h3><p>按用户选择创建忽略的.env.local，key留空由本人填写，模型沿用gpt-6-luna；尚未重启或调用API。当前3001仍无模型，3000与同库保留。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>启动P4独立手动验收预览</h3><p>3001运行已验收372646c构建，新建独立持久SQL与虚构经验fixture，runner自动生成Mia接棒/Sarah求助邀请；只读页面/桌面/390px检查通过。无模型/mock，原3000/P3和用户库不变。</p></div>
 
 <div class="card" data-updated="2026-10-25"><h3>P4最终10/10并集成协调分支</h3><p>372646c四项检查通过：backend20/20、生产e2e23/23及原竞态探针通过；请求隔离修复关闭R2-follow-up，全部返修结束。只解决两份文档的集成冲突，应用与被测SHA一致；3000/用户数据/main保持不变，下一步独立P4产品验收。</p></div>
