@@ -1,3 +1,5 @@
+Active P4 preview now runs product revision5a5fddf at3001, app/build buckeye-baton-p4-product-revision. Old buckeye-baton-p4-review is still the protected database and .env.local holder; do not remove/archive it. Read current docs/P4_PREVIEW.md and runtime manifest; historical372646c paths/PIDs below are superseded.
+
 Current P4 product override: docs/P4_PRODUCT_REVISION.md supersedes conflicting original P4 rules. Invitations are pickup-only; notifications for removed posts are hidden from recipients except the remover.
 
 # Buckeye Baton — agent entry

@@ -1,3 +1,21 @@
+# Current P4 preview — product revision (2026-10-25)
+
+- URL: http://127.0.0.1:3001/inbox
+- Actual application source: **5a5fddfa527b2dff509431ad05bcaa36a8c7dc80**; BuildID **zxqkg5OxLuNqffTSgakce**.
+- Active app/build: `C:/Users/23678/.codex/workspaces/buckeye-baton-p4-product-revision`. Do not rebuild, switch or archive while serving.
+- Node PID **40108**, hidden launcher **40512**. Recheck listener before any operation.
+- Same persistent database: `C:/Users/23678/.codex/workspaces/buckeye-baton-p4-review/.data/p4-preview-e2e-737dae5553fa44779b0d1d0ce0ff3459`.
+- Same real OpenAI/gpt-6-luna configuration loaded via Node `--env-file` from old p4-review `.env.local`; no key printed/copied/committed. Old p4-review remains protected as the database/config holder. **Zero real model calls for this revision.**
+- Runner enabled, pickup invitations only. Legacy help invitations are hidden; pending ones settle on check. Manual referrals and activity remain.
+- Before restarting, stopped only verified3001 PID14344 and copied the offline database to old p4-review `.data/p4-before-product-revision-20261025`.
+- After restart, compared all8 projects, full project details, discussions and private introduction states: **exactly unchanged**. Sarah's legacy help invitation is absent; runner enabled with successful check and no error. Live Inbox desktop/390px checks pass without writes.
+- 3000/P3 PID38224 unchanged. Main and PR#3 not merged; no deployment.
+- Current rules and final checks: [P4_PRODUCT_REVISION.md](P4_PRODUCT_REVISION.md). Runtime manifest copied to active app, old config/database holder and coordinator `.data/p4-preview-runtime.json`.
+
+---
+
+The following is historical setup evidence for the previous372646c preview; use the current runtime above.
+
 # P4 独立手动验收预览
 
 **AI已启用（2026-10-25）：** 用户自行填写P4 `.env.local` 后，已只重启3001，以Node `--env-file`加载本地配置。真实OpenAI / gpt-6-luna，非mock；一次生成返回200、1句/2标签，仅保存Mia的Campus Map Kiosk未发布草稿，没有确认或更改公开卡片。安全结果见[evidence/P4_AI_ENABLE_RESULT.json](evidence/P4_AI_ENABLE_RESULT.json)。key未打印、复制或提交Git；以后运行回归仍用mock，不能把此单次验收当持续真实调用授权。

@@ -20,3 +20,7 @@ Final results and preview identity are recorded below after execution. Browser p
 - Browser: 23/23 passed on production next start, including pickup-only runner before any page opens, deletion by owner/author, pagination refresh and superseded Load more, identity journey and 390px.
 - AI calls: zero real calls for this revision; existing AI regressions used local mock.
 - No schema/dependency changes.
+
+## Preserved-data preview
+
+Live at http://127.0.0.1:3001/inbox, application5a5fddf. Same database and real model configuration, zero new model calls. All8 projects, full project details, discussions and private introduction states compared exactly equal before/after restart. Sarah help invitations hidden; runner healthy and enabled. 3000/P3 and main unchanged. See P4_PREVIEW.md for current paths and process snapshot.
