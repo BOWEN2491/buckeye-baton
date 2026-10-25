@@ -1,3 +1,5 @@
+> Latest preview (2026-10-25): user-requested UI refinement runs on3001 from `C:/Users/23678/.codex/workspaces/buckeye-baton-demo-ui`, application SHA `56c61dbd55b60e50e253b59706a0bcc8116597bd`, build `-c6pnNww7xXiQXnxiIeNg`. Same P4-held database/config, pre-restart backup `p5-before-demo-ui-20261025`. Do not rebuild the active `.next` or open its database from a second process. PR6 is unmerged; P5 itself is accepted/merged. See docs/DEMO_UI_REFINEMENT.md and the active app `.data/demo-ui-preview-runtime.json`. This supersedes older3001 runtime notes below.
+
 # Buckeye Baton — current agent entry
 
 2026-10-25: P4 accepted and merged through PR #3 as3bf29b3. P5 is implemented on codex/p5-implementation at9093dbb and is now running on3001 for manual product acceptance; P5 is not merged. See docs/P5_PREVIEW.md for live runtime and protected data details.

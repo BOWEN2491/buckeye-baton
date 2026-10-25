@@ -15,3 +15,5 @@ Typecheck and production build passed. Backend26/26 and production browser25/25 
 ## Preview and data
 
 The3001 preview is upgraded from the preserved P5 database after a stopped-database backup. The original API project/user snapshot is stored in ignored .data/pre-ui-preview-api-snapshot.json. Runtime identity is recorded in .data/demo-ui-preview-runtime.json. Port3000 remains protected. No database schema changes, simulation import, main merge, or public deployment is part of this revision.
+
+Live preview confirmed: app SHA56c61dbd55b60e50e253b59706a0bcc8116597bd, build-c6pnNww7xXiQXnxiIeNg, Node PID27404, hidden launcher42152. Backup p5-before-demo-ui-20261025 matched all1069 files. Public API snapshots before/after restart are identical for30 projects and8 users; Staff and Sarah sort=newest groups were checked online. Port3000 remains PID38224. PR6 awaits product acceptance.
