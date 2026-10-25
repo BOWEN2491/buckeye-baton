@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import type { Sql } from './db';
 import * as v from './validation';
+import { z } from 'zod';
+import * as priority from './priority';
 import { fail, json, rows, one, role, parse, insert } from './http';
 import type { User } from '../shared/types';
 import type { QuestionState, QuestionThread, RelayLink, RelayProjectDetail, Workbench } from '../shared/relay-types';
@@ -57,7 +59,7 @@ function threadState(question: Row, posts: Row[], referral: Row | undefined): Qu
  return lastReply < 0 || lastFollowUp > lastReply ? 'awaiting_reply' : 'replied';
 }
 
-async function threads(sql: Sql, where: string, params: unknown[]): Promise<QuestionThread[]> {
+export async function threads(sql: Sql, where: string, params: unknown[]): Promise<QuestionThread[]> {
  const questions = await rows(sql, `SELECT * FROM project_questions WHERE ${where} ORDER BY "createdAt", id`, params);
  if (!questions.length) return [];
  const ids = questions.map(q => q.id);
@@ -131,17 +133,60 @@ export async function deletePost(db: Storage, user: User, postId: string) {
  }));
 }
 
-export async function workbench(db: Sql, user: User) {
+// sort=undefined keeps the original Workbench response; 'priority' adds per-thread priority (P3).
+export async function workbench(db: Sql, user: User, sort?: 'priority' | 'oldest') {
  const empty: Workbench = { needsReferral: [], referred: [], awaitingReply: [], replied: [] };
+ let groups: Workbench;
  if (user.role === 'staff') {
   const all = await threads(db, '"wantsMentor"', []);
-  return json({ ...empty, needsReferral: all.filter(t => t.state === 'needs_referral'), referred: all.filter(t => t.referral) });
- }
- if (user.role === 'mentor') {
+  groups = { ...empty, needsReferral: all.filter(t => t.state === 'needs_referral'), referred: all.filter(t => t.referral) };
+ } else if (user.role === 'mentor') {
   const mine = await threads(db, 'id IN (SELECT "questionId" FROM project_referrals WHERE "mentorId"=$1)', [user.id]);
-  return json({ ...empty, awaitingReply: mine.filter(t => t.state === 'awaiting_reply'), replied: mine.filter(t => t.state === 'replied') });
- }
- return fail(403, 'FORBIDDEN', 'The workbench is for Staff and Mentors');
+  groups = { ...empty, awaitingReply: mine.filter(t => t.state === 'awaiting_reply'), replied: mine.filter(t => t.state === 'replied') };
+ } else return fail(403, 'FORBIDDEN', 'The workbench is for Staff and Mentors');
+ if (sort !== 'priority') return json(groups);
+ const asOf = priority.now();
+ return json({ needsReferral: priority.prioritize(groups.needsReferral, asOf), referred: priority.prioritize(groups.referred, asOf), awaitingReply: priority.prioritize(groups.awaitingReply, asOf), replied: priority.prioritize(groups.replied, asOf) });
+}
+
+// Batch facts for P3 scoring: successor counts over all relations and shared threads per project.
+async function priorityFacts(db: Sql, projectIds: string[]) {
+ const counts = new Map((await rows(db, 'SELECT "sourceProjectId" AS id, count(*)::int AS n FROM project_relations WHERE "sourceProjectId" = ANY($1::text[]) GROUP BY "sourceProjectId"', [projectIds])).map(r => [r.id, r.n as number]));
+ const byProject = new Map<string, QuestionThread[]>();
+ for (const t of await threads(db, '"projectId" = ANY($1::text[])', [projectIds])) byProject.set(t.question.projectId, [...(byProject.get(t.question.projectId) ?? []), t]);
+ return { successors: (id: string) => counts.get(id) ?? 0, threadsOf: (id: string) => byProject.get(id) ?? [] };
+}
+
+// Recommended: input rows arrive in Newest order (createdAt desc, id asc at DB precision); a stable
+// sort by score keeps that order for ties.
+export async function recommend<T extends Record<string, any>>(db: Sql, projects: T[]) {
+ if (!projects.length) return [];
+ const asOf = priority.now();
+ const facts = await priorityFacts(db, projects.map(p => p.id));
+ return projects.map(p => ({ ...p, priority: priority.projectPriority(p as never, facts.successors(p.id), facts.threadsOf(p.id), asOf).priority }))
+  .sort((a, b) => b.priority.score - a.priority.score);
+}
+
+export async function projectPriorityDetail(db: Sql, id: string) {
+ const project = await one(db, 'projects', id);
+ const asOf = priority.now();
+ const facts = await priorityFacts(db, [id]);
+ const list = facts.threadsOf(id);
+ const { priority: score, scored } = priority.projectPriority(project as never, facts.successors(id), list, asOf);
+ return json({ projectId: id, priority: score, questions: list.map(t => ({ questionId: t.question.id, priority: priority.questionPriority(t, asOf) })), advice: priority.ownerAdvice(project as never, facts.successors(id), scored, asOf) });
+}
+
+// Only the asker may change or clear the hoped-for reply date; nothing else on the question changes.
+export async function updateDueAt(req: Request, db: Storage, user: User, questionId: string) {
+ const question = (await rows(db, 'SELECT * FROM project_questions WHERE id=$1', [questionId]))[0] ?? fail(404, 'NOT_FOUND', 'Question not found');
+ if (user.role !== 'student' || question.authorId !== user.id) fail(403, 'FORBIDDEN', 'Only the student who asked this question can change its reply date');
+ const input = await parse(req, z.object({ dueAt: v.dueAt }).strict());
+ return json(await db.transaction(async sql => {
+  const current = (await rows(sql, 'SELECT "authorId" FROM project_questions WHERE id=$1 FOR UPDATE', [questionId]))[0] ?? fail(404, 'NOT_FOUND', 'Question not found');
+  if (current.authorId !== user.id) fail(403, 'FORBIDDEN', 'Only the student who asked this question can change its reply date');
+  await sql.query('UPDATE project_questions SET "dueAt"=$2 WHERE id=$1', [questionId, input.dueAt]);
+  return thread(sql, questionId);
+ }));
 }
 
 // Staff-wide Awaiting reply counts; same thread state as the Mentor workbench above.
