@@ -3,6 +3,7 @@ import { database } from './db';
 import * as v from './validation';
 import { ApiFailure, fail, json, rows, one, actor, role, ownProject, parse, validateProject, insert, update } from './http';
 import * as relay from './relay';
+import * as intro from './introductions';
 export { ApiFailure };
 export async function handle(req: Request, resource: string, id?: string): Promise<Response> {
  try {
@@ -12,7 +13,7 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='users'&&method==='GET') return json(await rows(db,'SELECT * FROM users ORDER BY name'));
   if(resource==='projects'&&method==='GET') {
    const q=search.get('q')??''; const status=search.get('status'); if(status&&!['ongoing','finished','paused'].includes(status)) fail(400,'INVALID_INPUT','Invalid project status');
-   return json(await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC',[`%${q}%`,status]));
+   return json(await intro.browseProjects(db,await rows(db,'SELECT * FROM projects WHERE (title ILIKE $1 OR summary ILIKE $1) AND ($2::text IS NULL OR status=$2) ORDER BY "createdAt" DESC',[`%${q}%`,status])));
   }
   if(resource==='project'&&method==='GET') return json(await relay.projectDetail(db,id!));
   if(resource==='projectQuestions'&&method==='GET') return await relay.listQuestions(db,id!);
@@ -31,6 +32,10 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
   if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
   if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user);
+  if(resource==='mentorWorkload'&&method==='GET') return await relay.mentorWorkload(db,user);
+  if(resource==='introduction'&&method==='GET') return await intro.getEditor(db,user,id!);
+  if(resource==='introduction'&&method==='PATCH') return await intro.publish(req,db,user,id!);
+  if(resource==='introductionGenerate'&&method==='POST') return await intro.generate(req,db,user,id!);
   if(resource==='projects'&&method==='POST') {
    role(user,'student'); const input=await parse(req,v.projectInput);
    const data=validateProject({codeUrl:null,demoUrl:null,...input,status:input.status??'ongoing',reflection:{...v.emptyReflection(),...input.reflection}});

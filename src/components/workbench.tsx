@@ -7,6 +7,7 @@ import { formatDate, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Empty, Feedback, Loading } from "./ui";
 import { StateBadge, hasNewFollowUp } from "./project-questions";
+import { MentorWorkloadPanel } from "./mentor-workload";
 
 type Tab = keyof WorkbenchData;
 const tabs: Record<"staff" | "mentor", { key: Tab; label: string; empty: string; help: string }[]> = {
@@ -62,6 +63,7 @@ export function RoleWorkbench({ role }: { role: "staff" | "mentor" }) {
   return (
     <section aria-label={role === "staff" ? "Staff workbench" : "Mentor workbench"}>
       <Feedback error={error} />
+      {role === "staff" && <MentorWorkloadPanel />}
       <div className="filter-buttons workbench-tabs" role="group" aria-label="Workbench lists">
         {tabs[role].map((t) => (
           <button key={t.key} aria-pressed={tab === t.key} className={tab === t.key ? "selected" : ""} onClick={() => setTab(t.key)}>

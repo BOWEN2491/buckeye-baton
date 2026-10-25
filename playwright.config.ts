@@ -6,6 +6,7 @@ import path from 'node:path';
 // Build first. Each run starts a separate production server with an isolated database.
 const port = Number(process.env.E2E_PORT || 3100);
 const baseURL = `http://127.0.0.1:${port}`;
+const mockPort = Number(process.env.E2E_MOCK_AI_PORT || port + 99);
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 90_000,
@@ -22,14 +23,26 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
-  webServer: {
-    command: `npm run start -- --port ${port}`,
-    url: `${baseURL}/api/health`,
-    reuseExistingServer: false,
-    timeout: 60_000,
-    env: {
-      DATABASE_MODE: 'pglite',
-      PGLITE_DATA_DIR: path.join(tmpdir(), `pass-it-on-e2e-${randomUUID()}`),
+  webServer: [
+    {
+      command: `node tests/e2e/mock-openai.mjs ${mockPort}`,
+      url: `http://127.0.0.1:${mockPort}/`,
+      reuseExistingServer: false,
+      timeout: 20_000,
     },
-  },
+    {
+      command: `npm run start -- --port ${port}`,
+      url: `${baseURL}/api/health`,
+      reuseExistingServer: false,
+      timeout: 60_000,
+      // Explicit values override any .env.local, so tests never use a real key or model.
+      env: {
+        DATABASE_MODE: 'pglite',
+        PGLITE_DATA_DIR: path.join(tmpdir(), `pass-it-on-e2e-${randomUUID()}`),
+        OPENAI_API_KEY: 'e2e-mock-key-not-real',
+        OPENAI_PROJECT_INTRO_MODEL: 'e2e-mock-model',
+        OPENAI_BASE_URL: `http://127.0.0.1:${mockPort}/v1`,
+      },
+    },
+  ],
 });

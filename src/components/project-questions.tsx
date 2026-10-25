@@ -5,6 +5,7 @@ import type { ProjectPostKind, QuestionThread } from "@/shared/relay-types";
 import { ApiRequestError, api, errorText, formatDate, formatDateTime, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
+import { MentorSelect, invalidateMentorWorkload } from "./mentor-workload";
 
 export function stateLabel(thread: QuestionThread) {
   const mentor = thread.referral?.mentor.name;
@@ -133,6 +134,7 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
     setBusy(true);
     try {
       const updated = await api<QuestionThread>(`/project-questions/${thread.question.id}/referral`, userId, { mentorId, reason });
+      invalidateMentorWorkload();
       onChanged(`Referral sent. ${updated.referral?.mentor.name} will see this question in their workbench.`);
     } catch (err) {
       if (err instanceof ApiRequestError && err.code === "ALREADY_REFERRED") {
@@ -160,17 +162,7 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
         </button>
       )}
       {mentors.length ? (
-        <label>
-          Mentor
-          <select value={mentorId} disabled={busy} onChange={(e) => setMentorId(e.target.value)}>
-            <option value="">Choose a mentor</option>
-            {mentors.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name} · {m.headline}
-              </option>
-            ))}
-          </select>
-        </label>
+        <MentorSelect mentors={mentors} value={mentorId} disabled={busy} onChange={setMentorId} />
       ) : (
         <p className="subtle-empty">No mentors in the directory yet. The question stays under “Needs referral”.</p>
       )}
