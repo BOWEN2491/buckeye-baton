@@ -1,5 +1,7 @@
 # P3 当前手动验收预览
 
+最新UI精简：3000现运行 **38e4901b3b975fe222984ca05d6b03cdd63375a7**，应用目录`C:/Users/23678/.codex/workspaces/buckeye-baton-p3-detail`，PID38224。模型配置与原数据库路径保持下文现况，运行清单同步到各相关.data目录。Suggestions for your project旁Detail默认收起说明，点击/Enter切换展开，原建议/操作入口保留。typecheck及生产build通过，实际390px浏览器检查展开/收起、aria-expanded、原入口、无溢出/无异常；只读请求，项目资料/关系/讨论前后相同，AI调用0次。本次为小UI修订，未重复运行全套后端测试。
+
 ## 产品修订后当前状态（优先于下方启动历史）
 
 - 3000现运行 **93359a4eadf511629cef4102ea0ab5abdca02a9c**，BuildID `B8UeIqEWMCMjJXOnwSITn`，PID28852。
