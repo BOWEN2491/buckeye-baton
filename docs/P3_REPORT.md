@@ -3,6 +3,20 @@
 2026-10-24 · 分支 `codex/p3-implementation` · 基线 `origin/codex/p3-integration` @ `b1563aa`（已包含 P2 最终 `d97920f` 和 P3 冻结文档）· 契约 `docs/P3_CONTRACT.md`
 最终提交 SHA 见 READY 短块（本报告随该提交一起推送）。本报告是实现方自测，**不等于总控验收通过**，不给总体进度计分。
 
+## 返修 R1（依据 docs/P3_REVIEW.md，审查提交 2977e4d）
+
+- **问题**：跨问题同分并列时，比较的是转成毫秒 ISO 后的 pendingSince/createdAt，再按 id 排序。数据库时间不同、却落在同一毫秒内时，工作台 Priority 顺序和项目最高分问题的选择都会出错。
+- **修复**（只改 `src/server/priority.ts` 和 `src/server/relay.ts`）：
+  - 共用的 `threads()` 额外读取 `(extract(epoch FROM "createdAt") * 1000000)::bigint::text`，即问题和有效帖子的精确微秒时间，放进内部 WeakMap。公开字段、毫秒 ISO 格式和响应形状都不变。
+  - 唯一的比较器 `byQuestionPriority` 依次按分数、精确 pendingSince（问题本身，或最后一条有效回复之后第一条有效追问的微秒时间）、精确 question.createdAt 比较，完全相同时才看 id。工作台 Priority 和项目最高分问题选择共用这一比较器。
+  - 不新增 schema，不改 Newest/Oldest 顺序和权限，前端不参与。
+- **回归**（`tests/p3.test.ts`，真实 SQL 加 handle/API，固定 asOf=2027-03-01T12:00Z）：
+  - 场景 A（创建时间差 100µs、从未回复，均 30 分）：oldest 和 priority 都返回 `[z-earlier, a-later]`，项目原因指向 z-earlier；公开 createdAt 仍是毫秒 ISO，响应中不出现内部键。
+  - 场景 B（创建顺序与等待顺序相反，追问时间差 100µs）：Sarah 的 priority 队列和 Staff 的 Referred 都是 `[b-a-later, b-z-earlier]`，oldest 仍按创建顺序，项目原因指向 b-a-later。
+  - 精确 pendingSince 相同时按精确 createdAt 决定；完整时刻也相同时按 id 升序。
+  - **在 2977e4d 的 priority.ts/relay.ts 上，场景 A、B 两项都失败**（A 得到 a-later，B 得到 b-z-earlier）；修复后通过。
+- **文案**：ReplyDateEditor 提示改为 “Changing the date may change its priority, but does not change its reply status or mentor assignment.”，业务规则不变。
+
 ## 交付项
 
 - **类型**：`src/shared/p3-types.ts` 按契约实现，复用 BrowseProject/QuestionThread/Workbench，不改 ProjectInput，也不影响 AI sourceHash。
@@ -31,7 +45,7 @@
 
 - 无人接棒：当前 Paused 且没有任何 `project_relations.sourceProjectId` 指向它。分数 `min(20, 5 × floor(发布小时/168))`，文案 `Shared N days ago · no pickup yet`，基于 createdAt，不表述为暂停时长；未来的 createdAt 按 0 计。
 - 问题：状态必须是 `needs_referral` 或 `awaiting_reply`。分数 `min(30, 5 × floor(等待小时/24))`，再加期限分：dueAt ≤ asOf 加 50（`Reply date passed`），24 小时内加 35，72 小时内加 20，三档互斥。null 期限不加分；discussion/replied 状态的 priority 为 null。
-- pendingSince：没有有效正式回复时取 question.createdAt（引荐不重置）；否则取最后一条有效正式回复之后的第一条有效 follow_up。连续追问不重置，普通评论和日期修改不影响。
+- 并列比较使用数据库微秒时间（R1）。pendingSince：没有有效正式回复时取 question.createdAt（引荐不重置）；否则取最后一条有效正式回复之后的第一条有效 follow_up。连续追问不重置，普通评论和日期修改不影响。
 - 项目分：无人接棒分加上单个最高问题的分数（最高 100）。最高分问题并列时按 pendingSince、createdAt、id 依次决定。原因顺序为 no_pickup、waiting、期限，points 之和等于 score。
 - 建议：improve_handoff（无人接棒且发布 ≥14 天）、narrow_question（等待 ≥3 天）、review_reply_date（dueAt ≤ asOf+24h），不出现概率或保证类措辞。
 
@@ -40,9 +54,9 @@
 | 命令 | 结果 |
 |---|---|
 | `npm run typecheck` | 通过 |
-| `npm run test:backend` | **11/11** 通过（新增 P3 两项；P0 三项、P1 两项、P2 三项、评论删除一项保留） |
+| `npm run test:backend` | **13/13** 通过（P3 四项，含 R1 场景 A、B；P0 三项、P1 两项、P2 三项、评论删除一项保留） |
 | `npm run build` | 通过 |
-| `npm run test:e2e`（`E2E_PORT=3410`，mock 端口 3509） | **14/14** 通过（约 1.1 分钟）；Playwright 启动 `next start` 生产服务器、独立临时 PGlite 和本地 mock 模型服务器，即同时确认了生产启动 |
+| `npm run test:e2e`（`E2E_PORT=3410`，mock 端口 3509） | **14/14** 通过（约 1.1 分钟，R1 修复后重跑）；Playwright 启动 `next start` 生产服务器、独立临时 PGlite 和本地 mock 模型服务器，即同时确认了生产启动 |
 | `git diff --check` | 通过 |
 
 ### 固定时钟后端证据（`tests/p3.test.ts`，asOf = 2027-03-01T12:00Z，隔离 PGlite，走真实 API handler）

@@ -280,7 +280,7 @@ function ReplyDateEditor({ thread, onSaved }: { thread: QuestionThread; onSaved:
     <div className="reply-date-editor">
       <label htmlFor={`reply-date-${thread.question.id}`}>Hoping for a reply by</label>
       <input id={`reply-date-${thread.question.id}`} type="date" value={day} min={todayInput()} readOnly={busy} onChange={(e) => setDay(e.target.value)} />
-      <span className="field-help">Shown to readers in their own time zone. Changing it does not move the question in any mentor’s queue.</span>
+      <span className="field-help">Shown to readers in their own time zone. Changing the date may change its priority, but does not change its reply status or mentor assignment.</span>
       {error && (
         <p className="field-error" role="alert">
           {error}

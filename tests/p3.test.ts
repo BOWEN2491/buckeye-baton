@@ -224,3 +224,77 @@ test('P3 API: Recommended/Newest projects, prioritized workbench, owner advice a
   assert.deepEqual((await request('projects', undefined, 'GET', undefined, undefined, '?sort=recommended')).data.map((p: any) => [p.id, p.priority.score]), recBefore);
  } finally { setClock(null); await closeDatabase(); }
 });
+
+// R1 (P3_REVIEW.md): ties across questions compare exact database microseconds, not millisecond ISO.
+test('P3 R1 scenario A: never-replied questions 100 µs apart order by exact createdAt', async () => {
+ process.env.DATABASE_MODE = 'pglite'; process.env.PGLITE_DATA_DIR = await mkdtemp(path.join(tmpdir(), 'buckeye-baton-p3-r1-'));
+ setClock(() => new Date(A));
+ try {
+  const db = await database();
+  const insertQuestion = (id: string, projectId: string, createdAt: string) => db.query('INSERT INTO project_questions (id,"projectId","authorId",title,body,"wantsMentor","dueAt","createdAt") VALUES ($1,$2,$3,$4,$5,true,NULL,$6)', [id, projectId, 'student-mia', `Question ${id}`, '', createdAt]);
+  const insertPost = (id: string, questionId: string, kind: string, author: string, createdAt: string) => db.query('INSERT INTO project_posts (id,"questionId","authorId",body,kind,"createdAt") VALUES ($1,$2,$3,$4,$5,$6)', [id, questionId, author, kind, kind, createdAt]);
+  const ids = (list: any[], only: string[]) => list.map(t => t.question.id).filter(id => only.includes(id));
+  const staffQueue = async (sort: string) => (await request('workbench', undefined, 'GET', 'staff-kevin', undefined, `?sort=${sort}`)).data;
+  const reasonQuestion = async (projectId: string) => [...new Set((await detail(projectId)).priority.reasons.map((r: any) => r.questionId))];
+
+  // Scenario A: never-replied questions created 100 µs apart; both score 30.
+  await project(db, 'r1-a', 'ongoing', -30 * D);
+  await insertQuestion('z-earlier', 'r1-a', '2027-02-20T12:00:00.000100Z');
+  await insertQuestion('a-later', 'r1-a', '2027-02-20T12:00:00.000200Z');
+  assert.equal((await qp('r1-a', 'z-earlier')).score, 30); assert.equal((await qp('r1-a', 'a-later')).score, 30);
+  assert.deepEqual(ids((await staffQueue('oldest')).needsReferral, ['z-earlier', 'a-later']), ['z-earlier', 'a-later']);
+  assert.deepEqual(ids((await staffQueue('priority')).needsReferral, ['z-earlier', 'a-later']), ['z-earlier', 'a-later']);
+  assert.deepEqual(await reasonQuestion('r1-a'), ['z-earlier']);
+  // Public dates keep the millisecond ISO format and no internal key leaks.
+  const listed = (await request('projectQuestions', 'r1-a')).data;
+  assert.deepEqual(listed.map((t: any) => t.question.createdAt), ['2027-02-20T12:00:00.000Z', '2027-02-20T12:00:00.000Z']);
+  assert.ok(!JSON.stringify(listed).includes('createdAtUs'));
+
+ } finally { setClock(null); await closeDatabase(); }
+});
+
+test('P3 R1 scenario B and exact ties: follow-ups 100 µs apart order by exact pendingSince, then createdAt, then id', async () => {
+ process.env.DATABASE_MODE = 'pglite'; process.env.PGLITE_DATA_DIR = await mkdtemp(path.join(tmpdir(), 'buckeye-baton-p3-r1b-'));
+ setClock(() => new Date(A));
+ try {
+  const db = await database();
+  const insertQuestion = (id: string, projectId: string, createdAt: string) => db.query('INSERT INTO project_questions (id,"projectId","authorId",title,body,"wantsMentor","dueAt","createdAt") VALUES ($1,$2,$3,$4,$5,true,NULL,$6)', [id, projectId, 'student-mia', `Question ${id}`, '', createdAt]);
+  const insertPost = (id: string, questionId: string, kind: string, author: string, createdAt: string) => db.query('INSERT INTO project_posts (id,"questionId","authorId",body,kind,"createdAt") VALUES ($1,$2,$3,$4,$5,$6)', [id, questionId, author, kind, kind, createdAt]);
+  const ids = (list: any[], only: string[]) => list.map(t => t.question.id).filter(id => only.includes(id));
+  const staffQueue = async (sort: string) => (await request('workbench', undefined, 'GET', 'staff-kevin', undefined, `?sort=${sort}`)).data;
+  const reasonQuestion = async (projectId: string) => [...new Set((await detail(projectId)).priority.reasons.map((r: any) => r.questionId))];
+
+  // Scenario B: creation order opposite to wait order; first unanswered follow-ups 100 µs apart.
+  await project(db, 'r1-b', 'ongoing', -30 * D);
+  await insertQuestion('b-z-earlier', 'r1-b', '2027-02-19T12:00:00.000000Z');
+  await insertQuestion('b-a-later', 'r1-b', '2027-02-20T12:00:00.000000Z');
+  for (const q of ['b-z-earlier', 'b-a-later']) {
+   await db.query('INSERT INTO project_referrals (id,"questionId","staffId","mentorId",reason,"createdAt") VALUES ($1,$2,$3,$4,$5,$6)', [`ref-${q}`, q, 'staff-kevin', 'mentor-sarah', 'Fits.', '2027-02-20T13:00:00.000000Z']);
+   await insertPost(`${q}-reply`, q, 'mentor_reply', 'mentor-sarah', '2027-02-21T12:00:00.000000Z');
+  }
+  await insertPost('b-z-earlier-f', 'b-z-earlier', 'follow_up', 'student-mia', '2027-02-22T12:00:00.000200Z');
+  await insertPost('b-a-later-f', 'b-a-later', 'follow_up', 'student-mia', '2027-02-22T12:00:00.000100Z');
+  assert.equal((await qp('r1-b', 'b-z-earlier')).score, 30); assert.equal((await qp('r1-b', 'b-a-later')).score, 30);
+  assert.deepEqual(ids((await request('workbench', undefined, 'GET', 'mentor-sarah', undefined, '?sort=priority')).data.awaitingReply, ['b-z-earlier', 'b-a-later']), ['b-a-later', 'b-z-earlier']);
+  assert.deepEqual(ids((await staffQueue('priority')).referred, ['b-z-earlier', 'b-a-later']), ['b-a-later', 'b-z-earlier']);
+  assert.deepEqual(ids((await staffQueue('oldest')).referred, ['b-z-earlier', 'b-a-later']), ['b-z-earlier', 'b-a-later']);
+  assert.deepEqual(await reasonQuestion('r1-b'), ['b-a-later']);
+
+  // Same exact pendingSince, different exact createdAt → createdAt decides (both waits start at follow-ups).
+  await project(db, 'r1-c', 'ongoing', -30 * D);
+  await insertQuestion('c-b', 'r1-c', '2027-02-19T12:00:00.000300Z');
+  await insertQuestion('c-a', 'r1-c', '2027-02-19T12:00:00.000400Z');
+  for (const q of ['c-a', 'c-b']) {
+   await db.query('INSERT INTO project_referrals (id,"questionId","staffId","mentorId",reason,"createdAt") VALUES ($1,$2,$3,$4,$5,$6)', [`ref-${q}`, q, 'staff-kevin', 'mentor-sarah', 'Fits.', '2027-02-20T13:00:00.000000Z']);
+   await insertPost(`${q}-reply`, q, 'mentor_reply', 'mentor-sarah', '2027-02-21T12:00:00.000000Z');
+   await insertPost(`${q}-f`, q, 'follow_up', 'student-mia', '2027-02-22T12:00:00.000500Z');
+  }
+  assert.deepEqual(await reasonQuestion('r1-c'), ['c-b']);
+  // Fully identical exact times → id ascending.
+  await project(db, 'r1-d', 'ongoing', -30 * D);
+  await insertQuestion('d-b', 'r1-d', '2027-02-20T12:00:00.000700Z');
+  await insertQuestion('d-a', 'r1-d', '2027-02-20T12:00:00.000700Z');
+  assert.deepEqual(await reasonQuestion('r1-d'), ['d-a']);
+  assert.deepEqual(ids((await staffQueue('priority')).needsReferral, ['d-a', 'd-b']), ['d-a', 'd-b']);
+ } finally { setClock(null); await closeDatabase(); }
+});

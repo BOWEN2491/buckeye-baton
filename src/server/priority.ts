@@ -12,13 +12,30 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const hoursSince = (start: string | Date, asOf: Date) => Math.max(0, (asOf.getTime() - new Date(start).getTime()) / HOUR);
 const pendingStates = new Set(['needs_referral', 'awaiting_reply']);
 
-// pendingSince follows the shared thread order (SQL createdAt, id; deleted posts already excluded).
-export function pendingSince(thread: QuestionThread) {
+// Public ISO dates have millisecond precision; the database keeps microseconds. threads() records the
+// exact microsecond epoch of each question and post here so cross-question ties compare true time.
+// Internal only: response shapes and ISO formats are unchanged.
+const exactTimes = new WeakMap<QuestionThread, { question: bigint; posts: Map<string, bigint> }>();
+export function recordExactTimes(thread: QuestionThread, question: string, posts: [string, string][]) {
+ exactTimes.set(thread, { question: BigInt(question), posts: new Map(posts.map(([id, us]) => [id, BigInt(us)])) });
+}
+const fromIso = (iso: string) => BigInt(Date.parse(iso)) * 1000n;
+
+// The event that starts the current wait, following the shared thread order (SQL createdAt, id;
+// deleted posts already excluded): the question itself, or the first follow-up after the last reply.
+function pendingEvent(thread: QuestionThread) {
  let lastReply = -1;
  thread.posts.forEach((post, index) => { if (post.kind === 'mentor_reply') lastReply = index; });
- if (lastReply < 0) return thread.question.createdAt;
- const firstFollowUp = thread.posts.slice(lastReply + 1).find(post => post.kind === 'follow_up');
- return firstFollowUp?.createdAt ?? thread.question.createdAt;
+ const followUp = lastReply < 0 ? undefined : thread.posts.slice(lastReply + 1).find(post => post.kind === 'follow_up');
+ return followUp ? { iso: followUp.createdAt, postId: followUp.id } : { iso: thread.question.createdAt, postId: null };
+}
+export const pendingSince = (thread: QuestionThread) => pendingEvent(thread).iso;
+function exactKeys(thread: QuestionThread) {
+ const times = exactTimes.get(thread);
+ const event = pendingEvent(thread);
+ const created = times?.question ?? fromIso(thread.question.createdAt);
+ const pending = event.postId ? times?.posts.get(event.postId) ?? fromIso(event.iso) : created;
+ return { pending, created };
 }
 
 export function questionPriority(thread: QuestionThread, asOf: Date): QuestionPriority | null {
@@ -39,11 +56,14 @@ export function questionPriority(thread: QuestionThread, asOf: Date): QuestionPr
 }
 
 type Scored = { thread: QuestionThread; priority: QuestionPriority };
-// Highest score first; ties: pendingSince, question.createdAt, question.id ascending.
-const byQuestionPriority = (a: Scored, b: Scored) => b.priority.score - a.priority.score
- || a.priority.pendingSince.localeCompare(b.priority.pendingSince)
- || a.thread.question.createdAt.localeCompare(b.thread.question.createdAt)
- || (a.thread.question.id < b.thread.question.id ? -1 : a.thread.question.id > b.thread.question.id ? 1 : 0);
+const order = (x: bigint | string, y: bigint | string) => (x < y ? -1 : x > y ? 1 : 0);
+// Highest score first; ties: exact pendingSince, exact question.createdAt, then question.id ascending.
+// Used for both the workbench Priority order and choosing a project's single highest question.
+function byQuestionPriority(a: Scored, b: Scored) {
+ if (a.priority.score !== b.priority.score) return b.priority.score - a.priority.score;
+ const ka = exactKeys(a.thread), kb = exactKeys(b.thread);
+ return order(ka.pending, kb.pending) || order(ka.created, kb.created) || order(a.thread.question.id, b.thread.question.id);
+}
 
 export interface ProjectFacts { id: string; status: string; createdAt: string | Date }
 function noPickup(project: ProjectFacts, successorCount: number, asOf: Date) {

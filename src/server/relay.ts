@@ -3,6 +3,8 @@ import type { Sql } from './db';
 import * as v from './validation';
 import { z } from 'zod';
 import * as priority from './priority';
+// Exact microsecond epoch as text, for P3 tie-breaks across questions (public dates stay millisecond ISO).
+const exactUs = `(extract(epoch FROM "createdAt") * 1000000)::bigint::text AS "createdAtUs"`;
 import { fail, json, rows, one, role, parse, insert } from './http';
 import type { User } from '../shared/types';
 import type { QuestionState, QuestionThread, RelayLink, RelayProjectDetail, Workbench } from '../shared/relay-types';
@@ -60,23 +62,25 @@ function threadState(question: Row, posts: Row[], referral: Row | undefined): Qu
 }
 
 export async function threads(sql: Sql, where: string, params: unknown[]): Promise<QuestionThread[]> {
- const questions = await rows(sql, `SELECT * FROM project_questions WHERE ${where} ORDER BY "createdAt", id`, params);
+ const questions = await rows(sql, `SELECT *, ${exactUs} FROM project_questions WHERE ${where} ORDER BY "createdAt", id`, params);
  if (!questions.length) return [];
  const ids = questions.map(q => q.id);
  // Posts keep database order (microsecond timestamp, then id); state is derived from this order.
- const posts = await rows(sql, 'SELECT * FROM project_posts WHERE "questionId" = ANY($1::text[]) AND "deletedAt" IS NULL ORDER BY "createdAt", id', [ids]);
+ const posts = await rows(sql, `SELECT *, ${exactUs} FROM project_posts WHERE "questionId" = ANY($1::text[]) AND "deletedAt" IS NULL ORDER BY "createdAt", id`, [ids]);
  const referrals = new Map((await rows(sql, 'SELECT * FROM project_referrals WHERE "questionId" = ANY($1::text[])', [ids])).map(r => [r.questionId, r]));
  const users = new Map((await rows(sql, 'SELECT * FROM users')).map(u => [u.id, u as User]));
  return questions.map(q => {
   const own = posts.filter(p => p.questionId === q.id);
   const referral = referrals.get(q.id);
-  return {
+  const result: QuestionThread = {
    question: { id: q.id, projectId: q.projectId, authorId: q.authorId, title: q.title, body: q.body, wantsMentor: q.wantsMentor, dueAt: q.dueAt === null ? null : iso(q.dueAt), createdAt: iso(q.createdAt) },
    author: users.get(q.authorId)!,
    posts: own.map(p => ({ id: p.id, questionId: p.questionId, authorId: p.authorId, body: p.body, kind: p.kind, createdAt: iso(p.createdAt), author: users.get(p.authorId)! })),
    referral: referral ? { id: referral.id, questionId: referral.questionId, staffId: referral.staffId, mentorId: referral.mentorId, reason: referral.reason, createdAt: iso(referral.createdAt), staff: users.get(referral.staffId)!, mentor: users.get(referral.mentorId)! } : null,
    state: threadState(q, own, referral),
   };
+  priority.recordExactTimes(result, q.createdAtUs, own.map(p => [p.id, p.createdAtUs]));
+  return result;
  });
 }
 const thread = async (sql: Sql, id: string) => (await threads(sql, 'id=$1', [id]))[0] ?? fail(404, 'NOT_FOUND', 'Question not found');
