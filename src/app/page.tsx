@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import type { Project } from "@/shared/types";
+import type { BrowseProject } from "@/shared/p2-types";
+import type { ProjectSort, RecommendedProject } from "@/shared/p3-types";
+import { PriorityRules, UpdatedRefresh } from "@/components/priority";
 import { useResource } from "@/lib/client";
 import { useIdentity, Icon } from "@/components/app-shell";
 import {
@@ -15,8 +17,9 @@ export default function Explore() {
   const { user } = useIdentity();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
-  const query = new URLSearchParams({ q, ...(status ? { status } : {}) });
-  const { data, error, loading } = useResource<Project[]>(`/projects?${query}`);
+  const [sort, setSort] = useState<ProjectSort>("recommended");
+  const query = new URLSearchParams({ q, ...(status ? { status } : {}), sort });
+  const { data, error, loading, reload } = useResource<(BrowseProject & Partial<RecommendedProject>)[]>(`/projects?${query}`);
   return (
     <div className="explore-layout">
       <section>
@@ -56,13 +59,26 @@ export default function Explore() {
           </div>
           <span className="result-count">{data?.length ?? "—"} projects</span>
         </div>
+        <div className="sort-bar">
+          <div className="filter-buttons" role="group" aria-label="Sort projects">
+            {(["recommended", "newest"] as const).map((s) => (
+              <button key={s} aria-pressed={sort === s} className={sort === s ? "selected" : ""} onClick={() => setSort(s)}>
+                {s === "recommended" ? "Recommended" : "Newest"}
+              </button>
+            ))}
+          </div>
+          {sort === "recommended" && (
+            <UpdatedRefresh asOf={data?.[0]?.priority?.asOf} loading={loading} onRefresh={() => void reload()} />
+          )}
+        </div>
+        {sort === "recommended" && <PriorityRules />}
         <Feedback error={error} />
-        {loading ? (
+        {loading && !data ? (
           <Loading />
         ) : data?.length ? (
           <div className="project-grid">
             {data.map((p) => (
-              <ProjectCard key={p.id} project={p} />
+              <ProjectCard key={p.id} project={p} introduction={p.introduction} priority={sort === "recommended" ? p.priority : undefined} />
             ))}
           </div>
         ) : (

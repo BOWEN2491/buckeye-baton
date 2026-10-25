@@ -11,17 +11,12 @@
   "project": "Buckeye Baton",
   "tagline": "HackOHI/O 2026 · Honda challenge · 项目经验接力",
   "url": "https://github.com/BOWEN2491/buckeye-baton",
-  "lastUpdated": "2026-10-24",
+  "lastUpdated": "2026-10-25",
   "currentFocus": "",
-  "lastCompleted": "P1 总控与用户产品验收通过，PR #2 已合入 main（3b473de）",
-  "nextUp": "以 main 为共享基线准备 P2；真实 PostgreSQL 与云端仍待验证；现有预览保持运行",
-  "blockers": [
-    "真实 Neon 连接、AWS 权益及公网部署未验证"
-  ],
-  "health": {
-    "featuresDone": 7,
-    "featuresTotal": 8
-  }
+  "lastCompleted": "P0–P4及最终产品修订均验收通过，用户明确授权统一合入main",
+  "nextUp": "main作为完整共享基线；保留3000/3001与数据，后续部署另行规划",
+  "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
+  "health": {"featuresDone": 8, "featuresTotal": 8}
 }
 </script>
 <!-- claude:meta:end -->
@@ -167,15 +162,15 @@
     <!-- claude:overview:start -->
 
     <!-- claude:overview:pitch:start -->
-<div class="card" data-updated="2026-10-24"><h3>项目经验接力</h3><p>学生留下项目与经验，让下一组接棒，Staff 将合适的 Mentor 带进具体问题。当前先交付项目浏览和团队总结，连接与接棒属于后续阶段。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>项目经验接力</h3><p>学生留下项目、经验与后续接棒；Staff把Mentor带进具体问题。浏览、总结、接棒和人工指导已交付，当前扩展消息Inbox与自动站内邀请。</p></div>
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前阶段</h3><p>P0 与 P1：三状态项目与总结编辑、接棒关系、项目问题、人工引荐和多轮指导已实现。P1 十项独立本地验收及用户产品验收通过，PR #2 已合入 main；云端及 P2–P4 未完成。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P0–P4全部通过产品验收，用户明确授权PR #3统一合入main。最终应用5a5fddf已通过typecheck/build、backend20/20和browser23/23。预览与数据保留，尚未部署。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
-<div class="card" data-updated="2026-10-24"><h3>验证边界</h3><p>清理后类型检查、后端 3/3、生产构建和浏览器 5/5（10.4 秒）已通过；保留原有四个项目。桌面与 390px 布局已有自动化覆盖，云端与完整接棒仍未验证。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>验证边界</h3><p>372646c独立typecheck/build、backend20/20、生产e2e23/23和原Load more/focus探针通过，含四身份、390px及无页面自动派发。真实pg多连接、Neon/AWS/云端未验证，真实模型调用0。</p></div>
 <!-- claude:overview:health:end -->
 
     <!-- claude:overview:blockers:start -->
@@ -188,10 +183,13 @@
   <!-- ============ FEATURES ============ -->
   <section class="panel" id="features">
     <!-- claude:features:start -->
-<div class="card" data-updated="2026-10-24"><h3>v2 第一轮 <span class="badge done">本地通过</span></h3><p>项目搜索和状态筛选、三状态总结、所有者表单编辑、状态校验与历史保留；旧经验以 Historical experience 内联展示。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>项目接棒与导师连接 <span class="badge done">done · local</span></h3><p>三种接棒、来源/后续关系、问题日期、平铺讨论、Staff 引荐、指定 Mentor 多轮回复和工作台已接通真实本地 SQL。独立本地验收10/10，真实 pg 与云端未验证。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>旧版兼容 <span class="badge deprecated">历史功能</span></h3><p>独立 Lesson 页面重定向来源项目；采用界面、数字与响应字段已删除，采用写接口返回 410。旧数据库记录保留，经验只在项目内展示；旧完整旅程不等于新版接棒。</p></div>
-<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI、真实认证、上传、代码 fork、复杂关系图和通知。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>项目与三状态总结 <span class="badge done">产品验收通过</span></h3><p>浏览/搜索/筛选、所有者编辑/校验、历史保留；表单只显示当前状态字段，切换保留未保存输入。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>接棒与导师连接 <span class="badge done">P1 accepted</span></h3><p>三种接棒、来源/后续关系、项目问题、Staff人工引荐、指定Mentor多轮正式回复和工作台；P1已合main。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 <span class="badge done">产品验收通过</span></h3><p>所有者确认AI浏览简介/标签、Mentor Awaiting reply、作者/项目所有者评论删除。main合并尚无最新授权。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3 <span class="badge done">产品修订验收通过</span></h3><p>可解释年龄排序，Suggestions原入口与收起Detail说明，状态对应表单。无deadline评分/日期UI，微秒稳定排序与历史保持；当前3000应用38e4901。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4 <span class="badge done">技术及产品验收通过</span></h3><p>全角色Activity Inbox、事务通知、未读/分页/刷新、仅接棒自动邀请、限频去重、接受/忽略/设置与Node runner。评论被删除后仅删除者可保留无正文旧通知，其他接收者隐藏；help邀请与Interested helpers退役。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>暂缓</h3><p>AI导师推荐、真实认证、上传、代码fork、复杂关系图、外部邮件/推送与云端调度部署。</p></div>
 <!-- claude:features:end -->
   </section>
 
@@ -216,7 +214,11 @@
 <!-- claude:design:spacing:end -->
 
     <!-- claude:design:screenshots:start -->
-<div class="card" data-updated="2026-10-24"><h3>当前截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">桌面，更新于 2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">390px 手机，更新于 2026-10-24</p></div></div></div>
+<figure><img src="screenshots/p4-inbox-mobile.png" alt="Pickup-only Inbox at390px"><figcaption>2026-10-25 P4修订：Sarah无help邀请；桌面/390px检查通过，无写入。</figcaption></figure>
+<div class="card" data-updated="2026-10-25"><h3>P4预览截图（虚构演示数据）</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/p4-inbox-desktop.png" alt="P4 Inbox invitation desktop"><p class="caption">3001/P4桌面，2026-10-25；邀请仍未接受</p></div><div class="screenshot"><img src="screenshots/p4-inbox-mobile.png" alt="P4 Inbox invitation at390px"><p class="caption">3001/P4，390px，无横向溢出</p></div></div></div>
+
+<div class="card" data-updated="2026-10-24"><h3>预览与验收截图</h3><div class="screenshots"><div class="screenshot"><img src="screenshots/desktop.png" alt="Buckeye Baton desktop"><p class="caption">现有P3预览桌面，2026-10-24</p></div><div class="screenshot"><img src="screenshots/mobile.png" alt="Buckeye Baton mobile"><p class="caption">现有P3预览390px，2026-10-24</p></div></div></div>
+<p class="muted">P4独立生产页面验收：<a href="../docs/evidence/p4-final-loadmore-recovered.png">Inbox分页恢复截图（虚构数据，2026-10-25）</a>；手机与四身份结果见P4_ACCEPTANCE。3000仍保留P3。</p>
 <!-- claude:design:screenshots:end -->
 
     <!-- claude:design:end -->
@@ -235,6 +237,25 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-25"><h3>P4独立预览3001</h3><p><a href="../docs/P4_PREVIEW.md">实际SHA/BuildID/PID/SQL保护与验收入口</a>：372646c、独立演示库、runner开启，真实OpenAI/gpt-6-luna已单次验证。p4-review现为活跃服务目录，不可重建或归档。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4最终独立验收10/10</h3><p><a href="../docs/P4_ACCEPTANCE.md">372646c最终验收与限制</a> · <a href="../docs/P4_MANUAL_ACCEPTANCE.md">独立预览与用户手动剧本</a> · <a href="../docs/API_CONTRACT.md">已实现接口</a>。协调分支已集成，main和3000尚未切换。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4中途复验（历史）：9/10</h3><p><a href="../docs/P4_RECHECK.md">R1/R3关闭与R2剩余竞态</a>：原套件20/20通过，延迟Load more/focus探针失败；原worker继续只修该处。</p></div>
+
+<div class="card" data-updated="2026-10-24"><h3>P4首轮独立审查（历史）：7/10</h3><p><a href="../docs/P4_REVIEW.md">R1–R3与复现工具</a>：现有四项检查均通过，补充Unread/刷新/初始化恢复失败；候选7b8a629待返修，不替换3000。</p></div>
+
+<div class="card" data-updated="2026-10-24"><h3>P4单Agent当前入口</h3><p><a href="../docs/P4_AGENT_TASK.md">统一任务书与K1–K10</a> · <a href="../docs/P4_CONTRACT.md">Inbox/事件/邀请冻结契约</a> · <a href="../docs/P4_START_PROMPT.md">启动提示词</a>。协调基线codex/p4-integration；worker分支codex/p4-implementation，最终独立10/10，以P4_ACCEPTANCE为准。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3产品反馈修订</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前规则与复验重点</a>：Suggestions for your project保留入口；状态表单只显示对应内容且历史保留；无期限加分/日期界面，旧数据兼容。原P3期限规则为历史。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3当前预览</h3><p><a href="../docs/P3_PREVIEW.md">3000最新运行说明</a>：应用38e4901位于p3-detail，原数据库及真实配置仍在p3-review，旧P1/P2库保留；本轮不重启或调用模型。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3产品验收通过</h3><p><a href="../docs/P3_PRODUCT_REVISION.md">当前产品规则</a>覆盖旧期限用例；年龄排序、状态表单、Suggestions与Detail已由用户验收。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3最终本地验收10/10</h3><p><a href="../docs/P3_ACCEPTANCE.md">技术及产品验收记录</a>：初版4839e77独立通过，后续产品修订已通过。main合并未获最新授权。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3独立审查</h3><p><a href="../docs/P3_REVIEW.md">R1复现及验收8/10</a>：已有11/11后端、14/14浏览器通过；两种跨问题微秒排序探针失败。<a href="../docs/evidence/P3_TIMESTAMP_PROBE.json">探针结果</a>已保存，候选应用未集成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3 单Agent入口</h3><p><a href="../docs/P3_AGENT_TASK.md">任务书与J1–J10</a> · <a href="../docs/P3_CONTRACT.md">规则/类型/API契约</a> · <a href="../docs/P3_START_PROMPT.md">启动提示词</a>。基线codex/p3-integration包含P2，worker用codex/p3-implementation；文档准备不代表功能完成。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>主控交接</h3><p><a href="../PROJECT_CONTEXT.md">当前状态</a>与<a href="../docs/HANDOFF.md">协作约定</a>为当前入口；COORDINATOR_HANDOFF主体是P2结束时历史快照，不再代表服务现况。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>评论删除补充</h3><p><a href="../docs/COMMENT_DELETION.md">权限、API和验收</a>：项目所有者可删任意评论，作者可删自己的；增量审计字段与共用有效帖子读取保持Mentor负载一致。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 独立验收：10/10</h3><p><a href="../docs/P2_ACCEPTANCE.md">最终验收依据</a>：R1–R3及真实AI既有证据均通过；后续评论删除及用户产品验收也已通过。main合并未获最新授权，当前3000为P3。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 单Agent交付入口</h3><p><a href="../docs/P2_AGENT_TASK.md">任务书与启动提示词</a>；<a href="../docs/P2_CONTRACT.md">数据/API契约</a>。AI草稿/确认与负载统计已在协调分支实现，H1–H10独立验收通过；main未合并，任务书保留为交付依据。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 验收与新模块</h3><p><a href="../docs/P1_ACCEPTANCE.md">总控独立验收</a>：精确提交、十项门槛与限制。src/server/relay.ts 提供接棒/问题/工作台，src/shared/relay-types.ts 是契约类型；project-questions、relay-links、workbench 组件连接真实 API。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 执行入口</h3><p><a href="../docs/P1_AGENT_TASK.md">单 Agent 全栈任务书</a>：实现、验证与最终 READY 回传；<a href="../docs/P1_CONTRACT.md">冻结契约</a>：数据及接口；<a href="../docs/EXECUTION_ROADMAP.md">总控台账</a>：P0–P4 与十项验收门槛。原 A/B 任务已取代。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>统一入口</h3><p><a href="../docs/PROJECT_OVERVIEW.md">项目总览</a>：定位、状态、已实现与下一轮；<a href="../design/README.md">设计说明</a>：队友原型及未确认差异；<a href="../docs/HANDOFF.md">协作说明</a>：main 共享基线与唯一工作目录。旧实施笔记移入 docs/legacy/planning/。</p></div>
@@ -255,11 +276,11 @@
 <!-- claude:architecture:integrations:end -->
 
     <!-- claude:architecture:db:start -->
-<div class="card" data-updated="2026-10-24"><h3>数据库</h3><p>Project 使用可空 reflection JSONB；P1 新增 project_relations、project_questions、project_posts、project_referrals，增量迁移保留旧表。接棒事务与唯一约束保证去重，引荐每问题一条。历史保留，种子只补缺失 ID；真实 pg 多连接未验证。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>数据库</h3><p>Project.reflection与原P1关系/问题/帖子/引荐及P2简介保留。P4增量新增inbox_items、inbox_preferences、invitation_dispatch_state；通知与业务同事务，持久唯一约束和共用行锁约束邀请。迁移重跑不重置旧历史；真实pg多连接未验证。</p></div>
 <!-- claude:architecture:db:end -->
 
     <!-- claude:architecture:env:start -->
-<div class="card" data-updated="2026-10-24"><h3>环境变量</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>。本地 .env.local 和 .data 被 Git 忽略；不得提交真实连接信息。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>环境变量（仅名称）</h3><p><code>DATABASE_MODE</code>、<code>DATABASE_URL</code>、<code>PGLITE_DATA_DIR</code>；P2服务端使用<code>OPENAI_API_KEY</code>、<code>OPENAI_PROJECT_INTRO_MODEL</code>和可选<code>OPENAI_BASE_URL</code>。P4的<code>INVITATION_RUNNER_ENABLED</code>显式启用持续Node检查，默认关闭，构建不派发。真实.env.local和.data不进Git；P4测试无需真实key。</p></div>
 <!-- claude:architecture:env:end -->
 
     <!-- claude:architecture:commands:start -->
@@ -273,6 +294,7 @@ npm start</pre></div>
 <!-- claude:architecture:commands:end -->
 
     <!-- claude:architecture:decisions:start -->
+<div class="card" data-updated="2026-10-24"><h3>P4统一Inbox（已本地技术验收）</h3><p>事务内生成角色动态，收件人去重/排除自己；邀请明确接受，不绕过Staff引荐。持续Node runner依赖数据库限额与锁，云调度未验证。372646c已实现并独立验收10/10；用户产品验收待进行。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>仓库收敛</h3><p>用户授权 PR #1 合入 main，作为唯一共享基线。无独立修改的前后端预备分支及空闲工作目录已删除；以后按任务开短期分支。设计原型仅作参考，不自动采纳共同所有者、自动延续导师等新增规则。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 旧采用功能退役</h3><p>按用户要求删除独立经验与采用界面，旧链接转到来源项目。采用写接口返回 410，数据库历史保留，避免新旧两种主流程并存。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · 分阶段交付</h3><p>先实现真实项目总结与状态交互，接棒与连接使用不写数据的占位。可空 JSONB 与旧经验内联保护历史，完整接棒留待下一轮。</p></div>
@@ -325,6 +347,32 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>完整版本获准合并</h3><p>用户确认P4全部通过，授权P2–P4统一PR #3 → main；3000/3001、数据库和模型配置保留。详见docs/RELEASE_ACCEPTANCE.md。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4产品修订</h3><p>邀请收窄为Pick up the baton；旧help邀请隐藏、不可操作且不占接棒配额。删除通知对非删除者隐藏；原项目/讨论/AI记录保留。见docs/P4_PRODUCT_REVISION.md。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P4真实AI启用</h3><p>用户填好本地key后仅重启3001，Node显式加载P4.env.local，真实gpt-6-luna一次生成200、1句/2标签，未发布草稿。8项目/讨论/公开卡片保持，同库备份完成，3000和main不变。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4 AI本地配置模板</h3><p>按用户选择创建忽略的.env.local，key留空由本人填写，模型沿用gpt-6-luna；尚未重启或调用API。当前3001仍无模型，3000与同库保留。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>启动P4独立手动验收预览</h3><p>3001运行已验收372646c构建，新建独立持久SQL与虚构经验fixture，runner自动生成Mia接棒/Sarah求助邀请；只读页面/桌面/390px检查通过。无模型/mock，原3000/P3和用户库不变。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4最终10/10并集成协调分支</h3><p>372646c四项检查通过：backend20/20、生产e2e23/23及原竞态探针通过；请求隔离修复关闭R2-follow-up，全部返修结束。只解决两份文档的集成冲突，应用与被测SHA一致；3000/用户数据/main保持不变，下一步独立P4产品验收。</p></div>
+
+<div class="card" data-updated="2026-10-25"><h3>P4返修复验9/10</h3><p>2ad5607类型/构建、backend20/20、e2e20/20通过；原R1/R3关闭，R2串行刷新场景通过。补充发现Load more被focus刷新打断后busy不释放，单项返修证据已保存；3000/main不变。</p></div>
+
+<div class="card" data-updated="2026-10-24"><h3>P4候选独立审查需要返修</h3><p>7b8a629类型/生产构建、后端17/17和浏览器17/17通过；补充探针确认Unread含失效邀请、刷新窗口不完整及初始化失败终止runner。验收7/10，报告/JSON/虚构截图及复现工具保存。真实AI调用0，3000和main不变。</p></div>
+
+<div class="card" data-updated="2026-10-24"><h3>P3产品验收通过，准备P4统一Inbox与自动邀请</h3><p>用户接受最终Detail交互并启动P4，又补充四角色事件消息；合并进单Agent契约/任务书/启动词，K1–K10独立0/10。仅文档/分支准备，3000、数据库和main不变。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>系统建议说明按需展开</h3><p>Suggestions for your project标题旁增加Detail按钮，默认隐藏说明，点击展开/收起；建议与原操作入口不变。仅页面交互，不变更数据库或推荐规则。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3产品反馈三项修订通过本地回归</h3><p>Suggestions for your project保留入口，解释系统建议；表单随状态显示且输入/历史保留；日期输入/编辑和期限分移除，旧dueAt不改动且不参与排序。类型/生产构建、13/13后端、14/14浏览器通过，无真实模型调用。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>3000切换为P3手动验收预览</h3><p>核对并停止旧25596/31004，启动4839e77生产构建；仅独立库添加老项目与临期问题，只读检查推荐50分及队列35/30顺序、页面无异常。原库/配置保留，未调用AI或合并main。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3手动产品验收清单</h3><p>整理TC01–TC10、身份动作、相对顺序、分数变化及一次反馈模板；明确独立预览与老项目样例前置条件。仅文档准备，未启动服务、修改数据或代替用户验收。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3返修验收通过并集成</h3><p>4839e77按内部精确微秒比较同分问题，R1关闭；独立13/13后端、14/14浏览器及原探针通过，J1–J10全部通过。只合入P3协调分支，原数据/服务不动，用户产品验收待进行。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3候选独立验收8/10</h3><p>2977e4d类型/构建、后端11/11和浏览器14/14通过。额外临时SQL探针确认同毫秒不同微秒造成优先排序和原因来源错误，集中返修R1；原服务/数据保留，无真实模型调用。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P3单Agent契约与任务书</h3><p>按实际字段冻结共享年龄、待回复周期、互斥期限分、max聚合、稳定排序和作者日期更新；保留默认接口兼容与P2。无需新schema/依赖/AI调用，P3实现及独立验收0/10。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2全部产品验收结束与上下文交接</h3><p>用户确认评论删除补充通过；保存主控交接快照并同步当前状态，PR #3待明确合并授权。P3进入规划，未实现。仅更新文档，未调用AI、变更数据或重启预览。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>按产品验收新增评论删除</h3><p>用户确认P2其余功能通过，新增普通评论、追问与正式导师回复的删除权限、确认和失败提示；数据库保留审计记录，工作台按剩余有效帖子计算。typecheck/build、后端9/9和浏览器11/11通过，真实AI调用0次，main未合并。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 df5f050复验通过</h3><p>独立typecheck/build/start、后端8/8、浏览器10/10，原JSON/错误探针通过，双表单刷新回归通过；E1既有真实AI记录和截图已核对，无新增真实调用。H1–H10通过，待用户产品验收，main未合并，P1预览不变。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 677a1d7 总控审查</h3><p>独立typecheck/build通过，后端7/7、浏览器9/9通过；补充探针复现3项原测试缺口，H6/H8未通过；H3等待已有真实证据，合计7/10。未调用真实模型、未集成或合并、未影响P1预览。</p></div>
+<div class="card" data-updated="2026-10-24"><h3>P2 单Agent任务准备</h3><p>按用户要求沿用P1方式，单Agent连续全栈、正常最终只回传一次READY。契约规定保留原文、AI草稿需所有者确认、过时回退，负载复用P1待回复状态。真实AI需授权与独立证据，凭据/模型未确认；未改应用或重启预览。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 产品验收与 PR #2 合并</h3><p>用户手动验收本地 a232252 预览后明确授权合并；PR #2 已合入 main，合并提交 3b473deb2b01c708cac9f192663b4de1f352d4d4。本地同步 main；现有预览继续运行，未重启或重置数据，P2尚未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 总控独立验收通过</h3><p>对 61ff34b 在独立目录重跑 typecheck、生产 build/start、后端5/5和浏览器7/7，检查桌面/390px截图；G1–G10本地通过。代码已快进集成 codex/p1-integration；main未合并。真实pg多连接及Neon/AWS未验证，P2未开始。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 改为单 Agent 完整交付</h3><p>按用户最新决定合并前后端任务，正常只在全部实现、自测和推送后汇报一次。P1 功能验收仍为 0/10，本次仅更新交接文档。</p></div>
@@ -337,7 +385,6 @@ npm start</pre></div>
 <div class="card" data-updated="2026-10-24"><h3>2026-10-24 · Buckeye Baton</h3><p>用户确认新名称并要求删除旧练习。新的 Next.js 应用成为唯一运行入口，修复标签切换时旧响应类型导致的客户端错误；重新验收已通过。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>Buckeye Baton 比赛应用接入</h3><p>独立 pass-it-on/ 子目录，保留赛前文件；确认 Honda challenge 与 Student/Mentor/Staff。Node 22 构建和浏览器核心旅程通过，完整验收在进行，真实 AWS/Neon 尚未验证。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>更新记录</h3><div class="changelog-entry"><div class="date">2026-10-24</div><div><strong>队友 Setup 证据核对</strong><p class="muted">用户转述的云端 Linux 报告通过；本机 Windows 尚未验证。GitHub API 实查 nnyyttg 为 write，无需重复邀请，实际推送与首个 PR 仍待完成。</p></div></div><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>建立跨对话文档</strong><p class="muted">加入 AGENTS、PROJECT_CONTEXT、完整项目页与维护协议；背景明确区分已验证、历史证据和未知状态。</p></div></div><div class="changelog-entry"><div class="date">2026-10-23</div><div><strong>仓库连接完成</strong><p class="muted">42a494a：实际仓库安装与团队协作说明；main 已推送 GitHub。</p></div></div><div class="changelog-entry"><div class="date">2026-10-22</div><div><strong>开发环境准备</strong><p class="muted">86faf81：隔离环境、React/FastAPI 回显、Streamlit 后备、可选 API 检查、测试与披露材料。</p></div></div></div>
-
 <!-- claude:changelog:end -->
   </section>
 

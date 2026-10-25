@@ -1,5 +1,8 @@
 import Link from "next/link";
 import type { Project } from "@/shared/types";
+import type { PublishedIntroduction } from "@/shared/p2-types";
+import type { ProjectPriority } from "@/shared/p3-types";
+import { PriorityReasons } from "./priority";
 import { readable } from "@/lib/client";
 import { Icon } from "./app-shell";
 export function Feedback({
@@ -64,7 +67,17 @@ export function Tags({ tags }: { tags: string[] }) {
     </div>
   );
 }
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({
+  project,
+  introduction,
+  priority,
+}: {
+  project: Project;
+  introduction?: PublishedIntroduction | null;
+  priority?: ProjectPriority;
+}) {
+  // A confirmed introduction replaces the authored summary/tags on the card only while it is current.
+  const intro = introduction && !introduction.stale ? introduction : null;
   return (
     <article className="project-card">
       <div className="card-top">
@@ -83,7 +96,10 @@ export function ProjectCard({ project }: { project: Project }) {
       <p className="metadata">
         {project.courseOrClub} <span>·</span> {project.term}
       </p>
-      <p className="card-summary">{project.summary}</p>
+      <p className="card-summary">
+        {intro ? intro.sentences.join(" ") : project.summary}
+      </p>
+      {intro && <p className="ai-label">AI-assisted · owner-reviewed</p>}
       <div className="card-highlight">
         <strong>
           {project.status === "finished"
@@ -101,7 +117,13 @@ export function ProjectCard({ project }: { project: Project }) {
             "The team has not shared this update yet."}
         </p>
       </div>
-      <Tags tags={project.tags} />
+      <Tags tags={intro ? intro.tags : project.tags} />
+      {priority && (
+        <div className="card-priority" aria-label="Why recommended">
+          <strong>Why recommended</strong>
+          <PriorityReasons reasons={priority.reasons} projectId={project.id} limit={2} />
+        </div>
+      )}
       <div className="card-footer">
         <Icon name="book" size={17} />
         <span>

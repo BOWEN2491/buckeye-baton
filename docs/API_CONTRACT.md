@@ -1,4 +1,84 @@
+> Current product override (2026-10-25): see [P4_PRODUCT_REVISION.md](P4_PRODUCT_REVISION.md). Automatic invitations are pickup-only. Removed-post notifications are hidden from recipients other than the remover.
+
 # Buckeye Baton — API contract
+
+## P4 endpoints — independently accepted locally10/10, product acceptance pending
+
+Rules: [P4_CONTRACT.md](P4_CONTRACT.md). Types `src/shared/p4-types.ts`. Server: `src/server/inbox.ts` (Activity, listing, read), `src/server/invitations.ts` (eligibility, matching, limits, dispatch, responses, helpers, status), `src/server/invitation-runner.ts` + `src/instrumentation.ts` (runner). Tables (additive): `inbox_items` (UNIQUE `("recipientId","eventKey")`, CHECKs, recipient/target indexes), `inbox_preferences`, `invitation_dispatch_state` (singleton row = lock + last completed/failed).
+
+| Method / path | Who | Result |
+|---|---|---|
+| GET `/api/inbox?filter=all\|unread\|invitations&limit=1–50&cursor=<item id>` | self | 200 `InboxPage`, newest first by exact `createdAt` desc, id desc; foreign/unknown cursor 400 |
+| PATCH `/api/inbox/:id` `{read:true}` | recipient | 200 item; idempotent; others 404 |
+| GET / PATCH `/api/inbox/preferences` `{automaticInvitations}` | self | 200; GET never writes; off cancels pending invitations |
+| POST `/api/invitations/:id/respond` `{action:'accept'\|'ignore'}` | recipient | 200 `InvitationItem`; same action again returns current; opposite or no longer valid 409 `INVITATION_UNAVAILABLE`; others 404 |
+| GET `/api/project-questions/:id/interested-helpers` | Staff | 200 accepted help invitations for the current waiting round; others 403 |
+| GET `/api/invitations/status` | Staff | 200 `InvitationRunnerStatus`; others 403 |
+
+- Activity is written in the same transaction as the question, post or referral (`question:<id>`, `post:<id>`, `referral:<id>` event keys); recipients follow the contract matrix, are de-duplicated with merged reasons, and exclude the actor. Rejected writes and duplicate referrals add nothing. Previews (≤160 code points) are read live; deleted posts show `removed:true`, `preview:null`.
+- Invitations: `pickup` (Paused, no successor, shared ≥14 days; Students) and `help` (needs_referral/awaiting_reply, current round waiting ≥3 days; Students or Mentors), matched by normalized author tags with Finished-project or formal-reply evidence, ranked by matched tags, evidence projects, user id. Limits: recipient 1/24 h and 3/7 days, target 1/24 h and 3 lifetime, one per recipient+kind+target forever (`invite:<kind>:<targetId>`). Expiry 7 days; cycle key = question id or first unanswered follow-up id. GET computes effective status without writing; dispatch, responses and related writes persist expired/cancelled.
+- Locking: dispatch, responses, preference changes, question/post/referral writes, post deletion, pickup and project PATCH take the `invitation_dispatch_state` row lock first.
+- Runner: `INVITATION_RUNNER_ENABLED=1`, Node runtime only, skipped during `next build`; checks at start and 60 s after each completion; failures roll back and record `lastFailureAt`/`DISPATCH_FAILED`; there is no public dispatch endpoint.
+
+## Current status
+
+P3 product revisions, including age-only priority and the Detail toggle38e4901, have passed user acceptance. Current P3 UI has no deadline inputs or scoring; the age-only addendum below overrides the original deadline descriptions. Main merge remains pending explicit authorization; current3000 runs P3, not P1.
+
+**P4 application372646c is independently accepted locally10/10 and integrated in codex/p4-integration.** See[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md). All review repairs are closed; typecheck/build, backend20/20 and production e2e23/23 pass. User product acceptance and main merge remain pending. Current3000 still runs P3; no P4 preview has replaced it.
+
+## P3 product revision — age-only priority
+
+See[P3_PRODUCT_REVISION.md](P3_PRODUCT_REVISION.md). Priority reasons now only `no_pickup` / `waiting_for_reply`, advice codes only `improve_handoff` / `narrow_question`. Legacy dueAt is retained in storage/responses and author-only PATCH for compatibility, but has **zero effect on scores, ordering and advice**. Current UI creates questions with dueAt:null and has no reply-date input/editor/display. Maximum question score30, project50; all other opt-in shapes, exact tie-breaks and P1 permissions stay unchanged. Old deadline-based descriptions below refer to the first P3 version and are superseded by this addendum.
+
+## P3 endpoints — independently and product accepted locally
+
+Final4839e77 is integrated on codex/p3-integration, with coordinator J1–J10 passing; see[P3_ACCEPTANCE.md](P3_ACCEPTANCE.md). main is unmerged. Exact microsecond tie-break keys stay internal; public ISO dates and response shapes remain unchanged.
+
+Rules: [P3_CONTRACT.md](P3_CONTRACT.md). Types `src/shared/p3-types.ts`; the only scoring/ordering/advice module is `src/server/priority.ts` (server clock, injectable in tests only); data glue `recommend`, `workbench(sort)`, `projectPriorityDetail`, `updateDueAt` in `src/server/relay.ts`, all reading the shared `threads()` (deleted posts excluded). No schema change, no stored scores, no AI calls.
+
+| Method and path | Identity | Success |
+|---|---|---|
+| GET `/api/projects?q=&status=&sort=recommended` | public | 200 `RecommendedProject[]` (BrowseProject + `priority`), score desc then createdAt desc, id asc; all matching projects incl. 0 |
+| GET `/api/projects?sort=newest` / no sort | public | 200 original `BrowseProject[]`, createdAt desc, id asc |
+| GET `/api/workbench?sort=priority` | Staff / Mentor | 200 four-array `PrioritizedWorkbench`; per group pending first (score desc, pendingSince, createdAt, id), others after in createdAt,id with `priority:null` |
+| GET `/api/workbench?sort=oldest` / no sort | Staff / Mentor | 200 original `Workbench` |
+| GET `/api/projects/:id/priority` | public | 200 `ProjectPriorityDetail` (priority, per-question priority, advice); 404 unknown |
+| PATCH `/api/project-questions/:id` | asking Student | `{dueAt: future ISO Z \| null}` strict → 200 `QuestionThread`; 401 / 404 / 403 (incl. project owner) / 400 |
+
+- Unsupported `sort` (including empty) → 400 `INVALID_INPUT`. Project detail keeps its four keys; question GET/write responses keep `QuestionThread`.
+- Points: no-pickup Paused (no relation at all) `min(20, 5 × full weeks since createdAt)`; pending question (`needs_referral`/`awaiting_reply`) `min(30, 5 × full days since pendingSince)`; a project adds only its single highest question, maximum50. No dueAt points. Reasons always sum to the score.
+- pendingSince: question.createdAt while no valid mentor reply; otherwise the first valid follow-up after the last valid mentor reply (shared SQL order).
+- Advice: `improve_handoff` (Paused, no pickup, shared ≥14 days), `narrow_question` (pending ≥3 days). No date advice.
+- Pages: Explore Recommended/Newest with reasons, Updated/Refresh and rules; workbench Priority/Oldest first; project "Recommended because" and "Suggestions for your project" with collapsed Detail explanation and original action links. No reply-date editor/display.
+
+## Product acceptance addendum: project comment deletion
+
+User-authorized scope update: [COMMENT_DELETION.md](COMMENT_DELETION.md). `DELETE /api/project-posts/:id` returns 200 `{data: QuestionThread}`. Only the post author or source project's owner may delete; a question author has no additional moderation rights. Missing identity401, forbidden403, missing post404. Successful retries return200 without replacing the original deletion audit.
+
+The UI confirms deletion. Comments, explicit follow-ups and formal Mentor replies are covered; questions and referral records remain. Deleted posts are excluded from public threads and the common queue/workload calculation, with original rows retained via nullable deletedAt/deletedBy columns. This supersedes the earlier exclusion of post deletion; post editing is still deferred.
+
+## P2 endpoints — independently and product accepted locally, main merge pending
+
+P2提交df5f050已通过总控H1–H10验收，集成于codex/p2-integration；证据见[P2_ACCEPTANCE.md](P2_ACCEPTANCE.md)。main包含P0/P1，后续协调线包含已验收P2/P3；当前3000为P3。真实PostgreSQL/云端未验证。
+
+Rules: [P2_CONTRACT.md](P2_CONTRACT.md). Types `src/shared/p2-types.ts`; shared Zod `src/shared/p2-validation.ts` (model output, confirmation and client editor); handlers `src/server/introductions.ts`, `src/server/ai.ts`, `mentorWorkload` in `src/server/relay.ts`.
+
+| Method and path | Identity | Input | Success |
+|---|---|---|---|
+| GET `/api/projects` | public | `q`, `status` | 200 `BrowseProject[]` (Project + `introduction: {sentences,tags,reviewedAt,stale} \| null`) |
+| GET `/api/projects/:id/introduction` | owning Student | — | 200 `IntroductionEditor` |
+| POST `/api/projects/:id/introduction/generate` | owning Student | `{}` only | 200 `IntroductionEditor` with new draft |
+| PATCH `/api/projects/:id/introduction` | owning Student | `PublishIntroductionInput` | 200 `IntroductionEditor` with confirmed version |
+| GET `/api/mentors/workload` | Staff | header only | 200 `MentorWorkloadResult` |
+
+- Order of checks: identity (401) → project exists (404) → owner Student (403) → input (400) → in-progress lock (409 `GENERATION_IN_PROGRESS`) → configuration (503 `AI_UNAVAILABLE`). Bad input never reaches the model.
+- `sourceHash` = SHA-256 of sorted-key JSON of title, summary, courseOrClub, term, tags, status, reflection (null kept as null). Generation re-checks it in a short transaction after the model returns (409 `INTRODUCTION_STALE`, nothing written). Confirmation locks project + introduction rows: other draft id → 409 `DRAFT_CONFLICT`; hash changed → 409 `INTRODUCTION_STALE`.
+- Validation: 1–3 sentences, each one English sentence by `Intl.Segmenter`, ≤280 chars, ≤600 total; tags trimmed, lowercased, 1–32 chars, no line breaks, deduplicated to 1–6; no extra fields.
+- Upstream: missing config or HTTP/network failure 503 `AI_UNAVAILABLE`; 30 s abort 504 `AI_TIMEOUT`; refusal, `status` ≠ `completed`, bad JSON or failed validation 502 `AI_INVALID_OUTPUT`. One request per click, no retries. Upstream bodies, keys and stacks are not returned.
+- Browsing: a published introduction whose hash no longer matches is returned with `stale: true`, and cards then show the authored summary/tags. GET never calls the model or writes. Public responses exclude drafts, draft ids, model names and reviewer ids.
+- Storage: `project_introductions("projectId" PK/FK, draft jsonb, published jsonb, "updatedAt")`, added with `CREATE TABLE IF NOT EXISTS`; latest draft and latest confirmed version only.
+- Provider: OpenAI Responses API `POST {OPENAI_BASE_URL or https://api.openai.com/v1}/responses` via native fetch with `text.format = {type:'json_schema', strict:true}`, `store:false`. Env: `OPENAI_API_KEY`, `OPENAI_PROJECT_INTRO_MODEL`, optional `OPENAI_BASE_URL` (Playwright points it at a local mock).
+- Workload: every `role='mentor'` user, sorted by name then id, with the number of distinct referred questions whose P1 thread state is `awaiting_reply` (same `threads()`/`threadState` as the Mentor workbench). Student/Mentor 403, no header 401. `asOf` is server time.
 
 > **版本边界（2026-10-24）：v2 第一轮项目浏览与总结编辑之上，codex/p1-implementation 分支实现了 P1 接棒、项目问题、人工引荐、导师回复与工作台（见下文“P1 relay endpoints”）。** P1 已通过总控独立本地验收与用户产品验收，并经 PR #2 合入 main；云端及真实 PostgreSQL 多连接仍未验证。独立 Lesson 页面和采用功能已退出产品。规则依据 P1_CONTRACT.md，完整目标见 MVP_SPEC.md / ACCEPTANCE.md。
 

@@ -101,14 +101,14 @@ test('four identities complete pickup, question, referral, replies, follow-up an
   await page.getByLabel('Your question').fill(questionTitle);
   await page.getByLabel(/^Details/).fill('We can only build one confirmation channel this week. How should we decide?');
   await page.getByRole('radio', { name: 'Yes, ask Staff to refer a mentor', exact: true }).check();
-  await page.getByLabel(/^Hoping for a reply by/).fill(localDay(3));
+  await expect(page.locator('.ask-form input[type=date]')).toHaveCount(0);
   await page.route(`**/api/projects/${projectId}/questions`, route => route.request().method() === 'POST' ? route.fulfill(unavailable) : route.fallback(), { times: 1 });
   await page.getByRole('button', { name: 'Post question', exact: true }).click();
   await expect(page.getByRole('alert').filter({ hasText: 'Couldn’t post your question.' })).toBeVisible();
   await expect(page.getByLabel('Your question')).toHaveValue(questionTitle);
   await page.getByRole('button', { name: 'Post question', exact: true }).click();
   await expect(thread(page, questionTitle)).toContainText('Waiting for Staff referral');
-  await expect(thread(page, questionTitle)).toContainText('Hoping for a reply by');
+  await expect(thread(page, questionTitle)).not.toContainText('Hoping for a reply by');
   await page.getByRole('button', { name: 'Ask a question', exact: true }).click();
   await page.getByLabel('Your question').fill(discussionTitle);
   await page.getByRole('radio', { name: 'No, just open discussion', exact: true }).check();

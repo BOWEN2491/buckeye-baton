@@ -5,6 +5,9 @@ import type { ProjectPostKind, QuestionThread } from "@/shared/relay-types";
 import { ApiRequestError, api, errorText, formatDate, formatDateTime, readable, useResource } from "@/lib/client";
 import { useIdentity } from "./app-shell";
 import { Feedback } from "./ui";
+import { MentorSelect, invalidateMentorWorkload } from "./mentor-workload";
+import type { QuestionPriority } from "@/shared/p3-types";
+import { PriorityReasons, invalidateProjectPriority, useProjectPriority } from "./priority";
 
 export function stateLabel(thread: QuestionThread) {
   const mentor = thread.referral?.mentor.name;
@@ -25,14 +28,6 @@ export function hasNewFollowUp(thread: QuestionThread) {
 export function StateBadge({ thread }: { thread: QuestionThread }) {
   return <span className={`question-state ${thread.state}`}>{stateLabel(thread)}</span>;
 }
-// A date input holds a local calendar day; requests use the end of that day in UTC.
-function localDayToIso(day: string) {
-  return new Date(`${day}T23:59:00`).toISOString();
-}
-function todayInput() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 function RoleChip({ user }: { user: User }) {
   return <span className={`role-chip ${user.role}`}>{readable(user.role)}</span>;
 }
@@ -42,7 +37,6 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [wantsMentor, setWantsMentor] = useState<"" | "yes" | "no">("");
-  const [due, setDue] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit(e: FormEvent) {
@@ -50,12 +44,10 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
     if (busy) return;
     if (!title.trim()) return setError("Write your question.");
     if (!wantsMentor) return setError("Choose whether you want a mentor to answer.");
-    const dueAt = due ? localDayToIso(due) : null;
-    if (dueAt && Date.parse(dueAt) <= Date.now()) return setError("Choose a reply date in the future.");
     setError("");
     setBusy(true);
     try {
-      const thread = await api<QuestionThread>(`/projects/${projectId}/questions`, userId, { title, body, wantsMentor: wantsMentor === "yes", dueAt });
+      const thread = await api<QuestionThread>(`/projects/${projectId}/questions`, userId, { title, body, wantsMentor: wantsMentor === "yes", dueAt: null });
       onPosted(thread);
     } catch (err) {
       setError(`Couldn’t post your question. ${errorText(err)} Your text is kept. Try again.`);
@@ -85,11 +77,6 @@ function AskForm({ projectId, onPosted, onCancel }: { projectId: string; onPoste
           No, just open discussion
         </label>
       </fieldset>
-      <label>
-        Hoping for a reply by <span className="optional">(optional)</span>
-        <input type="date" value={due} min={todayInput()} readOnly={busy} onChange={(e) => setDue(e.target.value)} />
-        <span className="field-help">Shown to readers in their own time zone. No reminders are sent.</span>
-      </label>
       <div className="form-actions">
         <button type="button" className="button secondary" onClick={onCancel} disabled={busy}>
           Cancel
@@ -115,14 +102,16 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
     return <p className="metadata referral-note">The asker didn’t request a mentor, so this question isn’t in your workbench.</p>;
   if (thread.referral)
     return (
-      <div className="referral-note">
-        <button className="button secondary" disabled>
-          Referred
-        </button>
-        <span className="metadata">
-          {thread.referral.staff.name} referred {thread.referral.mentor.name} on {formatDate(thread.referral.createdAt)}. Each question can be referred once.
-        </span>
-      </div>
+      <>
+        <div className="referral-note">
+          <button className="button secondary" disabled>
+            Referred
+          </button>
+          <span className="metadata">
+            {thread.referral.staff.name} referred {thread.referral.mentor.name} on {formatDate(thread.referral.createdAt)}. Each question can be referred once.
+          </span>
+        </div>
+      </>
     );
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -133,6 +122,7 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
     setBusy(true);
     try {
       const updated = await api<QuestionThread>(`/project-questions/${thread.question.id}/referral`, userId, { mentorId, reason });
+      invalidateMentorWorkload();
       onChanged(`Referral sent. ${updated.referral?.mentor.name} will see this question in their workbench.`);
     } catch (err) {
       if (err instanceof ApiRequestError && err.code === "ALREADY_REFERRED") {
@@ -144,12 +134,14 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
   }
   if (!open)
     return (
+      <>
       <div className="referral-note">
         <button className="button primary" onClick={() => setOpen(true)}>
           Refer a mentor
         </button>
         <span className="metadata">No mentor referred yet.</span>
       </div>
+      </>
     );
   return (
     <form className="referral-form form-stack" onSubmit={submit} aria-label="Refer a mentor" noValidate>
@@ -160,17 +152,7 @@ function ReferralPanel({ thread, onChanged }: { thread: QuestionThread; onChange
         </button>
       )}
       {mentors.length ? (
-        <label>
-          Mentor
-          <select value={mentorId} disabled={busy} onChange={(e) => setMentorId(e.target.value)}>
-            <option value="">Choose a mentor</option>
-            {mentors.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name} · {m.headline}
-              </option>
-            ))}
-          </select>
-        </label>
+        <MentorSelect mentors={mentors} value={mentorId} disabled={busy} onChange={setMentorId} />
       ) : (
         <p className="subtle-empty">No mentors in the directory yet. The question stays under “Needs referral”.</p>
       )}
@@ -247,17 +229,44 @@ function Composer({ thread, onPosted }: { thread: QuestionThread; onPosted: () =
 
 const kindLabel: Record<ProjectPostKind, string> = { comment: "Comment", follow_up: "Follow-up", mentor_reply: "Referred mentor reply" };
 
-function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; highlighted: boolean; onChanged: () => void }) {
+// Only the asker sees this; the server also rejects everyone else, including the project owner.
+function Thread({ thread, projectOwnerId, priority, highlighted, onChanged }: { thread: QuestionThread; projectOwnerId: string; priority?: QuestionPriority | null; highlighted: boolean; onChanged: () => void }) {
   const { user } = useIdentity();
   const [success, setSuccess] = useState("");
+  const [deleting, setDeleting] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const q = thread.question;
+  async function remove(post: QuestionThread["posts"][number]) {
+    if (!user || deleting) return;
+    const queueNote = post.kind === "mentor_reply"
+      ? " The question may return to Awaiting reply."
+      : post.kind === "follow_up" ? " The mentor's Awaiting reply count may change." : "";
+    if (!window.confirm(`Delete this ${kindLabel[post.kind].toLowerCase()}? It will be removed from the discussion.${queueNote}`)) return;
+    setDeleting(post.id);
+    setDeleteError("");
+    setSuccess("");
+    try {
+      await api<QuestionThread>(`/project-posts/${post.id}`, user.id, undefined, "DELETE");
+      invalidateMentorWorkload();
+      onChanged();
+      setSuccess("Comment deleted.");
+    } catch (error) {
+      setDeleteError(`Couldn’t delete this comment. ${errorText(error)} Try again.`);
+    } finally {
+      setDeleting("");
+    }
+  }
   return (
     <article id={`q-${q.id}`} className={highlighted ? "question-thread highlighted" : "question-thread"} aria-label={q.title}>
       <div className="question-head">
         <StateBadge thread={thread} />
-        {q.dueAt && <span className="metadata">Hoping for a reply by {formatDate(q.dueAt)}</span>}
       </div>
       <h3>{q.title}</h3>
+      {priority && (
+        <div className="question-priority" aria-label="Question priority">
+          <PriorityReasons reasons={priority.reasons} />
+        </div>
+      )}
       <p className="metadata">
         Asked by {thread.author.name} · {formatDateTime(q.createdAt)}
       </p>
@@ -281,13 +290,19 @@ function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; hi
                 <RoleChip user={p.author} />
                 <span className={`kind-badge ${p.kind}`}>{kindLabel[p.kind]}</span>
                 <span className="metadata">{formatDateTime(p.createdAt)}</span>
+                {user && (p.authorId === user.id || projectOwnerId === user.id) && (
+                  <button type="button" className="text-button post-delete" disabled={!!deleting}
+                    aria-label={`Delete ${kindLabel[p.kind].toLowerCase()} by ${p.author.name}`} onClick={() => void remove(p)}>
+                    {deleting === p.id ? "Deleting…" : "Delete"}
+                  </button>
+                )}
               </div>
               <p>{p.body}</p>
             </li>
           ))}
         </ol>
       )}
-      <Feedback success={success} />
+      <Feedback success={success} error={deleteError} />
       {user?.role === "staff" && (
         <ReferralPanel
           thread={thread}
@@ -308,9 +323,16 @@ function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; hi
   );
 }
 
-export function ProjectQuestions({ projectId, status }: { projectId: string; status: ProjectStatus }) {
+export function ProjectQuestions({ projectId, projectOwnerId, status }: { projectId: string; projectOwnerId: string; status: ProjectStatus }) {
   const { user } = useIdentity();
-  const { data, error, loading, reload } = useResource<QuestionThread[]>(`/projects/${projectId}/questions`);
+  const { data, error, loading, reload: reloadThreads } = useResource<QuestionThread[]>(`/projects/${projectId}/questions`);
+  const { data: priorityDetail } = useProjectPriority(projectId);
+  const questionPriority = new Map(priorityDetail?.questions.map((q) => [q.questionId, q.priority]) ?? []);
+  // Any write here can change waiting time or state, so priority views on the page re-read too.
+  const reload = async () => {
+    invalidateProjectPriority();
+    await reloadThreads();
+  };
   const [asking, setAsking] = useState(false);
   const [success, setSuccess] = useState("");
   const [hash, setHash] = useState("");
@@ -368,7 +390,9 @@ export function ProjectQuestions({ projectId, status }: { projectId: string; sta
           <Thread
             key={t.question.id}
             thread={t}
+            projectOwnerId={projectOwnerId}
             highlighted={hash === t.question.id}
+            priority={questionPriority.get(t.question.id)}
             onChanged={() => void reload()}
           />
         ))

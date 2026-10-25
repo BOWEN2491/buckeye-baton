@@ -1,33 +1,25 @@
-# Buckeye Baton — 协作与目录约定
+# Buckeye Baton — 当前交接
 
-## 当前进行中的 P1
+**P4独立产品预览已启动：3001，应用372646c，runner开启，真实OpenAI/gpt-6-luna已单次验证。** 见[P4_PREVIEW.md](P4_PREVIEW.md)。p4-review现在持有活跃.next和独立SQL，不可重建/归档或另开连接；同时保留3000/P3。产品验收待用户进行，main不变。
 
-实现分支 codex/p1-implementation 已交付提交 61ff34b；总控独立验收本地 G1–G10 全部通过，已快进集成到 codex/p1-integration。报告见 P1_ACCEPTANCE.md。用户产品验收通过，PR #2 已合入 main（3b473de）；本地已同步 main，P2 未开始。P1_AGENT_TASK.md 保留为本轮已执行任务记录，不代表需要从头重做。
+**最新P4（2026-10-25）：372646c独立技术验收10/10。** 见[P4_ACCEPTANCE.md](P4_ACCEPTANCE.md)，四项检查/backend20/e2e23及原竞态探针通过，全部返修关闭。已集成P4协调分支，下一步独立P4预览与用户产品验收；3000继续P3，main未合并。
 
-## 从哪里开始
+2026-10-24。**P3产品验收通过，启动P4单Agent。** 当前入口：[P4_AGENT_TASK.md](P4_AGENT_TASK.md)、[P4_CONTRACT.md](P4_CONTRACT.md)、[P4_START_PROMPT.md](P4_START_PROMPT.md)。原任务准备时为0/10，现以P4_ACCEPTANCE的10/10为准；任务书保留交付规格。
 
-先读 PROJECT_CONTEXT.md 和 docs/PROJECT_OVERVIEW.md，再读 MVP_SPEC.md、API_CONTRACT.md、PHASE1_ACCEPTANCE.md。ACCEPTANCE.md 是完整未来目标，不代表当前功能已完成。
+## 仓库与分支
+仓库 https://github.com/BOWEN2491/buckeye-baton 。main含P0/P1，P2/P3已通过验收但尚无本次main合并授权。P4以最新origin/codex/p4-integration为协调基线，含38e4901及P4文档；worker用独立clone/worktree上的codex/p4-implementation。不得从旧main丢失P2/P3，不合PR #3、不强推、不覆盖现有工作。
 
-用户已授权将 PR #1 合入 main，main 作为唯一共享基线。唯一开发目录：
-C:/Users/23678/.codex/workspaces/buckeye-baton
+总控checkout C:/Users/23678/.codex/workspaces/buckeye-baton 只协调/审查，不供外部worker实现或构建。原永久前后端准备分支已清理，design/是设计交付，旧练习可从Git历史恢复。
 
-旧 codex/buckeye-baton-frontend、codex/buckeye-baton-backend 及对应工作目录没有独立内容，已删除。Downloads 设计目录是文件交付，不是另一个开发仓库；设计已纳入本仓库 design/。
+## 产品与执行
+先读PROJECT_CONTEXT.md、project-docs/index.html、DECISIONS.md和PROJECT_OVERVIEW。当前P3规则以P3_PRODUCT_REVISION为准：年龄评分，无deadline UI/加分；保留Suggestions原入口/Detail和隐藏状态总结。旧规范中的日期规划只作历史。
 
-## 今后如何协作
+P4含全角色动态Inbox与自动邀请，共用消息入口但工作台保留。正常只最终READY，真实阻塞才BLOCKED；总控按最终SHA独立验收K1–K10，随后用户产品验收。不要自动给其他对话发消息或创建任务。
 
-- 开始任务前更新 main 并检查工作区，再按具体任务建立短期 codex/ 分支；不保留永久前端/后端预备分支。
-- 只有确实同时修改代码时才为任务建立独立工作目录。页面与后端共用类型、接口、迁移必须先协调。
-- 用户主要负责开发，队友负责设计、文案和试用；协调方审查集成与验收。
-- 前端负责 pages/components/client/styles，后端负责 API/server/database/scripts。任务完成通过 PR 合入 main，再清理分支与临时工作目录。
-- 不丢弃未提交内容，不重置用户记录，不提交环境变量、数据库、依赖或构建目录。
+## 当前预览保护
+http://127.0.0.1:3000 继续运行P3应用源38e4901；应用/build在buckeye-baton-p3-detail，原验收SQL与真实配置在buckeye-baton-p3-review。实际PID、SHA、数据库绝对路径见P3_PREVIEW.md最新段及本地runtime manifest，操作前重新核对。该目录的HEAD可能只有文档变化，不代表运行应用已升级。
 
-## 当前及下一轮
+3001已停止，旧P1/P2数据库/env保留，不能清理detached worktree。不要重建活跃.next、复用用户.data或读取复制用户key。P4测试使用独立空闲端口/临时PGlite，模型真实调用0、旧P2回归mock。
 
-已完成项目浏览、三状态详情与所有者总结编辑，以及 P1 接棒关系、项目问题、Staff 引荐、Mentor 多轮回复和角色工作台。下一步是 PR 审阅/合并；P2 的 AI 简介/标签和 Mentor 负载尚未实现。不要恢复独立 Lesson 或逐条采用 UI。
-
-## 运行与验证
-
-使用 Node 22，按根 README 安装、配置与启动。当前本地预览为 http://127.0.0.1:3000。
-本地 PGlite 目录只由一个进程使用；测试有独立临时库。并行开发时用不同端口和数据目录。
-应用修改后按范围运行 typecheck、test:backend、build 和 test:e2e。文档/分支清理检查差异与结构，不用重复应用测试冒充新功能证据。
-真实 PostgreSQL、AWS 权益和公网部署另行验证。
+## 验证
+Node22，NEXT_TELEMETRY_DISABLED=1可避开本机Next遥测EXDEV。应用修改最终运行typecheck、test:backend、build、test:e2e并记录实际数量；文档准备只检查一致性/链接/结构/git差异，不冒充应用测试。PGlite单进程；真实pg多连接、Neon/AWS/public deployment未验证。

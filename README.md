@@ -4,7 +4,7 @@ OSU project handoffs and team reflections. A hackathon demo connecting students,
 
 Start here: [project overview and current scope](docs/PROJECT_OVERVIEW.md), [collaboration and branch rules](docs/HANDOFF.md), and [teammate design references](design/README.md). The user has authorized PR #1 to become the shared main baseline; redundant frontend/backend preparation branches and checkouts have been removed.
 
-Product update (2026-10-24): P0 project browsing, three-state reflections and owner editing are joined by P1 pickup links, project questions with optional reply dates, Staff referrals, repeated Mentor replies and role workbenches. P1 passed independent local acceptance on commit 61ff34b; see [coordinator evidence and limits](docs/P1_ACCEPTANCE.md). Real PostgreSQL multi-connection behavior and hosted deployment remain unverified; P2–P4 are pending. Independent Lesson/adoption UI stays retired; legacy links redirect to their project, adoption writes return HTTP 410, and stored history is preserved.
+Product update (2026-10-24): main includes P0 browsing/reflections and P1 pickup links, questions, Staff referrals and Mentor workbenches. P2 adds owner-reviewed AI browsing introductions/tags and Staff-visible Awaiting reply counts; commit df5f050 passed [independent local acceptance](docs/P2_ACCEPTANCE.md) and is integrated on codex/p2-integration, pending user product acceptance and main merge. Real PostgreSQL multi-connection behavior and hosted deployment remain unverified; P3–P4 are pending. Independent Lesson/adoption UI stays retired; legacy links redirect to their project, adoption writes return HTTP 410, and stored history is preserved.
 
 ## Run locally
 
@@ -18,6 +18,10 @@ npm run dev
 ```
 
 Open http://localhost:3000. The explicit local `DATABASE_MODE=pglite` stores a PostgreSQL-compatible database in `.data/pglite`; it survives application restarts. Run one app process per data directory. `npm run db:seed` ensures fictional seed content exists without deleting or overwriting user records. Schema setup adds the nullable project reflection column without resetting tables; old Lesson content remains available as historical experience.
+
+### Inbox and automatic invitations (P4)
+
+Every demo identity has an **Inbox** (navigation) with Activity about their projects and questions, plus automatic invitations. Activity is always on. Automatic invitations are created by a server-side runner that starts only when `INVITATION_RUNNER_ENABLED=1` is set for a continuously running `next start`/`next dev` process: it checks once at startup and then every 60 seconds after each check finishes. It reuses the app's own database connection (never open the same PGlite folder from a second process), keeps limits and de-duplication in the database, and does not run during `next build` or from any GET request. Staff can see the runner state and last successful check in their Inbox. Cloud or serverless scheduling has not been verified.
 
 To use Neon/hosted PostgreSQL, remove `DATABASE_MODE` from `.env.local` and provide your own `DATABASE_URL`. Use the provider's TLS connection string. Run `npm run db:setup` against that database. Never commit credentials. The application does not create a Neon account or AWS resources.
 
@@ -47,6 +51,8 @@ Demo identities: Alex (`student-alex`), Mia (`student-mia`), Sarah (`mentor-sara
 - [P1 shared contract](docs/P1_CONTRACT.md)
 - [P1 single-agent full-stack task](docs/P1_AGENT_TASK.md)
 - [P1 independent acceptance](docs/P1_ACCEPTANCE.md)
+- [P2 single-agent full-stack task](docs/P2_AGENT_TASK.md) / [P2 contract](docs/P2_CONTRACT.md)
+- [P2 independent acceptance](docs/P2_ACCEPTANCE.md) / [existing real-AI evidence](docs/evidence/P2_REAL_AI_RESULT.md)
 
 - [MVP and roles](docs/MVP_SPEC.md)
 - [API contract](docs/API_CONTRACT.md)

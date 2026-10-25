@@ -221,7 +221,7 @@ export function ProjectForm({
           or pausing.
         </p>
       )}
-      <label>
+      {status === "ongoing" && <label>
         Current progress
         <textarea
           aria-label="Current progress"
@@ -230,10 +230,10 @@ export function ProjectForm({
           onChange={(e) => field("progress", e.target.value)}
           placeholder="What is working, and what are you trying next?"
         />
-      </label>
+      </label>}
       {project && (
         <>
-          <fieldset className="reflection-fields">
+          {status === "finished" && <fieldset className="reflection-fields">
             <legend>Finished · team reflections</legend>
             <p className="field-help">
               Required when saving as Finished: one outcome and advice for the
@@ -313,8 +313,8 @@ export function ProjectForm({
                 onChange={(e) => field("nextTeam", e.target.value)}
               />
             </label>
-          </fieldset>
-          <fieldset className="reflection-fields">
+          </fieldset>}
+          {status === "paused" && <fieldset className="reflection-fields">
             <legend>Paused · handoff notes</legend>
             <p className="field-help">
               Required when saving as Paused: why you paused and one restart
@@ -398,7 +398,7 @@ export function ProjectForm({
             >
               Add reusable material
             </button>
-          </fieldset>
+          </fieldset>}
         </>
       )}
       <Feedback error={error} />

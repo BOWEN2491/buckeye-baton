@@ -1,5 +1,42 @@
 # Decisions
 
+### Implement P4 Inbox and invitations on the existing transaction and thread services
+**Date:** 2026-10-24 · **Status:** Implemented on372646c and independently accepted locally10/10 on2026-10-25; product acceptance/main merge pending
+**Files:** db/schema.sql, src/server/inbox.ts, src/server/invitations.ts, src/server/invitation-runner.ts, src/instrumentation.ts, src/app/inbox/page.tsx
+
+In the context of the frozen P4 contract asking for role Activity, automatic invitations and a browserless runner, facing lost notifications, duplicate sends and stale invitations under concurrent writes, we decided for Activity rows inserted inside each business transaction, invitations keyed by recipient plus kind/target with database limits, a singleton dispatch row taken first by every eligibility-changing write, and an opt-in Node runner via Next.js instrumentation reusing the app's database singleton, to achieve atomic, private, rate-limited delivery without new services, accepting serialized demo-scale writes and that only PGlite (single connection) was exercised; real multi-connection Postgres and cloud scheduling remain unverified.
+
+### Specify one Inbox for role activity and bounded automatic invitations
+**Date:** 2026-10-24 · **Status:** Specification implemented; final372646c independently accepted locally10/10, user product acceptance pending
+**Files:** docs/P4_CONTRACT.md, docs/P4_AGENT_TASK.md, docs/P4_START_PROMPT.md
+
+In the context of starting P4 after P3 product acceptance and the user's request for all-role messages, facing separate invitation and discussion notification flows, we decided for one private Inbox with transactional activity events and explicit invitation responses, to achieve consistent navigation and role-specific awareness, accepting a larger P4 slice. Automatic invitations use verifiable related contributions, persistent caps and conservative lifetime target/recipient dedup; accepting never assigns a Mentor. The specified local runner requires a persistent Node process; cloud scheduling is unverified. The initial specification was implemented on372646c and independently accepted locally; the user preview still runs P3 until a separate P4 preview is prepared.
+
+### Retain clearly named system suggestions and use age-only help priority
+**Date:** 2026-10-24 · **Status:** Implemented, locally checked and product accepted by user, including Detail toggle38e4901; main merge pending
+**Supersedes:** Deadline scoring/UI and simultaneous status fields from the initial P3 specification
+**Files:** docs/P3_PRODUCT_REVISION.md, src/server/priority.ts, src/components/project-form.tsx
+
+In the context of manual product feedback, facing an editable-sounding system advice label, an overloaded form and an unnecessary reply-date variable, we decided for Suggestions for your project with unchanged action links, conditional state-specific fields backed by the same retained reflection state, and publication/wait-age-only priority, to achieve clearer authorship and fewer inputs, accepting retained legacy dueAt data/API that no longer influence ranking. Ordinary comments remain outside the help queue, and a follow-up starts its own unanswered request age after a formal reply.
+
+### Specify explainable P3 priority with existing publication age and reply cycles
+**Date:** 2026-10-24 · **Status:** Initial4839e77 independently accepted10/10; deadline/UI portions superseded by the product revision above, now product accepted; main merge pending
+**Files:** docs/P3_CONTRACT.md, docs/P3_AGENT_TASK.md, docs/P3_START_PROMPT.md
+
+In the context of the user starting P3 after all P2 product acceptance, facing missing pause timestamps, conflicting queue clocks and an unactionable suggestion to extend reply dates, we decided for deterministic request-time scores using actual project publication age and the common valid-post reply cycle, opt-in API sorting with stable ties and compatible default shapes, plus question-author-only dueAt updates, to achieve explainable discovery and actionable advice, accepting hand-tuned weights and no measured exposure guarantees. This contract adds no schema or AI/invitations; P4 retains rate-limited in-app invitations. P3 branches from the accepted P2 integration because main has not yet received P2.
+
+### Project owners and post authors can remove discussion posts
+**Date:** 2026-10-24 · **Status:** Implemented, locally tested and product accepted by user; main merge pending
+**Files:** docs/COMMENT_DELETION.md, src/server/relay.ts, db/schema.sql
+
+In the context of the user accepting the rest of P2 and requesting comment deletion by the project owner or comment author, facing existing history-retention rules and state derived from Mentor replies/follow-ups, we decided for server-authorized soft deletion and the same filtered post stream for discussions and queues, to achieve immediate removal with consistent workload counts, accepting retained private audit rows and no restore UI. This supersedes P1/P2's earlier exclusion of post deletion only; questions, referral records and post editing remain outside this addition.
+
+### Specify P2 owner-reviewed browsing content and shared Mentor workload semantics
+**Date:** 2026-10-24 · **Status:** Implemented on P2 branch and independently accepted locally; main merge pending
+**Files:** docs/P2_AGENT_TASK.md, docs/P2_CONTRACT.md, docs/EXECUTION_ROADMAP.md
+
+In the context of the user requesting the same single-agent handoff as P1, facing AI text overwriting authored experience and workload counts drifting from existing follow-up rules, we decided for separate draft/published introductions with source hashes and owner confirmation, plus Staff-only question counts reusing P1 thread state, to achieve reviewable AI browsing content and consistent manual referrals, accepting additional metadata and a required live AI verification gate. Provider/key decisions precede API implementation; no credentials or calls were authorized by writing the task. Subsequent independent acceptance is 10/10 and all user product acceptance, including comment deletion, passed; PR #3 remains unmerged.
+
 ### P1 single-agent delivery supersedes the two-worker split
 **Date:** 2026-10-24 · **Status:** Accepted by user
 **Supersedes:** P1 backend/frontend split in “Coordinate two external workers with a contract-first P1”.
@@ -79,3 +116,9 @@ In the context of the user authorizing homepage/card interactions before pickup 
 **Supersedes:** The adoption compatibility portion of “Deliver project reflections first and preserve legacy records additively”.
 
 In the context of the user explicitly asking to delete the remaining old adoption implementation, facing old links that still exposed a superseded workflow, we decided for source-project redirects, removal of unused lesson/adoption components and adoption response fields, and HTTP 410 for retired adoption writes, to achieve one project-centered interface, accepting a deliberate compatibility break for obsolete adoption clients while preserving all stored history and inline historical experience.
+
+### Restrict invitations to baton pickup and hide removed-post notifications
+**Date:** 2026-10-25 · **Status:** Accepted
+**Supersedes:** Original P4 help-invitation scope and universal Comment removed display.
+
+In the context of P4 product acceptance and the user's clarified deletion rule, facing unwanted help invitations for old questions and unwanted deletion entries in other recipients' Inbox, we decided for pickup-only automatic dispatch and a shared server-side notification visibility predicate, to achieve an Inbox focused on useful activity and project continuation, accepting retained but inaccessible legacy help invitation history. Manual referrals remain intact; no table or user content is deleted.
