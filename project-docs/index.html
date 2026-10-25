@@ -12,9 +12,9 @@
   "tagline": "HackOHI/O 2026 · Honda challenge · 项目经验接力",
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-25",
-  "currentFocus": "",
-  "lastCompleted": "P5实现与typecheck/build、backend26/26、browser24/24、模拟脚本2/2通过；基线main f2312ee",
-  "nextUp": "总控备份并升级3001、导入明确标注的模拟数据及产品验收；不合main",
+  "currentFocus": "P5 3001 standalone preview ready for manual acceptance; existing P4 database backed up, migrated and populated with simulation data",
+  "lastCompleted": "P5 9093dbb; typecheck/build, backend26/26, browser24/24, simulation2/2; existing 3001 data preserved with 20 simulation projects; 3000 unchanged",
+  "nextUp": "User manual acceptance of P5 and simulated role journeys; then consider fixes or merge, never merge main automatically",
   "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
   "health": {"featuresDone": 8, "featuresTotal": 10}
 }
@@ -183,8 +183,8 @@
   <!-- ============ FEATURES ============ -->
   <section class="panel" id="features">
     <!-- claude:features:start -->
-<div class="card" data-updated="2026-10-25"><h3>P5 <span class="badge wip">自动验收通过，待产品验收</span></h3><p>Mentor自选五类expertise，异步问题分类和Staff前三候选、实时Awaiting reply；GitHub公开仓库来源简介、限定Topics/Technologies、所有者确认与过期回退。详见<a href="../docs/P5_REPORT.md">P5交付报告</a>和<a href="../docs/P5_MANUAL_ACCEPTANCE.md">手动验收路线</a>。</p></div>
-<div class="card" data-updated="2026-10-25"><h3>P5产品模拟 <span class="badge wip">脚本验证通过，未导入预览</span></h3><p>20项目、4Mentor、30问题、60帖子与3接棒关系；20份simulation来源简介、24份明确虚构的评分，0真实模型调用。重复导入不覆盖编辑，事务失败整体回滚。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P5 <span class="badge wip">自动验收通过，等待手动产品验收</span></h3><p>Mentor自选五类expertise、问题分析与Staff前三候选、实时Awaiting reply；GitHub来源简介、限定标签、所有者确认。P5运行于3001，源SHA 9093dbb。详见<a href="../docs/P5_REPORT.md">交付报告</a>、<a href="../docs/P5_PREVIEW.md">预览记录</a>和<a href="../docs/P5_MANUAL_ACCEPTANCE.md">手动验收</a>。</p></div>
+<div class="card" data-updated="2026-10-25"><h3>P5产品模拟 <span class="badge done">已导入3001</span></h3><p>新增20项目、4 Mentor、30问题、60帖子与3接棒关系；20份simulation简介、24份虚构评分，导入阶段0真实模型调用。新Mentor待回复负载4/2/1/0，原有记录保持不变。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>项目与三状态总结 <span class="badge done">产品验收通过</span></h3><p>浏览/搜索/筛选、所有者编辑/校验、历史保留；表单只显示当前状态字段，切换保留未保存输入。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>接棒与导师连接 <span class="badge done">P1 accepted</span></h3><p>三种接棒、来源/后续关系、项目问题、Staff人工引荐、指定Mentor多轮正式回复和工作台；P1已合main。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>旧Lesson采用 <span class="badge deprecated">退役</span></h3><p>独立Lesson页面转来源项目，采用UI/数字移除，旧采用写410；历史记录保留。</p></div>
@@ -353,6 +353,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-25"><h3>P5预览与模拟数据导入</h3><p>3001运行P5提交9093dbb，保留原持久数据库并完成增量迁移；停服时事务导入20个项目、4名Mentor、30个问题、60条帖子和3条接棒，核对16张数据表的旧记录均未变化。升级前1047个文件逐一SHA-256匹配备份；3000保持不动。详见docs/P5_PREVIEW.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P5实现与模拟适配</h3><p>新增固定五类Mentor专长/问题分类/前三候选，GitHub来源简介及只读限定标签，持久单任务循环与增量迁移。typecheck/build、后端26/26、生产浏览器24/24与模拟2/2通过；含仓库来源hash变化/旧页确认、失败后有限重试和详情标签即时刷新。验证不改变3000/3001、main或部署。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>完整版本获准合并</h3><p>用户确认P4全部通过，P2–P4已通过PR #3合入main（3bf29b3）；3000/3001、数据库和模型配置保留。详见docs/RELEASE_ACCEPTANCE.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P4产品修订</h3><p>邀请收窄为Pick up the baton；旧help邀请隐藏、不可操作且不占接棒配额。删除通知对非删除者隐藏；原项目/讨论/AI记录保留。见docs/P4_PRODUCT_REVISION.md。</p></div>

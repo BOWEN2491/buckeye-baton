@@ -1,8 +1,8 @@
 # Buckeye Baton — current agent entry
 
-2026-10-25: user confirmed all P4 product revisions pass and explicitly authorized merging the complete accepted version into main. P0–P4 are product accepted. PR #3 was merged into main as3bf29b3 with accepted P2/P3/P4; the coordinator checkout now uses main. See docs/RELEASE_ACCEPTANCE.md; this status supersedes old no-merge/pending-product-acceptance notes.
+2026-10-25: P4 accepted and merged through PR #3 as3bf29b3. P5 is implemented on codex/p5-implementation at9093dbb and is now running on3001 for manual product acceptance; P5 is not merged. See docs/P5_PREVIEW.md for live runtime and protected data details.
 
-Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVERVIEW.md and docs/P4_PRODUCT_REVISION.md. Pickup-only invitations and remover-only removed-post notifications supersede the original P4 contract. Application source5a5fddf passed typecheck/build, backend20/20 and production browser23/23; subsequent commits are documentation only.
+Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVERVIEW.md, docs/P4_PRODUCT_REVISION.md and docs/P5_PREVIEW.md. Pickup-only invitations and remover-only removed-post notifications supersede the original P4 contract. P5 source is 9093dbb; it passed typecheck/build, backend26/26, production browser24/24 and simulation2/2. Keep the active preview build stable during manual acceptance.
 
 ## Active rules
 - Project-centered app; embedded experience, not independent Lesson adoption. Old adoption writes stay410; stored history remains.
@@ -15,7 +15,7 @@ Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVE
 - P4 adds all-role Activity Inbox and bounded automatic invitations. Notification and business writes must share transactions; acceptance does not assign Mentor or create a pickup. Automatic invitation opt-out does not mute activity. Follow the frozen P4 contract, no AI matching or fictional solved counts.
 
 ## Environment and collaboration
-- Preserve active previews:3001/P4 app/build C:/Users/23678/.codex/workspaces/buckeye-baton-p4-product-revision, source5a5fddf. Database and .env.local remain in buckeye-baton-p4-review. Do not archive either directory, rebuild the active .next, switch the active checkout or open its PGlite from a second process. Read docs/P4_PREVIEW.md and .data/p4-preview-runtime.json before process operations.
+- Preserve active previews:3001/P5 app/build in this worktree, source9093dbba0084dcbe80d2ab1edcca9ce0b8fd8aaa. It uses the existing P4 database and protected .env.local in buckeye-baton-p4-review; the pre-upgrade backup is in that holder .data/p4-before-p5-upgrade-20261025. Do not rebuild the active .next, switch the active checkout, or open its PGlite from another process. Read docs/P5_PREVIEW.md and .data/p5-preview-runtime.json before process operations.
 - 3000/P3 app/build buckeye-baton-p3-detail and database/config buckeye-baton-p3-review remain protected. No preview/data/key changes are needed for the main merge.
 - Next15.5.28 / TypeScript / Node22 / Tailwind / pg; PGlite is explicit, single-process local storage. Real PostgreSQL/Neon/AWS/public deployment/multi-instance operation remain unverified.
 - No .env.local, keys, databases, node_modules or build artifacts in Git. Existing real model configuration may stay enabled for user actions; no additional paid calls are required by this merge.
