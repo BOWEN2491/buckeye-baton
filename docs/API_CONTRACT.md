@@ -1,5 +1,9 @@
 # Buckeye Baton — API contract
 
+## P3 planned contract — not implemented
+
+计划中的可选projects/workbench排序、项目priority GET、问题作者dueAt PATCH见[P3_CONTRACT.md](P3_CONTRACT.md)。当前应用尚未提供这些能力，不能按文档存在宣称API已上线。P3保持默认旧响应兼容，无schema新增；精确交付以P3_REPORT及总控独立验收为准。
+
 ## Product acceptance addendum: project comment deletion
 
 User-authorized scope update: [COMMENT_DELETION.md](COMMENT_DELETION.md). `DELETE /api/project-posts/:id` returns 200 `{data: QuestionThread}`. Only the post author or source project's owner may delete; a question author has no additional moderation rights. Missing identity401, forbidden403, missing post404. Successful retries return200 without replacing the original deletion audit.

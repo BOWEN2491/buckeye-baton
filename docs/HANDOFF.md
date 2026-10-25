@@ -12,6 +12,8 @@ P2实现分支codex/p2-implementation交付df5f050，R1–R3及E1已关闭，总
 
 ## 从哪里开始
 
+当前P3执行依据：P3_AGENT_TASK.md / P3_CONTRACT.md；启动词P3_START_PROMPT.md。基线origin/codex/p3-integration，worker分支codex/p3-implementation。契约已写好，应用尚未实现，总控0/10。
+
 先读 PROJECT_CONTEXT.md 和 docs/PROJECT_OVERVIEW.md，再读 MVP_SPEC.md、API_CONTRACT.md、PHASE1_ACCEPTANCE.md。ACCEPTANCE.md 是完整未来目标，不代表当前功能已完成。
 
 用户已授权将 PR #1 合入 main，main 作为唯一共享基线。唯一开发目录：
