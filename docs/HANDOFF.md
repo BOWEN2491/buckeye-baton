@@ -1,12 +1,12 @@
 # Buckeye Baton — 协作与目录约定
 
-## 当前准备P2
+## P2已通过总控验收
 
-唯一实现任务书 P2_AGENT_TASK.md，契约 P2_CONTRACT.md；从 origin/codex/p2-integration 建 codex/p2-implementation，一个Agent全栈交付。正常只转交最终READY短块，详细报告随分支保存为docs/P2_REPORT.md。总控独立验收后再提供产品预览，经用户验收/授权后才合入main。实现方已交付677a1d7，总控独立验收7/10；集中返修及证据要求见P2_REVIEW.md。正常只需修完回传一次，未集成或合并，不影响P1服务和数据库。
+P2实现分支codex/p2-implementation交付df5f050，R1–R3及E1已关闭，总控独立验收10/10并集成codex/p2-integration。依据P2_ACCEPTANCE.md；P2_REVIEW.md保留前次历史。main未合并，待提供产品预览、用户验收/授权。当前3000的P1服务和数据库保持不动。
 
 ## 已完成的P1
 
-实现分支 codex/p1-implementation 已交付提交 61ff34b；总控独立验收本地 G1–G10 全部通过，已快进集成到 codex/p1-integration。报告见 P1_ACCEPTANCE.md。用户产品验收通过，PR #2 已合入 main（3b473de）；本地已同步 main，P2 未开始。P1_AGENT_TASK.md 保留为本轮已执行任务记录，不代表需要从头重做。
+实现分支 codex/p1-implementation 已交付提交 61ff34b；总控独立验收本地 G1–G10 全部通过，已快进集成到 codex/p1-integration。报告见 P1_ACCEPTANCE.md。用户产品验收通过，PR #2 已合入 main（3b473de）；main已包含P1；P2状态见上文。P1_AGENT_TASK.md 保留为本轮已执行任务记录，不代表需要从头重做。
 
 ## 从哪里开始
 
@@ -27,7 +27,7 @@ C:/Users/23678/.codex/workspaces/buckeye-baton
 
 ## 当前及下一轮
 
-已完成项目浏览、三状态详情与所有者总结编辑，以及 P1 接棒关系、项目问题、Staff 引荐、Mentor 多轮回复和角色工作台。下一步是 PR 审阅/合并；P2 的 AI 简介/标签和 Mentor 负载尚未实现。不要恢复独立 Lesson 或逐条采用 UI。
+已完成项目浏览、三状态详情与所有者总结编辑，以及 P1 接棒关系、项目问题、Staff 引荐、Mentor 多轮回复和角色工作台。P2的AI简介/标签和Mentor负载已在协调分支通过总控验收，下一步是用户产品验收后再合并PR。不要恢复独立 Lesson 或逐条采用 UI。
 
 ## 运行与验证
 

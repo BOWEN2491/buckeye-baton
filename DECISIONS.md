@@ -1,7 +1,7 @@
 # Decisions
 
 ### Specify P2 owner-reviewed browsing content and shared Mentor workload semantics
-**Date:** 2026-10-24 · **Status:** Accepted for coordination contract; implementation pending
+**Date:** 2026-10-24 · **Status:** Implemented on P2 branch and independently accepted locally; main merge pending
 **Files:** docs/P2_AGENT_TASK.md, docs/P2_CONTRACT.md, docs/EXECUTION_ROADMAP.md
 
 In the context of the user requesting the same single-agent handoff as P1, facing AI text overwriting authored experience and workload counts drifting from existing follow-up rules, we decided for separate draft/published introductions with source hashes and owner confirmation, plus Staff-only question counts reusing P1 thread state, to achieve reviewable AI browsing content and consistent manual referrals, accepting additional metadata and a required live AI verification gate. Provider/key decisions precede API implementation; no credentials or calls are authorized by writing the task. P2 remains 0/10 until independent acceptance.

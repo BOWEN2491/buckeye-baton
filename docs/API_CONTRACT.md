@@ -1,6 +1,8 @@
 # Buckeye Baton — API contract
 
-## P2 endpoints — implemented on codex/p2-implementation, pending coordinator acceptance
+## P2 endpoints — independently accepted locally, pending product acceptance and main merge
+
+P2提交df5f050已通过总控H1–H10验收，集成于codex/p2-integration；证据见[P2_ACCEPTANCE.md](P2_ACCEPTANCE.md)。main及现有3000预览仍为P1，真实PostgreSQL/云端未验证。
 
 Rules: [P2_CONTRACT.md](P2_CONTRACT.md). Types `src/shared/p2-types.ts`; shared Zod `src/shared/p2-validation.ts` (model output, confirmation and client editor); handlers `src/server/introductions.ts`, `src/server/ai.ts`, `mentorWorkload` in `src/server/relay.ts`.
 
