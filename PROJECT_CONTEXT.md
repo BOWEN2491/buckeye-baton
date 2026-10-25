@@ -6,7 +6,7 @@
 
 ## 当前结论与执行入口
 
-2026-10-25：用户确认包括两项最终修订在内的P4全部产品验收通过，并明确授权合并。将已验收P2/P3/P4统一纳入PR #3 → main，作为共享基线；详见docs/RELEASE_ACCEPTANCE.md。
+2026-10-25：用户确认包括两项最终修订在内的P4全部产品验收通过，并明确授权合并。已将验收通过的P2/P3/P4统一通过PR #3合入main（merge3bf29b3），main现为完整共享基线；详见docs/RELEASE_ACCEPTANCE.md。
 
 - 3001/P4继续运行应用5a5fddf；应用目录buckeye-baton-p4-product-revision，数据库与真实OpenAI配置仍在buckeye-baton-p4-review。不要重建、切换、归档活跃应用，也不要并发打开其PGlite。详见docs/P4_PREVIEW.md。
 - 最终应用typecheck/build、backend20/20、production e2e23/23通过，用户产品验收通过。合并本身只更新文档，不改应用代码、数据、预览或API配置。

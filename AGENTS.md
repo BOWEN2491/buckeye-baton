@@ -1,6 +1,6 @@
 # Buckeye Baton — current agent entry
 
-2026-10-25: user confirmed all P4 product revisions pass and explicitly authorized merging the complete accepted version into main. P0–P4 are product accepted. PR #3 is being updated from its old P2 scope to include accepted P2/P3/P4. See docs/RELEASE_ACCEPTANCE.md; this status supersedes old no-merge/pending-product-acceptance notes.
+2026-10-25: user confirmed all P4 product revisions pass and explicitly authorized merging the complete accepted version into main. P0–P4 are product accepted. PR #3 was merged into main as3bf29b3 with accepted P2/P3/P4; the coordinator checkout now uses main. See docs/RELEASE_ACCEPTANCE.md; this status supersedes old no-merge/pending-product-acceptance notes.
 
 Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVERVIEW.md and docs/P4_PRODUCT_REVISION.md. Pickup-only invitations and remover-only removed-post notifications supersede the original P4 contract. Application source5a5fddf passed typecheck/build, backend20/20 and production browser23/23; subsequent commits are documentation only.
 

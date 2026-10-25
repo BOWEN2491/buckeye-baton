@@ -1,4 +1,4 @@
-> 2026-10-25 current status: P0–P4 are user product accepted, including final pickup-only invitations and deletion visibility. User authorized PR #3 → main with all accepted P2–P4. See RELEASE_ACCEPTANCE.md. The earlier pending/no-merge statuses below are historical.
+> 2026-10-25 current status: P0–P4 are user product accepted, including final pickup-only invitations and deletion visibility. PR #3 merged into main as3bf29b3 with all accepted P2–P4. See RELEASE_ACCEPTANCE.md. The earlier pending/no-merge statuses below are historical.
 
 # Buckeye Baton — 分级实施与总控台账
 

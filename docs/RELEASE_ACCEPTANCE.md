@@ -1,6 +1,6 @@
 # Accepted P0–P4 release — 2026-10-25
 
-The user confirmed all P4 product changes pass and explicitly authorized merge into main. PR #3 is expanded from the older P2-only integration branch to contain all accepted P2/P3/P4 changes. The older main already contains P0/P1.
+The user confirmed all P4 product changes pass and explicitly authorized merge into main. [PR #3](https://github.com/BOWEN2491/buckeye-baton/pull/3) was expanded from its older P2-only integration scope and **merged into main** with all accepted P2/P3/P4 changes. Merge commit: **3bf29b3782bb42634385f13119a3f5bfc5e73378**. Local coordinator checkout is now on main. The older main already contains P0/P1.
 
 Final application source: **5a5fddfa527b2dff509431ad05bcaa36a8c7dc80**. Later commits before release update documentation/screenshots only. Verification on that application: typecheck and production build passed, backend20/20, browser23/23 including390px and all four identities. Final manual product acceptance is confirmed by the user in this chat.
 
