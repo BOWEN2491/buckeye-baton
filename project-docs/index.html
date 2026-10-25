@@ -13,8 +13,8 @@
   "url": "https://github.com/BOWEN2491/buckeye-baton",
   "lastUpdated": "2026-10-24",
   "currentFocus": "",
-  "lastCompleted": "P2 df5f050总控验收10/10，R1–R3/E1关闭；后端8/8、浏览器10/10通过",
-  "nextUp": "准备P2产品预览供用户验收，授权后才合并main；P3未开始，3000仍为P1",
+  "lastCompleted": "P2其余功能用户验收通过；新增评论删除完成，后端9/9、浏览器11/11通过",
+  "nextUp": "更新3001供用户确认评论删除，随后等待main合并授权；P1服务和已有数据保留",
   "blockers": [
     "真实 Neon 连接、AWS 权益及公网部署未验证"
   ],
@@ -235,6 +235,7 @@
 <!-- claude:architecture:overview:end -->
 
     <!-- claude:architecture:filemap:start -->
+<div class="card" data-updated="2026-10-24"><h3>评论删除补充</h3><p><a href="../docs/COMMENT_DELETION.md">权限、API和验收</a>：项目所有者可删任意评论，作者可删自己的；增量审计字段与共用有效帖子读取保持Mentor负载一致。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 独立验收：10/10</h3><p><a href="../docs/P2_ACCEPTANCE.md">最终验收依据</a>：R1–R3及真实AI既有证据均通过；已集成codex/p2-integration，main未合并。3000仍运行P1。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 单Agent交付入口</h3><p><a href="../docs/P2_AGENT_TASK.md">任务书与启动提示词</a>；<a href="../docs/P2_CONTRACT.md">数据/API契约</a>。AI草稿/确认与负载统计已在协调分支实现，H1–H10独立验收通过；main未合并，任务书保留为交付依据。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P1 验收与新模块</h3><p><a href="../docs/P1_ACCEPTANCE.md">总控独立验收</a>：精确提交、十项门槛与限制。src/server/relay.ts 提供接棒/问题/工作台，src/shared/relay-types.ts 是契约类型；project-questions、relay-links、workbench 组件连接真实 API。</p></div>
@@ -327,6 +328,7 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-10-24"><h3>按产品验收新增评论删除</h3><p>用户确认P2其余功能通过，新增普通评论、追问与正式导师回复的删除权限、确认和失败提示；数据库保留审计记录，工作台按剩余有效帖子计算。typecheck/build、后端9/9和浏览器11/11通过，真实AI调用0次，main未合并。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 df5f050复验通过</h3><p>独立typecheck/build/start、后端8/8、浏览器10/10，原JSON/错误探针通过，双表单刷新回归通过；E1既有真实AI记录和截图已核对，无新增真实调用。H1–H10通过，待用户产品验收，main未合并，P1预览不变。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 677a1d7 总控审查</h3><p>独立typecheck/build通过，后端7/7、浏览器9/9通过；补充探针复现3项原测试缺口，H6/H8未通过；H3等待已有真实证据，合计7/10。未调用真实模型、未集成或合并、未影响P1预览。</p></div>
 <div class="card" data-updated="2026-10-24"><h3>P2 单Agent任务准备</h3><p>按用户要求沿用P1方式，单Agent连续全栈、正常最终只回传一次READY。契约规定保留原文、AI草稿需所有者确认、过时回退，负载复用P1待回复状态。真实AI需授权与独立证据，凭据/模型未确认；未改应用或重启预览。</p></div>

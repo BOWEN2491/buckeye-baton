@@ -12,6 +12,7 @@ import { POST as retiredAdoptionPOST } from '../src/app/api/lessons/[id]/adoptio
 import { PATCH as retiredAdoptionPATCH } from '../src/app/api/adoptions/[id]/route';
 import './relay.test';
 import './p2.test';
+import './post-deletion.test';
 
 async function request(resource: string, id?: string, method='GET', user?: string, body?: unknown, query='') {
  const req = new Request(`http://localhost/api/${resource}${query}`, {method,headers:{...(user?{'x-demo-user-id':user}:{}),'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});

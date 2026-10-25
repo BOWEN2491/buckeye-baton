@@ -239,10 +239,32 @@ function Composer({ thread, onPosted }: { thread: QuestionThread; onPosted: () =
 
 const kindLabel: Record<ProjectPostKind, string> = { comment: "Comment", follow_up: "Follow-up", mentor_reply: "Referred mentor reply" };
 
-function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; highlighted: boolean; onChanged: () => void }) {
+function Thread({ thread, projectOwnerId, highlighted, onChanged }: { thread: QuestionThread; projectOwnerId: string; highlighted: boolean; onChanged: () => void }) {
   const { user } = useIdentity();
   const [success, setSuccess] = useState("");
+  const [deleting, setDeleting] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const q = thread.question;
+  async function remove(post: QuestionThread["posts"][number]) {
+    if (!user || deleting) return;
+    const queueNote = post.kind === "mentor_reply"
+      ? " The question may return to Awaiting reply."
+      : post.kind === "follow_up" ? " The mentor's Awaiting reply count may change." : "";
+    if (!window.confirm(`Delete this ${kindLabel[post.kind].toLowerCase()}? It will be removed from the discussion.${queueNote}`)) return;
+    setDeleting(post.id);
+    setDeleteError("");
+    setSuccess("");
+    try {
+      await api<QuestionThread>(`/project-posts/${post.id}`, user.id, undefined, "DELETE");
+      invalidateMentorWorkload();
+      onChanged();
+      setSuccess("Comment deleted.");
+    } catch (error) {
+      setDeleteError(`Couldn’t delete this comment. ${errorText(error)} Try again.`);
+    } finally {
+      setDeleting("");
+    }
+  }
   return (
     <article id={`q-${q.id}`} className={highlighted ? "question-thread highlighted" : "question-thread"} aria-label={q.title}>
       <div className="question-head">
@@ -273,13 +295,19 @@ function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; hi
                 <RoleChip user={p.author} />
                 <span className={`kind-badge ${p.kind}`}>{kindLabel[p.kind]}</span>
                 <span className="metadata">{formatDateTime(p.createdAt)}</span>
+                {user && (p.authorId === user.id || projectOwnerId === user.id) && (
+                  <button type="button" className="text-button post-delete" disabled={!!deleting}
+                    aria-label={`Delete ${kindLabel[p.kind].toLowerCase()} by ${p.author.name}`} onClick={() => void remove(p)}>
+                    {deleting === p.id ? "Deleting…" : "Delete"}
+                  </button>
+                )}
               </div>
               <p>{p.body}</p>
             </li>
           ))}
         </ol>
       )}
-      <Feedback success={success} />
+      <Feedback success={success} error={deleteError} />
       {user?.role === "staff" && (
         <ReferralPanel
           thread={thread}
@@ -300,7 +328,7 @@ function Thread({ thread, highlighted, onChanged }: { thread: QuestionThread; hi
   );
 }
 
-export function ProjectQuestions({ projectId, status }: { projectId: string; status: ProjectStatus }) {
+export function ProjectQuestions({ projectId, projectOwnerId, status }: { projectId: string; projectOwnerId: string; status: ProjectStatus }) {
   const { user } = useIdentity();
   const { data, error, loading, reload } = useResource<QuestionThread[]>(`/projects/${projectId}/questions`);
   const [asking, setAsking] = useState(false);
@@ -360,6 +388,7 @@ export function ProjectQuestions({ projectId, status }: { projectId: string; sta
           <Thread
             key={t.question.id}
             thread={t}
+            projectOwnerId={projectOwnerId}
             highlighted={hash === t.question.id}
             onChanged={() => void reload()}
           />

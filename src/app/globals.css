@@ -1503,6 +1503,10 @@ nav {
   gap: 6px;
   font-size: 13px;
 }
+.post-delete {
+  margin-left: auto;
+  color: var(--accent);
+}
 .referral-note {
   display: flex;
   flex-wrap: wrap;

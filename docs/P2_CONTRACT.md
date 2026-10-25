@@ -1,5 +1,7 @@
 # P2 契约：浏览简介与 Mentor workload
 
+用户产品验收补充：评论删除范围/权限与对队列的影响见[COMMENT_DELETION.md](COMMENT_DELETION.md)。其余P2契约不变。
+
 2026-10-24。此文件是P2契约依据，df5f050已完成实现及独立本地验收；运行接口见API_CONTRACT.md，验收见P2_ACCEPTANCE.md。main合并仍待用户产品验收与授权。P0/P1 已合入 main。唯一任务书见 [P2_AGENT_TASK.md](P2_AGENT_TASK.md)；本轮不进入 P3/P4。
 
 ## 1. 产品边界

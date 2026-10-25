@@ -1,5 +1,11 @@
 # Decisions
 
+### Project owners and post authors can remove discussion posts
+**Date:** 2026-10-24 · **Status:** User-authorized addition; implemented and locally tested
+**Files:** docs/COMMENT_DELETION.md, src/server/relay.ts, db/schema.sql
+
+In the context of the user accepting the rest of P2 and requesting comment deletion by the project owner or comment author, facing existing history-retention rules and state derived from Mentor replies/follow-ups, we decided for server-authorized soft deletion and the same filtered post stream for discussions and queues, to achieve immediate removal with consistent workload counts, accepting retained private audit rows and no restore UI. This supersedes P1/P2's earlier exclusion of post deletion only; questions, referral records and post editing remain outside this addition.
+
 ### Specify P2 owner-reviewed browsing content and shared Mentor workload semantics
 **Date:** 2026-10-24 · **Status:** Implemented on P2 branch and independently accepted locally; main merge pending
 **Files:** docs/P2_AGENT_TASK.md, docs/P2_CONTRACT.md, docs/EXECUTION_ROADMAP.md

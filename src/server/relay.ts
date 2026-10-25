@@ -62,7 +62,7 @@ async function threads(sql: Sql, where: string, params: unknown[]): Promise<Ques
  if (!questions.length) return [];
  const ids = questions.map(q => q.id);
  // Posts keep database order (microsecond timestamp, then id); state is derived from this order.
- const posts = await rows(sql, 'SELECT * FROM project_posts WHERE "questionId" = ANY($1::text[]) ORDER BY "createdAt", id', [ids]);
+ const posts = await rows(sql, 'SELECT * FROM project_posts WHERE "questionId" = ANY($1::text[]) AND "deletedAt" IS NULL ORDER BY "createdAt", id', [ids]);
  const referrals = new Map((await rows(sql, 'SELECT * FROM project_referrals WHERE "questionId" = ANY($1::text[])', [ids])).map(r => [r.questionId, r]));
  const users = new Map((await rows(sql, 'SELECT * FROM users')).map(u => [u.id, u as User]));
  return questions.map(q => {
@@ -118,6 +118,17 @@ export async function refer(req: Request, db: Sql, user: User, questionId: strin
  try { await insert(db, 'project_referrals', { id: randomUUID(), questionId, staffId: user.id, mentorId: input.mentorId, reason: input.reason }); }
  catch (error) { if (isUniqueViolation(error)) alreadyReferred(); throw error; }
  return json(await thread(db, questionId), 201);
+}
+
+export async function deletePost(db: Storage, user: User, postId: string) {
+ return json(await db.transaction(async sql => {
+  const post = (await rows(sql, 'SELECT post.*, project."ownerId" AS "projectOwnerId" FROM project_posts post JOIN project_questions question ON question.id=post."questionId" JOIN projects project ON project.id=question."projectId" WHERE post.id=$1 FOR UPDATE OF post', [postId]))[0] ?? fail(404, 'NOT_FOUND', 'Comment not found');
+  if (post.authorId !== user.id && post.projectOwnerId !== user.id)
+   fail(403, 'FORBIDDEN', 'Only the comment author or project owner can delete this comment');
+  // Keep the original record for history, but exclude it from discussions and queue state.
+  if (!post.deletedAt) await sql.query('UPDATE project_posts SET "deletedAt"=clock_timestamp(), "deletedBy"=$2 WHERE id=$1', [postId, user.id]);
+  return thread(sql, post.questionId);
+ }));
 }
 
 export async function workbench(db: Sql, user: User) {

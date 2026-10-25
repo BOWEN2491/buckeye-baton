@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS project_questions (id text PRIMARY KEY, "projectId" t
 CREATE INDEX IF NOT EXISTS project_questions_project_idx ON project_questions("projectId");
 CREATE TABLE IF NOT EXISTS project_posts (id text PRIMARY KEY, "questionId" text NOT NULL REFERENCES project_questions(id), "authorId" text NOT NULL REFERENCES users(id), body text NOT NULL, kind text NOT NULL CHECK(kind IN ('comment','follow_up','mentor_reply')), "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp());
 CREATE INDEX IF NOT EXISTS project_posts_question_idx ON project_posts("questionId");
+ALTER TABLE project_posts ADD COLUMN IF NOT EXISTS "deletedAt" timestamptz;
+ALTER TABLE project_posts ADD COLUMN IF NOT EXISTS "deletedBy" text REFERENCES users(id);
 CREATE TABLE IF NOT EXISTS project_referrals (id text PRIMARY KEY, "questionId" text NOT NULL UNIQUE REFERENCES project_questions(id), "staffId" text NOT NULL REFERENCES users(id), "mentorId" text NOT NULL REFERENCES users(id), reason text NOT NULL, "createdAt" timestamptz NOT NULL DEFAULT clock_timestamp());
 CREATE INDEX IF NOT EXISTS project_referrals_mentor_idx ON project_referrals("mentorId");
 CREATE TABLE IF NOT EXISTS project_introductions ("projectId" text PRIMARY KEY REFERENCES projects(id), draft jsonb, published jsonb, "updatedAt" timestamptz NOT NULL DEFAULT clock_timestamp());

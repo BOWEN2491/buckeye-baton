@@ -30,6 +30,7 @@ export async function handle(req: Request, resource: string, id?: string): Promi
   if(resource==='pickups'&&method==='POST') return await relay.pickup(req,db,user,id!);
   if(resource==='projectQuestions'&&method==='POST') return await relay.askQuestion(req,db,user,id!);
   if(resource==='questionPosts'&&method==='POST') return await relay.addPost(req,db,user,id!);
+  if(resource==='projectPost'&&method==='DELETE') return await relay.deletePost(db,user,id!);
   if(resource==='questionReferral'&&method==='POST') return await relay.refer(req,db,user,id!);
   if(resource==='workbench'&&method==='GET') return await relay.workbench(db,user);
   if(resource==='mentorWorkload'&&method==='GET') return await relay.mentorWorkload(db,user);

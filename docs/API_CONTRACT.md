@@ -1,5 +1,11 @@
 # Buckeye Baton — API contract
 
+## Product acceptance addendum: project comment deletion
+
+User-authorized scope update: [COMMENT_DELETION.md](COMMENT_DELETION.md). `DELETE /api/project-posts/:id` returns 200 `{data: QuestionThread}`. Only the post author or source project's owner may delete; a question author has no additional moderation rights. Missing identity401, forbidden403, missing post404. Successful retries return200 without replacing the original deletion audit.
+
+The UI confirms deletion. Comments, explicit follow-ups and formal Mentor replies are covered; questions and referral records remain. Deleted posts are excluded from public threads and the common queue/workload calculation, with original rows retained via nullable deletedAt/deletedBy columns. This supersedes the earlier exclusion of post deletion; post editing is still deferred.
+
 ## P2 endpoints — independently accepted locally, pending product acceptance and main merge
 
 P2提交df5f050已通过总控H1–H10验收，集成于codex/p2-integration；证据见[P2_ACCEPTANCE.md](P2_ACCEPTANCE.md)。main及现有3000预览仍为P1，真实PostgreSQL/云端未验证。

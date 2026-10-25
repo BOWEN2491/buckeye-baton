@@ -1,5 +1,7 @@
 # Buckeye Baton — MVP v2：项目交接与接棒
 
+2026-10-24产品验收补充：项目所有者及评论作者的删除权限见[COMMENT_DELETION.md](COMMENT_DELETION.md)，取代旧的帖子删除排除；其他历史保留规则不变。
+
 更新：2026-10-24。状态：**v2 第一轮实现：首页与三状态项目交互；完整接棒与项目引荐仍未实现。** 本轮验证状态见 PHASE1_ACCEPTANCE.md。
 
 本文件保留完整 v2 目标，取代以独立 Lesson 与采用反馈为中心的旧规格。第一轮仅实现下列范围；后续目标不可作为本轮已完成能力。旧规格保存在 legacy/MVP_SPEC_LESSON_V1.md，旧验收在 legacy/ACCEPTANCE_LESSON_V1.md。

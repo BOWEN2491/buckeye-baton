@@ -309,7 +309,7 @@ export default function ProjectPage({
               </section>
             )}
             {mine && <IntroductionPanel key={p.updatedAt} projectId={p.id} />}
-            <ProjectQuestions projectId={p.id} status={p.status} />
+            <ProjectQuestions projectId={p.id} projectOwnerId={p.ownerId} status={p.status} />
             <Successors successors={successors} />
           </div>
           <aside>
