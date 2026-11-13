@@ -1,5 +1,8 @@
 # Buckeye Baton — current agent entry
 
+Current override (2026-11-13): main already includes P0–P5 (PR #4/#5); old statements that P5 is unmerged are historical. This computer's obsolete local project copies are being retired at the owner's request, including their local config and demonstration databases. See README's recreation section. Forty unmatched historical file variants were byte-checked and pushed to codex/archive-local-before-cleanup-20261113; remaining source versions were already in remote history. Additional UI changes remain on codex/demo-ui-refinement and were not merged by cleanup. Do not assume old preview paths/PIDs still exist or are active; check the current host before operations.
+
+
 2026-10-25: P4 accepted and merged through PR #3 as3bf29b3. P5 is implemented on codex/p5-implementation at9093dbb and is now running on3001 for manual product acceptance; P5 is not merged. See docs/P5_PREVIEW.md for live runtime and protected data details.
 
 Read project-docs/index.html, PROJECT_CONTEXT.md, DECISIONS.md, docs/PROJECT_OVERVIEW.md, docs/P4_PRODUCT_REVISION.md and docs/P5_PREVIEW.md. Pickup-only invitations and remover-only removed-post notifications supersede the original P4 contract. P5 source is 9093dbb; it passed typecheck/build, backend26/26, production browser24/24 and simulation2/2. Keep the active preview build stable during manual acceptance.

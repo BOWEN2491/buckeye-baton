@@ -1,3 +1,5 @@
+> 2026-11-13 本机清理说明：main 已包含 P0–P5；下文“P5 未合并”等内容属于历史记录。用户同意丢弃本机演示库、.env、依赖和构建，旧目录不再作为开发入口；重新克隆与测试步骤见 README。40 份远端历史中未匹配的旧源码/文档已逐字节归档并推送到 codex/archive-local-before-cleanup-20261113。codex/demo-ui-refinement 的 4 个额外提交仍单独保留，清理没有合并该分支。旧预览路径和 PID 不可当作当前运行证据。
+
 > Current product override (2026-10-25): see [P4_PRODUCT_REVISION.md](docs/P4_PRODUCT_REVISION.md). Automatic invitations are pickup-only. Removed-post notifications are hidden from recipients other than the remover.
 
 # Buckeye Baton — 当前项目状态

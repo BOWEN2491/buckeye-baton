@@ -64,6 +64,35 @@ The starter identity switcher includes Alex (`student-alex`), Mia (`student-mia`
 
 The app uses Next.js 15, TypeScript, Node.js 22, Tailwind CSS, and PostgreSQL-compatible storage. Local PGlite is persistent but intended for one local Node process; do not share it between services. Real PostgreSQL multi-connection behavior, Neon/AWS setup, public deployment, production authentication, and multi-instance or serverless scheduling have not been verified. Hosted PostgreSQL requires a separately configured `DATABASE_URL` and `npm run db:setup`. Do not deploy local PGlite as a shared cloud database.
 
+## Recreate a local demo after workspace cleanup
+
+Local workspaces are disposable once their source changes are pushed. On 2026-11-13 the owner chose to discard this computer's old demo databases, local `.env` configuration, dependencies and builds. Those files are intentionally **not** in GitHub. A fresh clone restores code and starter fixtures, not previous edits, generated AI results or the 20-project simulation batch.
+
+With Node.js 22 and Git installed, choose a new directory and run in PowerShell:
+
+```powershell
+git clone https://github.com/BOWEN2491/buckeye-baton.git
+cd buckeye-baton
+npm ci
+Copy-Item .env.example .env.local
+npm run db:setup
+npm run dev
+```
+
+Open http://localhost:3000 and use the four fictional identities to browse projects and exercise the role flows. Stop with `Ctrl+C`. For automated checks:
+
+```powershell
+npm run typecheck
+npm run test:backend
+npm run build
+npx playwright install chromium
+npm run test:e2e
+```
+
+Core demo flows and mocked browser tests do not require a real API key. Live AI actions need your own local `OPENAI_API_KEY` and `OPENAI_PROJECT_INTRO_MODEL`; the background analysis and invitation runners remain opt-in as described above. Do not copy secrets into Git. Use a separate PGlite data directory per app process. The old simulation importer is tied to a historical preview manifest and is not the fresh-install seed command; use `npm run db:setup` for the normal starter data.
+
+Latest P0–P5 application code is on `main`. The separately pushed `codex/demo-ui-refinement` branch contains additional UI changes that this cleanup does not merge. Historical local source/document variants were preserved, byte-checked and pushed on [codex/archive-local-before-cleanup-20261113](https://github.com/BOWEN2491/buckeye-baton/tree/codex/archive-local-before-cleanup-20261113/archive/local-before-cleanup-20261113), with a file manifest. That archive is for recovery, not the current app.
+
 ## Project handoff documents
 
 - [Product overview](docs/PROJECT_OVERVIEW.md) · [roadmap](docs/EXECUTION_ROADMAP.md) · [API contract](docs/API_CONTRACT.md)

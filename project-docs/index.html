@@ -11,12 +11,17 @@
   "project": "Buckeye Baton",
   "tagline": "HackOHI/O 2026 · Honda challenge · 项目经验接力",
   "url": "https://github.com/BOWEN2491/buckeye-baton",
-  "lastUpdated": "2026-10-25",
-  "currentFocus": "P5 3001 standalone preview ready for manual acceptance; existing P4 database backed up, migrated and populated with simulation data",
-  "lastCompleted": "P5 9093dbb; typecheck/build, backend26/26, browser24/24, simulation2/2; existing 3001 data preserved with 20 simulation projects; 3000 unchanged",
-  "nextUp": "User manual acceptance of P5 and simulated role journeys; then consider fixes or merge, never merge main automatically",
-  "blockers": ["真实Neon连接、AWS权益及公网/持续调度环境未验证"],
-  "health": {"featuresDone": 8, "featuresTotal": 10}
+  "lastUpdated": "2026-11-13",
+  "currentFocus": "—",
+  "lastCompleted": "本机旧稿归档分支已推送并验证；README 补充删除后重建、建库及测试步骤",
+  "nextUp": "需要时重新克隆 main；额外 UI 仍在 codex/demo-ui-refinement，未在本次清理合并",
+  "blockers": [
+    "真实Neon连接、AWS权益及公网/持续调度环境未验证"
+  ],
+  "health": {
+    "featuresDone": 8,
+    "featuresTotal": 10
+  }
 }
 </script>
 <!-- claude:meta:end -->
@@ -166,7 +171,7 @@
 <!-- claude:overview:pitch:end -->
 
     <!-- claude:overview:status:start -->
-<div class="card" data-updated="2026-10-25"><h3>当前阶段</h3><p>P0–P4已通过产品验收并合main。P5在独立实现分支通过typecheck/build、backend26/26、生产browser24/24及模拟脚本2/2；含来源变化、失败后重试计时与确认后详情标签刷新回归。下一步由总控升级3001和产品验收，尚未合main或部署。</p></div>
+<div class="card" data-updated="2026-11-13"><h3>当前阶段</h3><p>main 已包含 P0–P5。用户选择清理这台电脑上的旧开发目录、演示数据与本机配置。40 份未匹配的旧稿已逐字节归档到远端独立分支，主产品代码没有改动。重新克隆和测试步骤见 README；旧预览记录仅供历史追溯。额外 UI 分支仍未合并。</p></div>
 <!-- claude:overview:status:end -->
 
     <!-- claude:overview:health:start -->
@@ -353,6 +358,8 @@ npm start</pre></div>
   <!-- ============ CHANGELOG ============ -->
   <section class="panel" id="changelog">
     <!-- claude:changelog:start -->
+<div class="card" data-updated="2026-11-13"><h3>本机清理与恢复说明</h3><p>用户同意丢弃本机配置及演示库。检查 321 份源码/文档：281 份已在远端历史中，40 份不同版本已归档到 codex/archive-local-before-cleanup-20261113 并逐字节校验。README 增加新克隆、安装、建库、运行与测试说明；不上传密钥或数据库，不合并 UI 分支，不部署。</p></div>
+
 <div class="card" data-updated="2026-10-25"><h3>P5预览与模拟数据导入</h3><p>3001运行P5提交9093dbb，保留原持久数据库并完成增量迁移；停服时事务导入20个项目、4名Mentor、30个问题、60条帖子和3条接棒，核对16张数据表的旧记录均未变化。升级前1047个文件逐一SHA-256匹配备份；3000保持不动。详见docs/P5_PREVIEW.md。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>P5实现与模拟适配</h3><p>新增固定五类Mentor专长/问题分类/前三候选，GitHub来源简介及只读限定标签，持久单任务循环与增量迁移。typecheck/build、后端26/26、生产浏览器24/24与模拟2/2通过；含仓库来源hash变化/旧页确认、失败后有限重试和详情标签即时刷新。验证不改变3000/3001、main或部署。</p></div>
 <div class="card" data-updated="2026-10-25"><h3>完整版本获准合并</h3><p>用户确认P4全部通过，P2–P4已通过PR #3合入main（3bf29b3）；3000/3001、数据库和模型配置保留。详见docs/RELEASE_ACCEPTANCE.md。</p></div>
