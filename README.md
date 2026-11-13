@@ -66,7 +66,7 @@ The app uses Next.js 15, TypeScript, Node.js 22, Tailwind CSS, and PostgreSQL-co
 
 ## Recreate a local demo after workspace cleanup
 
-Local workspaces are disposable once their source changes are pushed. On 2026-11-13 the owner chose to discard this computer's old demo databases, local `.env` configuration, dependencies and builds. Those files are intentionally **not** in GitHub. A fresh clone restores code and starter fixtures, not previous edits, generated AI results or the 20-project simulation batch.
+Local workspaces are disposable once their source changes are pushed. Automated removal on this host was blocked by the tool approval policy; the old directories were not deleted automatically. They can be removed manually after accepting loss of local config/demo data. On 2026-11-13 the owner chose to discard this computer's old demo databases, local `.env` configuration, dependencies and builds. Those files are intentionally **not** in GitHub. A fresh clone restores code and starter fixtures, not previous edits, generated AI results or the 20-project simulation batch.
 
 With Node.js 22 and Git installed, choose a new directory and run in PowerShell:
 
