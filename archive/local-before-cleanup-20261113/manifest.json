@@ -1,0 +1,1968 @@
+[
+  {
+    "source": "buckeye-baton",
+    "file": ".gitignore",
+    "sha256": "11d70a934673286ead071aef62fac3cb55866d69a68ce5df35e57cd601943ea7",
+    "existing_remote_blob": "dc2f04771ce27cff5a0ad3fa4412fc04459f9be5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": ".nvmrc",
+    "sha256": "12d3a4efa6646b3ece4782f70033b9785bf0d167b553c43e22579b031cea5c4d",
+    "existing_remote_blob": "2bd5a0a98a36cc08ada88b804d3be047e6aa5b8a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "AGENTS.md",
+    "sha256": "94ab8a2fbd0f316a866ecf8bbeed75ebb0c68ced047e8f0bc543df0a62fce436",
+    "existing_remote_blob": "07e15c0605b0c0b93f094cb26d62512f2905bad7"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "CLAUDE.md",
+    "sha256": "6fa12a5c0535c4ea2f8bddbf3969549fca456d962dd30de034db4a09e0eaa9cc",
+    "existing_remote_blob": "8742780f52834a08965ef22a5c46dda2e91cb85c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "DECISIONS.md",
+    "sha256": "1c154d85532c5d3dcf1227b408393cca3d80af7188c1087f954cc689f69e6732",
+    "existing_remote_blob": "b8979890c6dc6ecb39e97ef805a0e42a1861ca57"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "next.config.ts",
+    "sha256": "3891f7e68ff191a088e4fd4cf866c54e318f2e9edc2c8000f235cf4d4db2a8fb",
+    "existing_remote_blob": "f7fa9f3fe7863022cecbb8efef8cd8ef842fd35e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "package-lock.json",
+    "sha256": "2acbd52b304a8522502e7fb0e45b83297fcf12aff6fd2953a129026d6c32a64f",
+    "existing_remote_blob": "917b0cb60a454b1f623075d22ca87a679a885166"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "package.json",
+    "sha256": "94fade296d94e6aad486ac8d09e60fd2304627224780d87450d7e8f698fd1d36",
+    "existing_remote_blob": "a22e7b58d758ba3303bd733bad1636158c6dbd91"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "playwright.config.ts",
+    "sha256": "a308b4dc53fa8c1bd3ffd695e9a7b4c3cf40ca57988349d98ca430804b5b8340",
+    "existing_remote_blob": "96e218b6904706156e340ab2f1deca0302a5a6a0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "postcss.config.js",
+    "sha256": "4f121bc616e3bbb744572750413e0ba414499d3424cc6eaf5ee9eaf21062d623",
+    "existing_remote_blob": "cce4985fbec1db93c0e8e5479b3bb64e349352a3"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "PRIOR_WORK.md",
+    "sha256": "3df1ada4288095470b1caf22739ae09f14d395b91aa7bb53e3821f90fb0b6699",
+    "existing_remote_blob": "9d8fe32e2d6d6ace8b7d753debe6e67ca4d6ed2e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "PROJECT_CONTEXT.md",
+    "sha256": "81cd368df40147287f2e12bec03e2c4fdf467cc2f1262913a12bc500d3480404",
+    "existing_remote_blob": "f14ced1c3d0befedf1c0c1922c98e9feb041f29e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "README.md",
+    "sha256": "24789d707746a07e95713205b8745571a4a6ed0aa75005cd2694269a19248586",
+    "existing_remote_blob": "3a8a306f3503d3dc5986cc9d03cf8f2e73f1cc5f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tailwind.config.ts",
+    "sha256": "1429bd7a867329f6accd5f2662dda5ee6abd4bad03eccd814fba89ace61b2fee",
+    "existing_remote_blob": "d53a686b63bbfd323a1b18c03a72a6640268d5b7"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "TEAMMATE.md",
+    "sha256": "faa2fa258249930ff9611592658860d6d5512b098655d3d2bf58af2b96854b87",
+    "existing_remote_blob": "24409c5e5fc3150e8550a192dcb408f287b1a876"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tsconfig.json",
+    "sha256": "afc937b4ebe4adc20bb4389837ed23f841c48a97e9690ea18aa05514ab310af9",
+    "existing_remote_blob": "1f5098735668257886d020791dd1da9d4f89b5b9"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "db/schema.sql",
+    "sha256": "c72c1cb2c8a31166ed434ab30d4894b64432183e3b88ab61a2771973fb2e0d22",
+    "existing_remote_blob": "3395633d329fda61abd31fb9cf901637d58e6f85"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/README.md",
+    "sha256": "dcbbcdec08ec147ef78f26ecfc8003136cec38952664954e0577c15a820a36a9",
+    "existing_remote_blob": "18260b2b83e1cdaa4510513fff478f15dece7dea"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/cards/finished.html",
+    "sha256": "516d1e61e3a9028f40936b90a3283467a376784b1e629384d6d0a60bfe5af16b",
+    "existing_remote_blob": "b1bbfca09ddce9cc457f0dcf8fd51bd48f69b2bc"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/cards/IMPLEMENTATION.md",
+    "sha256": "6751ce8f014dc88d64a3c449be9bb23c16e7d91c14c03bf56bbdf6ffb63f53ec",
+    "existing_remote_blob": "c154e380962ad633ec4c14544b8148acfc44bdd9"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/cards/ongoing.html",
+    "sha256": "4c22bddf0a4d35c6aee74203f12139fa79d53b6c62644a882b8acc092b1816d2",
+    "existing_remote_blob": "0c2cf6f365785b38cb9ea10aba8aed56149b14bc"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/cards/paused.html",
+    "sha256": "a001353b26438e94601745563e0d2f9ff525014b353fe9a35996a8d56c21001d",
+    "existing_remote_blob": "f3ea159e72eeb5b1c496b5996da3d6658ae1670d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/feed/feed.html",
+    "sha256": "e1f7eaee2db40e61ad8234274d5ae4fd15144987e3ca552e03c5b92ec55e32ac",
+    "existing_remote_blob": "e44b07e559163815f9edabfd58580813bb8127fa"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/feed/FEED.md",
+    "sha256": "e708029b386784c6ee7aed59c7dadc5fae0fe9bb86af603e59cfef4aacc52c98",
+    "existing_remote_blob": "7517cfd8e59e6ba8d67a6b406ccbefe7291efc42"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/alex-paused.html",
+    "sha256": "2c5dd2f8e5035d07a79f88c029c4555530236eb8c2b7f0729679992067d679e6",
+    "existing_remote_blob": "0f2fece676e92ccbba002be327fa55e2fe0d0472"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/baton-form.html",
+    "sha256": "493329f75daeab8d6e46a264d7e47c059703aac1815da48321f581d4563e2356",
+    "existing_remote_blob": "05593a4bf6074dbed874ccb75c1d5a18b68076ce"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/index.html",
+    "sha256": "17a29ea92a9d61e80288809cb59c60b6513fa6ad43bfd8d18f5addeb410a6f7f",
+    "existing_remote_blob": "10433f31c5b3da7fcb54fbbbbb215bc37bddaca3"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/mia-ongoing.html",
+    "sha256": "24ca3415701a9b15e612e521c0cd98c98228d26845431c7071a44e02e767c99a",
+    "existing_remote_blob": "03394db0fc5da7d3a4edb2e533c836582ee4c8a3"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pick-up-result.html",
+    "sha256": "14972fe347e233f4543b21c1fb8fdb9eba1d9fbdca6624d9999170bcee5f530b",
+    "existing_remote_blob": "a92c2de0117b718c69dfcec3ca27d2398d94e23b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/picked-up.html",
+    "sha256": "5074b642c3e488b7fe79e1275fd8b06455b560d39d3734dd985e5a54a7ff3b0f",
+    "existing_remote_blob": "b4fe1ad60c706dbd6330b376f69ac5f603f40ef8"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-finished-1.html",
+    "sha256": "9d3995d47dd48bcbfcd250ee7d1b7082da694f11bb2eb56d78b26cb6a494b368",
+    "existing_remote_blob": "0b9e92853f8b4b516ac298111991bf28f28946ae"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-finished-2.html",
+    "sha256": "64a74d179d140d1c9bcb558646291a466ca485afaf1bb426e831c98b2f0fb890",
+    "existing_remote_blob": "dcf0b03082352ca6179a3cad11cd58d1d8c47192"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-ongoing-1.html",
+    "sha256": "9d3995d47dd48bcbfcd250ee7d1b7082da694f11bb2eb56d78b26cb6a494b368",
+    "existing_remote_blob": "0b9e92853f8b4b516ac298111991bf28f28946ae"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-ongoing-2.html",
+    "sha256": "64a74d179d140d1c9bcb558646291a466ca485afaf1bb426e831c98b2f0fb890",
+    "existing_remote_blob": "dcf0b03082352ca6179a3cad11cd58d1d8c47192"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-paused-1.html",
+    "sha256": "9d3995d47dd48bcbfcd250ee7d1b7082da694f11bb2eb56d78b26cb6a494b368",
+    "existing_remote_blob": "0b9e92853f8b4b516ac298111991bf28f28946ae"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/pickup-paused-2.html",
+    "sha256": "64a74d179d140d1c9bcb558646291a466ca485afaf1bb426e831c98b2f0fb890",
+    "existing_remote_blob": "dcf0b03082352ca6179a3cad11cd58d1d8c47192"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/SPEC.md",
+    "sha256": "3ec96a8b5e2ad89a207807e12a005bc50e6daa1bf2b0f163d9cf92fc6e0efe17",
+    "existing_remote_blob": "119fc99a2db68032bfed346dcf6cab6cffcc763c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "design/relay/workbench.html",
+    "sha256": "b85f47fc78bdd338b17e0e3a8f64e6476e9b0775055b7cb623a5bd8e9f494370",
+    "existing_remote_blob": "69cd46c135c4798cac92a003efac556049efa5af"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/ACCEPTANCE.md",
+    "sha256": "87f5adc6478a99373c4caec6d1b84fe03207b3c427412b5aad407c8ef32283e7",
+    "existing_remote_blob": "47fee09c8fd5069097f889c5b21317962cc1a309"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/API_CONTRACT.md",
+    "sha256": "a3f3daef2ac0b55fcfee7c540e90bed2b8d3c4e502d96655751671b297acbb6f",
+    "existing_remote_blob": "c91fedffd9b5a2fb10fe491f189b0b959ab2c83d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/COMMENT_DELETION.md",
+    "sha256": "907a17a8707c633c9b318fbc7629fa2e97ce9d9e613b35d8caee4a23e24b7be1",
+    "existing_remote_blob": "defef05bb7f96506df29a47da8318d0f10a45613"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/COORDINATOR_HANDOFF.md",
+    "sha256": "c80619f69c66c6abeda6be4cc12bfc574e1b5ebaa595fe320bd1dea384d2fef8",
+    "existing_remote_blob": "7012f7f06d67f29ff2459d2abb28182a8d141ceb"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/EXECUTION_ROADMAP.md",
+    "sha256": "fddf25ef2ab7cd0523925a1bad7ee724e027d9b3a640a4df54e679a99bee5084",
+    "existing_remote_blob": "e974e4ede6e32d0d6c52e201a40a75234be1d093"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/explore-concept.png",
+    "sha256": "0404cf6ece1d4afb4571c46c7822bf2e14b548ea4de90aea120fe85a36ca78db",
+    "existing_remote_blob": "bae175f6d481524bb1524146fddee4c3258380cb"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/HANDOFF.md",
+    "sha256": "2ca9e7cdef59cde45462f05de8b1aefcfc279effb99786bb81f002625ef04aea",
+    "existing_remote_blob": "5ab9cc6449e853dc2785aaedb274941919c28fa9"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/MVP_SPEC.md",
+    "sha256": "756c7672dacc34bae010b99a79a58a6aaeed62bb5d3989f6197fb0911c155ab8",
+    "existing_remote_blob": "44528abb82ef188a0bdc7a6a9f4e86e2867e6a33"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P1_ACCEPTANCE.md",
+    "sha256": "e28a07f5e46800eb1365b0509739f6fe64a64110649663c1742c56b4a4363f77",
+    "existing_remote_blob": "c95c11dc8b8dc3bc2d12d1115706c7bfd7f3f0f7"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P1_AGENT_TASK.md",
+    "sha256": "d0c53d0d577d848350abbf32f174a7f6772f6aa6cf33daf8a280e93bbac3c442",
+    "existing_remote_blob": "e6ce603fb3af3f53aa39046f5865fc1f0a99a19e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P1_CONTRACT.md",
+    "sha256": "91f46a1bf6a11de599b0d02c1fa2a05bc51be1d27e83b3a3a0702a1455819374",
+    "existing_remote_blob": "2480ae1e64cb2738d5723875ec2cbaf97296ea11"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P1_REPORT.md",
+    "sha256": "c494e281e4a82e0018d944488715aa0d233d74a177787958bc318f6d9cfc98b3",
+    "existing_remote_blob": "1d884844f4cfcc058635040f8dad4e4df2197c0c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P2_ACCEPTANCE.md",
+    "sha256": "a6588114ce32ff88959802fd4564ae2cffaed90ec695280741d703bc3b5a5318",
+    "existing_remote_blob": "7f00037d83b7c016fb67af3604cf31b841d60577"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P2_AGENT_TASK.md",
+    "sha256": "3405da02357bac6838eddd704c536471efd64b9cca5efc331d1909ffde4bd6f0",
+    "existing_remote_blob": "ef6aae53c76ef5c208e3ddb889708f08e1588c07"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P2_CONTRACT.md",
+    "sha256": "f939ce03887a2b4eb4e6b06c177ce6c21bf5f7f42155042126ad231856fc6b27",
+    "existing_remote_blob": "d9bd0aab19ad70a0f17b9487c45a5849e95fb01b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P2_REPORT.md",
+    "sha256": "ec18e74ad2629511487941df5edb31db64538ee5c4847519b204f6fa0349339c",
+    "existing_remote_blob": "26f2d7f50387758050f143375e1f230b4ebb7cbe"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P2_REVIEW.md",
+    "sha256": "eaa90d0799099b4095465df96c46c85727a1ad6199e6c50a82ba525f5ce844a6",
+    "existing_remote_blob": "3910dd52e919bee0332f5da203437db49e0efeb3"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_ACCEPTANCE.md",
+    "sha256": "44c26b712d407257cf55ffe5e9ee0d881d1b9af02edf5905b39f0832938e783e",
+    "existing_remote_blob": "524f345042de6ee23a69195005dad596546fb220"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_AGENT_TASK.md",
+    "sha256": "ecfe8dede34488091e11fa3f2b705d60e5d4cd34c8303518638f3d43fd8f3018",
+    "existing_remote_blob": "e9ab430a23b03dcc3a50bfc33460ecacdc8c59b6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_CONTRACT.md",
+    "sha256": "1957453cafd6dbfa3cd9b4bd9d0a7d455105ffef30cca6fb9245e6739ab84738",
+    "existing_remote_blob": "e3204bfd0469cf83ef56772e0b53e8bab889f757"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_MANUAL_ACCEPTANCE.md",
+    "sha256": "79290e469d082c5be64c8ad73d8f57111d6807963d0694d2e7a3cfb3a53426ff",
+    "existing_remote_blob": "0b5f41415f7443d08167189b99fd054abca100a0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_PREVIEW.md",
+    "sha256": "92a858f3b42c75190acde9abf7089ef2f112379eaa5c414ba8b3ddc306a19396",
+    "existing_remote_blob": "f7117593050050c9872a481b204e1bf39dd90e15"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_PRODUCT_REVISION.md",
+    "sha256": "628fc705d249f26a3534ec0c9719df82a3c33109495131db7312cdc4ade60612",
+    "existing_remote_blob": "03df98052d4a4729399a4f95318e02af2ee4a21e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_REPORT.md",
+    "sha256": "1205d08a3d45c8f23f9b4f1deac4a5c2a07d28385564b357e6496677f2935711",
+    "existing_remote_blob": "0bc206578f96e4571f7a206de62ba98f3d09037d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_REVIEW.md",
+    "sha256": "9b469e553a086c583e9ecc906cbbac33bb6f954c18dc47b522c8a05395a2a10f",
+    "existing_remote_blob": "ae3d993f4c70b363f29cdcffaf7cc6920ba10731"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P3_START_PROMPT.md",
+    "sha256": "e9689d1bb5b53f64096337d11dd9481566713a2ecd51c9df4ac4db3d7d5072fc",
+    "existing_remote_blob": "2648a5a0f0f1858087327b5c34d25422b7e96a4d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_ACCEPTANCE.md",
+    "sha256": "95aa76caf8e3087d526f1bdbfa5229a9bf5e98bad96c3381d51be78fb219354f",
+    "existing_remote_blob": "2739652eb03e1b6705121a668e00d0857d8ca3b5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_AGENT_TASK.md",
+    "sha256": "8e8e69165b9a74328c1bc322bfdc156c69e59058112d5f9ce092cdb54291655a",
+    "existing_remote_blob": "5edfec3570e7e9404de1fba63425cf068a7c547a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_CONTRACT.md",
+    "sha256": "71637a9ca0b3f56cfd8a2d9220502b2029c58581469b0c1436a0cc0b26c56860",
+    "existing_remote_blob": "bc93fd403c08d68a31cc81da889225c2cf267ac0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_MANUAL_ACCEPTANCE.md",
+    "sha256": "93a1476689964d0579d35fad120247607037d382df7c47b9eed4adba918aeabc",
+    "existing_remote_blob": "6d0f3ac793a03b343a9bd6d8c9603b817478c9db"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_PREVIEW.md",
+    "sha256": "a616c799f17a1265a4443d23c00d833ec0d76bfd4ef6506da6ed17aa80c3e0ef",
+    "existing_remote_blob": "0f09273f52ecc5dd4e06e402029851275561ac1d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_PRODUCT_REVISION.md",
+    "sha256": "075fe143e5664ee61e34088253a359fc6cc184c9293e0fa3392fbc07ba6a49df",
+    "existing_remote_blob": "f6b2e65e792ee096246e9d7a489a4ba827da3fbd"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_RECHECK.md",
+    "sha256": "125c9362ab8300eed296196d74de9091a3ed89ea30c33211561eb382f3dd7360",
+    "existing_remote_blob": "c980f86263873047a72d592fdc9d1fa51ead4fe1"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_REPORT.md",
+    "sha256": "d2485d8826a86387de40ca158a5f71203fc8a1461d98a5ff7f283936e180207f",
+    "existing_remote_blob": "4eefae19151d3c5a190183e96438b0b89b30d529"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_REVIEW.md",
+    "sha256": "be11bef2223f65f629e0ea72543558085452c8f2a819d90e1dbb79232c8a5723",
+    "existing_remote_blob": "c29cda072744b6c56f00f79360ab5aeef43307e4"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/P4_START_PROMPT.md",
+    "sha256": "231af467e64db0eb8294d29ac8877341a24ae7860a065be9544c4b6bc1a8e03d",
+    "existing_remote_blob": "2e4e51c7bc01063c831d7a6b3a9a31dedaca7495"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/PHASE1_ACCEPTANCE.md",
+    "sha256": "3e544d03cc01996c09d2786e5e236b5fc2129b7442af82fc8b4657bbf2bf3466",
+    "existing_remote_blob": "dcc29f950ef33d958daa336850686461d9f8898f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/PROJECT_OVERVIEW.md",
+    "sha256": "5beaeb43692b29a560e8601383cd812d0d1d347d3ffd47e15e3524328d0163fd",
+    "existing_remote_blob": "5e82bb8429bb4ae8f4a509bee4463896b04fccc2"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/QA_VERIFICATION.md",
+    "sha256": "99c88fd2ea19834f9e6ed4707ca4912e40b12c28903ad49bb3b8de1d275a5d53",
+    "existing_remote_blob": "756150b2544375eb6fa90e9efa11434441287d16"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/RELEASE_ACCEPTANCE.md",
+    "sha256": "997ae5a9dfb56c8118ba34d2d8d97dbcd3380305c84f13820d522eef4aa7849a",
+    "existing_remote_blob": "121d325fa4c268a3e784a71e99a15358d2121364"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p2-real-ai-browse-card.png",
+    "sha256": "3f2e0fd797a9ae6b4a7c393c53722b5f3c2d5a8e79482cead55654edebe39da4",
+    "existing_remote_blob": "49007d442873359fbf7ed30eccbf3725c7a7eebe"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P2_REAL_AI_RESULT.md",
+    "sha256": "cbb6659564655eb5e1b41aa868ec5208aae0e30a845a1f4c419c3b982da6164d",
+    "existing_remote_blob": "efa4fa9baec68b892ea3308bb2493245d31888b5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P3_TIMESTAMP_PROBE.json",
+    "sha256": "21a414523179face27796882e7a2216b773e2b5d43fa6e8773e0bf635ffb9ca6",
+    "existing_remote_blob": "fda34558c9c173432a4c5086e7fa0cd4124c3e53"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P3_TIMESTAMP_PROBE_FIXED.json",
+    "sha256": "4ef46e255d3348bd3060b7f0b7abb986142fbf448e243a0281991d70cb9b34cf",
+    "existing_remote_blob": "e17787d284e70d6d3de15c8b1318a06e93964357"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-backend-probe.ts",
+    "sha256": "64d8a33323fbc10d348df4f2d5780891fee44f3760b740fe7148f2677d102957",
+    "existing_remote_blob": "40cffd20d93d984c66e4e47bd3035cbabaf50cab"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-final-loadmore-recovered.png",
+    "sha256": "7437e8b21f64ae8c6cbd3f8b3cc709ceaa8d96fa76672f78740a00ee365fcdba",
+    "existing_remote_blob": "d515400ad9d748f98fd9e2e3686859775485f137"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-final-ui-probe.cjs",
+    "sha256": "5bf6b65fa0f7032e6d301a0eef8fbfc3bb3e83a15de1e78060eb4215e3a7f06f",
+    "existing_remote_blob": "65a592b8b1636564ef67f66450cf1d2ebd5258f6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-recheck-backend-probe.ts",
+    "sha256": "1deabcb659ff7339c765c623fe127f95dde21f296d263704f634e4a6b05cd4de",
+    "existing_remote_blob": "6fe11e5467cf546d828dbc7ed961b8aabb82a314"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-recheck-ui-probe.cjs",
+    "sha256": "00281c2bc724e173df209bff8e49a17ac66f51d94c699b5ae5a7117d0bf907b8",
+    "existing_remote_blob": "7caf0ea30847e76e8f3fcbd72c48ff4e83213fdf"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-refresh-deleted-preview.png",
+    "sha256": "f8f9d7f6e475cdaed27c43e72b64a9362efc539c64a379305149709dba3bc8aa",
+    "existing_remote_blob": "170753b1c51d4649001490145918e5b482d63add"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-refresh-loadmore-race.png",
+    "sha256": "d364377b624cc39d5408455fca39a7be6c3d9bd63919a1a1923f9919ab6237ca",
+    "existing_remote_blob": "d13fc7e6d3fbfd624d9f1f27302328623a0e4649"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-refresh-pagination.png",
+    "sha256": "38d0ff2d93591e1184422a397c53a20559a1c0a64bc152fbbeea7f2fbe46aba3",
+    "existing_remote_blob": "6c9119e77431b5eab4aa5fb961291f0ae1a689a4"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-refresh-unread.png",
+    "sha256": "ef851d5fe89eeeb72db9f2cd3f3a9029f9c0f97ac645a246b28970408cc4068b",
+    "existing_remote_blob": "b8512b6832028753b4f4174dd48102de26afa6d5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/p4-ui-probe.cjs",
+    "sha256": "32bf0f89d1f5142840a437b5b1664f1bbc41d65c7df391c0865b24eb0d09f073",
+    "existing_remote_blob": "29eedcc6136518e46d9428e486dc752fbde3a7de"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_AI_ENABLE_RESULT.json",
+    "sha256": "2b2aa3357ff49c3bd715fcd444572e69b343e6dfe486db295216a8846adcd587",
+    "existing_remote_blob": "795675d4ff11b563640c6fa1fd22cff31bde978c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_BACKEND_PROBES.json",
+    "sha256": "a7d868c438b7be11f046d74d1430f6100e065d2ea0abda428252145f6b760fe1",
+    "existing_remote_blob": "c9e5c86b310337cf0f2275f01ca6e063307102de"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_FINAL_UI_PROBES.json",
+    "sha256": "9eec2b402dbaa84ab7170d0d08df1b983994cde994b19c515c7805c26c3155e6",
+    "existing_remote_blob": "a462abee551be807f4e92500a7f522d1e41e9d78"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_RECHECK_BACKEND_PROBES.json",
+    "sha256": "6dcbf39b19d9d74329f75bcd7a32a97b04aa8d0acf2b227c2a7c9e32592c28ea",
+    "existing_remote_blob": "eb45a546b4146a31a4d63dde7c6cbe464d571ad4"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_RECHECK_UI_PROBES.json",
+    "sha256": "b655e839d30a269e6d8f64f4ac0ce601c2b8afd1ec68a5d64ea397b76f0df103",
+    "existing_remote_blob": "6caebff5962c7e098cf164265004f0b2f5c50d61"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/evidence/P4_UI_PROBES.json",
+    "sha256": "4ee9996c7c2644370c2c5ad157a07e313c875d7f26ee54f750e007559c7862ed",
+    "existing_remote_blob": "4a252b0bfc086fc89e43a93f7a21e090accaac96"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/ACCEPTANCE_LESSON_V1.md",
+    "sha256": "865e69ef9383cb4999687d8a49b485296901d59c09da88544c25b68f214c4571",
+    "existing_remote_blob": "c73b7615dc534be0127bfe043b83896849f39ed4"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/MVP_SPEC_LESSON_V1.md",
+    "sha256": "39e12ad0f86c8e119c2a4aa51c6493f521032b3d3a881a70f90a475f7741b9ef",
+    "existing_remote_blob": "339f94757f5a3b913c3df97c8b15bbe6f5fdd8d0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/QA_LESSON_V1.md",
+    "sha256": "d2e89ff821a465ab8cc5e9114a58e018311baef921a57c46b6af1e3dd1cc6580",
+    "existing_remote_blob": "4a8a4b855f9abdb187e40c02d73551fb011ead6b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/planning/findings.md",
+    "sha256": "78d960c094901bc02308351a5b8469497b55bd5602ff08bc997de30d59a2b4b2",
+    "existing_remote_blob": "3294b4584dc6e441582cc7f79a2cb960876dc6e2"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/planning/progress.md",
+    "sha256": "93d157577d755431f1048791a118c4fba87097aa523bdd4857826fe3704b8892",
+    "existing_remote_blob": "b449f92811ca2d49db82393af13bda817efc7997"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "docs/legacy/planning/task_plan.md",
+    "sha256": "fbe6a01c75e7a3a3e8a718e40902f6d4a2a973d297c17bcc26f929194902209d",
+    "existing_remote_blob": "eb68945cadd69a25881e6752c84c8e3c7389c411"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/index.html",
+    "sha256": "941409c0e9d2dead02301f39373d4cd0e8d6ff46660e3f8faf204c85e2dd7e6b",
+    "existing_remote_blob": "bc3e43a87c0f9db444cf84a8129ac6b6d29fc3a8"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/MAINTENANCE.md",
+    "sha256": "aa024c79f8394091ffa1e77d167c4c24f8d6c371be152fd032e9a3d6736f0563",
+    "existing_remote_blob": "89cf1297ad12d48c1a4a9fe2016544413de4d43a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/take-screenshots.mjs",
+    "sha256": "654da158b258a9258ff4cb19791c82971106f21fb8d162575584c637cfec6dcd",
+    "existing_remote_blob": "631a76951717e8a5b121d428fc9db3e6eefac96b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/assets/logo.svg",
+    "sha256": "b85182083d8d09f2df115a3a37bb420a68d8de693f244ca8be72a0c01eac9950",
+    "existing_remote_blob": "8decbc263e4651db49cf108661dafe125e828181"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/desktop.png",
+    "sha256": "d64d1d331aae385ef0053e12f02a3f4d132d4cba892fb209ef62f54bd1ea6801",
+    "existing_remote_blob": "00cd1122f36494d87998064b61b6c97999029594"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/finished-desktop.png",
+    "sha256": "5819fa79c352ea6880ebd88dd756239809a5cec8d4a15c8f9c943013cf94343c",
+    "existing_remote_blob": "3956497db9416f5d90e8c7be5f72ec6052224d7f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/finished-mobile.png",
+    "sha256": "6752a3f9c61903fcd0b0a5953b884628756c61f9738c2095d1e6d7d10a379ab7",
+    "existing_remote_blob": "89c90564dd114db0a411ddf6f4eb6282399f2350"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/mobile.png",
+    "sha256": "9aca50adfa661232789d71edfdeff6ba337eff729a260e240dc9716187a312c0",
+    "existing_remote_blob": "3441f76ddd826b481e0eca228303c206abaf6510"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/ongoing-desktop.png",
+    "sha256": "1f9035e76f59b7ebf75994735ada0ab48678e7ec1750245c5863e9975dd600d5",
+    "existing_remote_blob": "16d2fff7f74d404e32102d26e6af4a72097a021e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/ongoing-mobile.png",
+    "sha256": "ec1e9882adc52133a6fac6b3072f5c400dfc161b1da2ed4d81ea0c2fbbf0a337",
+    "existing_remote_blob": "b9ba458c649c4e07318722de6301272ff18cf087"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/p4-inbox-desktop.png",
+    "sha256": "44ef4ccd11e3adac28b47ea9cc9c22fd21f9aec9387b4708b57a7407a54a6396",
+    "existing_remote_blob": "fd465a30b6c881f3f1dc9e5d0c07407abcf6e2f5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/p4-inbox-mobile.png",
+    "sha256": "6e642e6ce52c31759cc13fada7c07a70c07c68a244e396c91875e88daad15227",
+    "existing_remote_blob": "e4e81216175e1b874ef0d6c2198f826eef7d6bcd"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/paused-desktop.png",
+    "sha256": "d728719b8a435ef56af5a71b1ed047d115de839fad6513dabbc6badf72483113",
+    "existing_remote_blob": "41c29f3777440346a258b348cbee7b0b0f6843e5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "project-docs/screenshots/paused-mobile.png",
+    "sha256": "3ce7723f3c3a9c1c8c04faddb71b3e0f1cae48140cf3763cb7f4b16d529bc478",
+    "existing_remote_blob": "f570907f74abc808fda52b0ce220b53914611e59"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "scripts/db-seed.ts",
+    "sha256": "5cd8304b148f7581a117439af8d5fd86352df4bbe7ebdcc9dbfaf0c245213b70",
+    "existing_remote_blob": "55ada0d5830ab0d6f2495129241d65b3b4292800"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "scripts/db-setup.ts",
+    "sha256": "8347639cf29e7f0bc2f2a963cbf5196fabcc1153b704a06e507d3f759a9ae3f9",
+    "existing_remote_blob": "0d0e04d786b4e8ca733f4dec46375a9ef22668a2"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "scripts/import-product-simulation.ts",
+    "sha256": "3206808f5a6b2c81511e2a3f4a3fe7ba3d7045e769870e9fbb891973b802ea46",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton/scripts/import-product-simulation.ts"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "scripts/product-simulation.ts",
+    "sha256": "37bb738eca06ffab9772f01bb51ab31cb0d7d4e01b4f30831bfbdc604e42d5d8",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton/scripts/product-simulation.ts"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/instrumentation.ts",
+    "sha256": "5e0664fcf06b690abbed70cbd935391c824c71f1cceedd91ae8b0486c1d4cda0",
+    "existing_remote_blob": "0b99018734cf84f7252a4353d8bd63c04dcb251d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/globals.css",
+    "sha256": "48bad02d9eaf75c6527624212e64c43a42f8836c90948676791a2b42c52ff696",
+    "existing_remote_blob": "c5297c7005571df80eb85ff988227060e1b19fcf"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/layout.tsx",
+    "sha256": "d797877c364cef423834780dc26d1108b5a8a02cff18fd9a0a8efb6b53224df6",
+    "existing_remote_blob": "522a79b92e0ddeac3a5d1e2a6b7fb88b03b02e9f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/page.tsx",
+    "sha256": "becac467cb8897ce8ffe67a752eb654650b37d65550655df3951583d4d327373",
+    "existing_remote_blob": "e4609a71ed405e32cb316b5832fe1fb0d427e89f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/adoptions/[id]/route.ts",
+    "sha256": "050d40e0bd4004c9f3530d502563e51948906ab44979a47af51b3f6fa7a653fa",
+    "existing_remote_blob": "65621df21cc65198994eddf3eebaf742510b74b4"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/health/route.ts",
+    "sha256": "2da4028e9fa786b6856ab6360142dd2f3999da5d87da518eabdc791e2540d783",
+    "existing_remote_blob": "11f1fa8d9ae7eb9c2a46c4bdce78ace71d6de8ec"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/inbox/route.ts",
+    "sha256": "6681c671e89dba92cb98540a06dcae86ee77676bf52c9b0fd65fb57eb9d705e1",
+    "existing_remote_blob": "e0fec32e7c6d5dd18ac2d58dcabc5a7c527eadb8"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/inbox/preferences/route.ts",
+    "sha256": "5a87f4d7b60f5e13eb269e3fa15d6ac757757286e43bc73a48ae90a58578918a",
+    "existing_remote_blob": "8b565cb753dab92c120b1ec5872f6c39b6095ea6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/inbox/[id]/route.ts",
+    "sha256": "74b440fc48605c8c4b99aa2648bf25f1551dc3fd2bebd958eead21a144b2f223",
+    "existing_remote_blob": "d2eca1c1bf4e9b5faf49762336863cb3af3e2752"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/invitations/status/route.ts",
+    "sha256": "8dfc444219aff45133e1dbf94c703a90360e4fbf165d347f895b0534f8d02a79",
+    "existing_remote_blob": "e8f009003356053e487ff0bc7801e5df9c3bc9a5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/invitations/[id]/respond/route.ts",
+    "sha256": "fb2d400527c8a7f3294c3f4c4e871306975bd37514e00d9e177ebadd155bebc8",
+    "existing_remote_blob": "72c1e97ebf1c1adbe392d85a66033b3d764bdb83"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/lessons/route.ts",
+    "sha256": "24b6d0c4dd3e59dbc62db73ff896d6396047325bd5ed7aee4a9a64abd1a1a54b",
+    "existing_remote_blob": "b52bdf5a285c73c3d4fc334473833e32eb897dcb"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/lessons/[id]/route.ts",
+    "sha256": "ffce2547c87e854719a452a5a5c26d2d0c4f864fa16ce3ad10f1ae0e499f7376",
+    "existing_remote_blob": "d5549a5b91c8f5277a3f03aa3c853c455de5e9fa"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/lessons/[id]/adoptions/route.ts",
+    "sha256": "9f5728c3dc1d076031dfd1013303fe9a684593c82b293364851c4a93f9c66bcc",
+    "existing_remote_blob": "426977b2951bb14fbfcba268870d9498729d4802"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/lessons/[id]/comments/route.ts",
+    "sha256": "839222ba25cd69a1f5235054a2032ddf36513fad6df909d151e6a6556fa50e02",
+    "existing_remote_blob": "4148a10f60112c1e82a324abf7f173da9bb7ee11"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/mentors/workload/route.ts",
+    "sha256": "ac46b4a6a1edc3c870e522eeddf9f34dbaaf21cbae4a621f48bc25f59740ced5",
+    "existing_remote_blob": "b06e73ac224138fc9245f3182ac7f02c467e2461"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/project-posts/[id]/route.ts",
+    "sha256": "938a7f31216ce447ea1916b60ff9519bb2e0422bb6c3b3a905f75ee1c8cfe333",
+    "existing_remote_blob": "d5651c16e5087b8dbeb6cf6b0abdbacae2e01596"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/project-questions/[id]/route.ts",
+    "sha256": "192a79e39bac7cde272ceef2ba0c3fa4d1fbf86603f08459ab27dba2ba912aa9",
+    "existing_remote_blob": "f323ccb7366a85ec6b6ef91d04fa3a44525fcb0c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/project-questions/[id]/interested-helpers/route.ts",
+    "sha256": "6f4861f763fc7020e63d304e65fc5bf750ccfc15b95573112f587a6a20e3c306",
+    "existing_remote_blob": "b33a67a8f4a643c02115089dfb7a9e35210dca2b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/project-questions/[id]/posts/route.ts",
+    "sha256": "73bde2abd052ab4dc3f3bc4b6ebeff62da795a9605d65027f5876e65f557ed1f",
+    "existing_remote_blob": "c17a72e242f71013648ece7097ffad59c115bbb6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/project-questions/[id]/referral/route.ts",
+    "sha256": "c3ec8a35ed41098fe9627c919071d3661170f6bedc6cc1ff15ecbb8bf0e4d9a4",
+    "existing_remote_blob": "e4ff94731920f2205a3c931ed7815392f554da17"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/route.ts",
+    "sha256": "752b5d29bac68f601928b72b274813e06b72884411f36658b54fb4996c72f396",
+    "existing_remote_blob": "d18461193745c1e051b4cb7f791f540b030d787c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/route.ts",
+    "sha256": "704e78f11d8681819aa9207f6509d5e0086304f10c0225ec91fac208149c7b99",
+    "existing_remote_blob": "21e0e9ff9b575d2816f4c53684681092455e70c2"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/introduction/route.ts",
+    "sha256": "1f8bb7f0c0c1934646cbd2d7ea616335f7a94461463c99f04c614c1c12462147",
+    "existing_remote_blob": "181321af15990ba816cc7f73476ba75ac4e45d09"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/introduction/generate/route.ts",
+    "sha256": "ef07aca8eafd7ac2e58f2c63a3474a4f0bf51c38f803d60992f02e0c3027d68b",
+    "existing_remote_blob": "efee598ac79a0b74721f398c391455a4632ada06"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/lessons/route.ts",
+    "sha256": "6cef54d7e5b7c76b89214445c281b38e0339c598d92200865f5660ac4a5f2fd1",
+    "existing_remote_blob": "7e916350dbe8a0f3396bb91faa272ebac229ec9c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/pickups/route.ts",
+    "sha256": "78c5eda9d0a79ea24ac252af41cfc1823fdb23aef648413a69a88506774c4a11",
+    "existing_remote_blob": "3cd3c8db2471e7bce14b8d65af9a877060d7dff6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/priority/route.ts",
+    "sha256": "8ed2d7f57afdecf8c6c124485533a60cc12a7461f6fe51cca587aeb6b9f3d28a",
+    "existing_remote_blob": "483e533c2386548997d29e66a44998c345e48c26"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/projects/[id]/questions/route.ts",
+    "sha256": "6a305972ec97a10a0c5d4cd947358f1f00c6aa4b23ac84a8789fab37c9160879",
+    "existing_remote_blob": "e17c8384d9d75de7353d255770860af4e9c82212"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/referrals/route.ts",
+    "sha256": "c59236bcfcb739f216931989d7d97b11bb5cad62284eea045cc18fcd518fc6c9",
+    "existing_remote_blob": "ad1ad4fe7bac6994da45d3d4630ff5f05c837ced"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/referrals/[id]/replies/route.ts",
+    "sha256": "6f9237cab25158ed9c6bae8538ce6098064aac6942d63c89566c9267653e8cae",
+    "existing_remote_blob": "b003ffd16bd582d7e872063f741a8e1612254d2d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/users/route.ts",
+    "sha256": "f07f48dc12e65edab3bd46e966b39b3b302791fca1e52c8647f7e57fbb2b4cd7",
+    "existing_remote_blob": "e3622f4d20523457951ff7d1cb4621bc10d29eb0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/api/workbench/route.ts",
+    "sha256": "cabbb0254189a147d6d012e814ab57e4f57ab399506597829832de6b15fc2665",
+    "existing_remote_blob": "1f2e29f3dc8f197733b683f9f2e957525f486dfa"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/inbox/page.tsx",
+    "sha256": "531d4994874b4d255ee896518f56e906e3e1959928d8f3790c936d975bdca11f",
+    "existing_remote_blob": "0655977e83356d341d6fe98291a0cd8d13b46c8e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/lessons/[id]/page.tsx",
+    "sha256": "9c24747771e91e1fa03bd386e57a97c45de79a6118275d14015f11f34a77027f",
+    "existing_remote_blob": "90686b0f08ecf89306562c5f2d0a81168f2b0186"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/projects/new/page.tsx",
+    "sha256": "bcff11a392e85109247c3481e3b6bd1d3059e5bca82d6198e86203c80a928666",
+    "existing_remote_blob": "159a2b0f162ca54bbacddb623deb837bdef0a708"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/projects/[id]/page.tsx",
+    "sha256": "87572d751e33adaeef9e70287029499a8ff027cdefc8eab26d471c9aba655fb9",
+    "existing_remote_blob": "2e0e4f59b3733c3ede8c82a745cd69fe56a45bec"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/projects/[id]/pick-up/page.tsx",
+    "sha256": "f4ad13c6ed8a200b93d60a71b4ca791804f116a4daf873be31b524548f95ba53",
+    "existing_remote_blob": "728ea1237d0e2d07fa3640ba015ad74bcb4a0a97"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/app/workspace/page.tsx",
+    "sha256": "e40e0d5ec60891d009b599f11fa6c5b7fd62e8fe29a78b03d5d6b1cc20bdf5f0",
+    "existing_remote_blob": "e7e55907f1fb619331fc3706c66b7edad8248d5b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/app-shell.tsx",
+    "sha256": "2b596a87c4bd17ee02b90372882cef5eb71f25551e5a2bfbf229154d17e8461a",
+    "existing_remote_blob": "2240aaec285e38dd5652a5646b2ee31e96bca946"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/inbox-shared.tsx",
+    "sha256": "418b137c3957609f15783d28d646f411b32735bbf6c0327738774ae9e747c4be",
+    "existing_remote_blob": "df176ec6c2ef0f80cad95d7654112b85f0e7e110"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/introduction-panel.tsx",
+    "sha256": "9bcc0a4cd198e23eebe7ff8332f3a781e72e623ea5274af0e62aeb1d8a28e49e",
+    "existing_remote_blob": "f5065e5303766a115c44b93001986f9bb9a4e2d5"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/mentor-workload.tsx",
+    "sha256": "7f0775681b27da04f8db6925b27e013fd32dcf1aae123871fbf071c63d477d2c",
+    "existing_remote_blob": "94b62fe677398fd36e1a72636bdf27cbbb7ce3d7"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/priority-panel.tsx",
+    "sha256": "7143a7aaa73a0796d3098a0340a1e781e7766198956adadd1cfc3c03417b406f",
+    "existing_remote_blob": "92745fac75f95eb681d56c90f835a61e7455b252"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/priority.tsx",
+    "sha256": "34d0f49a83b2a4c1d99ee119f13ba83573ba130f963febae08bd3dc81795e76c",
+    "existing_remote_blob": "a4dc50786d37c59073b7f19940fcf3607e364658"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/project-form.tsx",
+    "sha256": "6f850b8914b3cbc4d9c92591cf08ab82469bc8d9a52b9270156a9ad0e750e8a5",
+    "existing_remote_blob": "3d0682895b074936ddc5531e7cafb06a86bef3e0"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/project-questions.tsx",
+    "sha256": "73b0a3fdf0485d24a0d7fce88d33d97be5716cb1384ca32a97bcbf22f23ec1d9",
+    "existing_remote_blob": "676dec07c8ea3738759994ed9812b1bea9bea224"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/relay-links.tsx",
+    "sha256": "755e06aef4760892dc3c92932a413e8b75d1c2ff3aa58306b083216e76849617",
+    "existing_remote_blob": "66670cb248a6199dd492a7727c6b2bc5bae0f62d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/ui.tsx",
+    "sha256": "598efab6cdc0b797ca08a12f33ba1ea84768902a358fce1f1e6c32dfc46a3d1c",
+    "existing_remote_blob": "ed0bde92c76364f70175bf2de9ee7d6e728c195b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/components/workbench.tsx",
+    "sha256": "cb56dd5d4e078cbfc83a259f8700b4431c42f9773a1df49068c97c45729d33df",
+    "existing_remote_blob": "58dd5d21a469985020c7109dfe486ae5e380a874"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/lib/client.ts",
+    "sha256": "4eadd0013acb0c1da1d544aca6b6ea892a39ec8166cf641d8e102e406be71ebf",
+    "existing_remote_blob": "30c1c5f351b50492ee57e5fe2affda3c45e62c87"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/ai.ts",
+    "sha256": "1875537a6d9d431ce90bbfa79620e8c8097328e6c3d2113622616815705cf5ff",
+    "existing_remote_blob": "1f7d3de6814afc8588d690c4ecbf71976de4f243"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/api.ts",
+    "sha256": "4a67d9034d1e23065ac4cbf23c4408400d1fe85d34abde65d6df95e0d089da96",
+    "existing_remote_blob": "6f460c5cbee728d909b808daa41bbab8264587d6"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/db.ts",
+    "sha256": "b5f710e77261058b6f1b07d0dc8b62fdeed2c0a4cdb926e5de493e83e805f2bc",
+    "existing_remote_blob": "44fda0697a3188e5f9ad71be21bcf11e2033b9a9"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/http.ts",
+    "sha256": "ae2e90dec47f8198d05415f9ca8c7ffea14bafc09a396a2d74d4d11b9f37fb0a",
+    "existing_remote_blob": "ef12e1e5f066f301bd0c7cbbd6c6b8b62698320a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/inbox.ts",
+    "sha256": "3c52498d11228ac96269f14e3918c0fab37a1b942a3b8e3431eac91466fd5c70",
+    "existing_remote_blob": "c638b15b792d06d6216437acceb0150b3fcf687c"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/introductions.ts",
+    "sha256": "1a69bcfcb21526703a92d40f5afab0d82dc58442d34452fc7e07470f1802e444",
+    "existing_remote_blob": "3f1026174890017e83ce7e176b23702d036f2d07"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/invitation-runner.ts",
+    "sha256": "3e91575326040fa17f1367accc617fc1c8125c74e87a2d7ebb360e11c14f7377",
+    "existing_remote_blob": "46257e579070feda6ade7b7650376f9351026b74"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/invitations.ts",
+    "sha256": "20a69c71f356b4f5930f020a91b908b846840e41560ef830ba8bdcc17ba0b6a7",
+    "existing_remote_blob": "237f08f8cb9170de5abe45182142b75732e7ef3e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/priority.ts",
+    "sha256": "409e2c816e2fa42141c696672aff2159fff9ce1f93c1bd25262e268dbc2c152e",
+    "existing_remote_blob": "24940580cdafa1f4dfb1aeffc74c89cf04586f44"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/relay.ts",
+    "sha256": "b5f1a4dcfc8c9c7182528ee72387ab7f45a93036a7ce78e892c2d09bd526474b",
+    "existing_remote_blob": "1796838316190b1cf4a12be0cd76497d21d5f006"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/seed.ts",
+    "sha256": "3c8c63dc2ae53c37b6626d2a1fb72ea5129611b515d4546b4d5c32932eac6b74",
+    "existing_remote_blob": "e2bcc2e1c4093cda48bdaea26fc6313c3fbb3b61"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/server/validation.ts",
+    "sha256": "7fdb4caa99c7f8ec89fe2f58d3fe501a2c68ddd67ff46e4134580290c89730c4",
+    "existing_remote_blob": "c223726f0c5648e3107b6e186b2e9fc3932e998e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/fixtures.ts",
+    "sha256": "e93ca990f754eb41b4633a9dfec958ce8042422beac769e7eb3206e2a9760c40",
+    "existing_remote_blob": "6e9bcd378074ac25829668a9b6ac6d6ba7f647c1"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/p2-types.ts",
+    "sha256": "238df5313046c6be3d8cb00f52b8aa0f77997fdf54781bb0377b0ec15d29c59c",
+    "existing_remote_blob": "a2536796f3a46c6ce36b107c2b73dd9d621e6c40"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/p2-validation.ts",
+    "sha256": "6b2051a644984ca9ee02502a4e86771686faf878f4020bb65c570c11fc92a00d",
+    "existing_remote_blob": "6986935a23d3301bed9b0565c6306eb86e79274e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/p3-types.ts",
+    "sha256": "7472ccc6f5328757fa4895ee5f948738334e832bf8f4518cce7488052d6d0071",
+    "existing_remote_blob": "83edc179c751fc55add8c6b773219593b126958d"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/p4-types.ts",
+    "sha256": "9346c2d5b211dec01f0171b708d16172f2ec2ccad343de067bc3a7be113e64e9",
+    "existing_remote_blob": "6cb273a3e5a832039c1eeddcb5103c1bb4d1964f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/relay-types.ts",
+    "sha256": "49449bdf57bceacec17b577d7452b464fea6bdda4fe6803fd90a3bd742a89e60",
+    "existing_remote_blob": "0e62220190019ecc5abcf22b13a4ae10f6c22267"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "src/shared/types.ts",
+    "sha256": "8244d1821d5515ab16aa4db181e01a37b205644c7ee1eb3b3cddd9077ee671ab",
+    "existing_remote_blob": "2069ca0dfce3d0a51a18b49bb809f0e9c360466a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/backend.test.ts",
+    "sha256": "a7b0510b4988c643d489091b2f193da36954fcda7425da731375288a42d5b32c",
+    "existing_remote_blob": "986a565b40508b3ccd4e3ce0235f7b8ba4224f0f"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/p2.test.ts",
+    "sha256": "fb9e88a08915f1eccf974d220baa62c7dc8d55270bbc5e0b8993334ace00958c",
+    "existing_remote_blob": "a45a5560bc990994f525bc582521e4bec8bebc72"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/p3.test.ts",
+    "sha256": "7bf7b7649d93620708fc39e1a32d04f2f08a961144f9e6ca2c63a41b2cd8c1b2",
+    "existing_remote_blob": "b2872c90155521a3e12d0ccfac4d8b1262ea9d03"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/p4-review.test.ts",
+    "sha256": "6a4b2f594bcb033be74b6381fdbd0dc71de1c190355c29000aa7d8e8893d98b8",
+    "existing_remote_blob": "df8c07e006f0638b80f65454322ebbc28a191d24"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/p4.test.ts",
+    "sha256": "10406b8218cfc0ba4bd28e4d63b7f65fc785c806243e094ed2e016aaad36ac12",
+    "existing_remote_blob": "2b9f5feb4c57f7ea606599b8d830dd85d0749b70"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/post-deletion.test.ts",
+    "sha256": "047f9f9bda285352f56bead43e08a1154ce1a059abe0b359e99bb6c0d5728f54",
+    "existing_remote_blob": "319521c0b8b25bbc0fc261891028e0c2b8aad650"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/product-simulation.test.ts",
+    "sha256": "30100567e10d24f3badbc458b687ac002cd4c3aac8975b5a51f16db3e8028c76",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton/tests/product-simulation.test.ts"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/relay.test.ts",
+    "sha256": "0e94e99e0d1bfa833041d7a17073e23674524371f4d3eb3d763b80083add11e2",
+    "existing_remote_blob": "5ebf84fb4b92c1079a7ab29e983b00728b22016e"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/inbox.spec.ts",
+    "sha256": "ed39160669a919a79bb434fd6a77a552514c1aebc2b754f39265d58edee18d6d",
+    "existing_remote_blob": "c8d06c17fe83b16f4aee4b33df42817e334beee8"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/journey.spec.ts",
+    "sha256": "5a16d32ebd0158e46628ca9b45765d8bb170df5b4d0cb660c084eb7cc8ec8ffb",
+    "existing_remote_blob": "6146dd474005e75291b204e06a5127a566086d9a"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/mock-openai.mjs",
+    "sha256": "1e9bc0376d56de17216cff18e22dcc7e64dbdbecdf24ff8428d09ebf605434bb",
+    "existing_remote_blob": "573245af87e6ac5019fc5a70d235f9573d1a2803"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/p3-fixtures.ts",
+    "sha256": "71b700685ad01379843f980499afa5f6d81dac8e04f18cb33fe5648027e62274",
+    "existing_remote_blob": "cc9526322863f100afc515278f7bc096df342951"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/post-deletion.spec.ts",
+    "sha256": "1f59051bcf1b4a539cdb945b2c0bacfd758641b8b52eb23e2f143d722814f6e8",
+    "existing_remote_blob": "2bcf811fc7228d07cf4087ac718c0782f94b6b1b"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/relay.spec.ts",
+    "sha256": "7f9ce2a4013e9cc2e3ba8dcc23ba86d80a06abe7bbcfb907c142df27854ec78f",
+    "existing_remote_blob": "6b75737ec6f4ce43c2506d736f852038ed7a51ca"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/workbench-priority.spec.ts",
+    "sha256": "a04cf728cb4c9635c8fb4a0305c7e3955304e7d8ef7358c482628e388d035a87",
+    "existing_remote_blob": "21d2e4f94bc0744f48a4764fb910717ad60cb8fd"
+  },
+  {
+    "source": "buckeye-baton",
+    "file": "tests/e2e/workload-introductions.spec.ts",
+    "sha256": "d591fcecda2620ae28be36e7b2a61e14f198e592f0d7216146cf16c273ebcb77",
+    "existing_remote_blob": "0e37ddc39dd3093a395946b1cfec8658c6aa3c74"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": ".gitignore",
+    "sha256": "d8bf6f286a56e6e7e5fc7b21d2e040c7761bdf4ed64431ac35c81ee91c578c4a",
+    "existing_remote_blob": "dc2f04771ce27cff5a0ad3fa4412fc04459f9be5"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": ".nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "existing_remote_blob": "2bd5a0a98a36cc08ada88b804d3be047e6aa5b8a"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "AGENTS.md",
+    "sha256": "6c0eb3fba55f73f285bf0ce407684bd6e04e40640e71bc9799e25635e2b32329",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/AGENTS.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "DECISIONS.md",
+    "sha256": "4f4a2213b1641cd17ef5de3a1f594ea678c47aeb8b8b91647e5c65f44caa40cd",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/DECISIONS.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "findings.md",
+    "sha256": "66dd672e8931c2dad69b7b8f03e154f2d0bcbd8770e8f6f0460dbf1c5cd30c70",
+    "existing_remote_blob": "c028ee1b7b42ba64d3a3d9cca92dd2f1cda62f45"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "next.config.ts",
+    "sha256": "6fe0fc9769de414db2a59dca2545275b2a0ecb5f6b0c1abf54d8bafcf0684d21",
+    "existing_remote_blob": "f7fa9f3fe7863022cecbb8efef8cd8ef842fd35e"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "package-lock.json",
+    "sha256": "b1df3f4939260adfdda15c9c640fb6fbe2b6e877e46f8acdf7089529bcb39d35",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/package-lock.json"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "package.json",
+    "sha256": "4cae9a3941b940b5506bd59928fecf4f4ea4b94fd06e5beb841aeb0b00581012",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/package.json"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "playwright.config.ts",
+    "sha256": "cd0cde7c7a08150c3a2c872f62d7f09a8080d4cfe56b451fdc247c057f517cf1",
+    "existing_remote_blob": "fc50307ad95f5927fb6d32ac8e47c0e7733d7301"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "postcss.config.js",
+    "sha256": "fe0d5cf3cb8c1922f71cca2da3796f3e63366623ad6164336655766efe330e6a",
+    "existing_remote_blob": "cce4985fbec1db93c0e8e5479b3bb64e349352a3"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "progress.md",
+    "sha256": "ada0cd78d87f6dc3e97f01af9482ca0a45e581cf3b8a4073f2e4eefdebeae555",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/progress.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "README.md",
+    "sha256": "daa6ab048507f622a7b7a198830c28eb0e46ab35b6c1e2495992aa30ced4da01",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/README.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "tailwind.config.ts",
+    "sha256": "089055a9b70481f06a6ed3e2e59c938ac3b358f8c9b5544d97a8b80b466f2e74",
+    "existing_remote_blob": "d53a686b63bbfd323a1b18c03a72a6640268d5b7"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "task_plan.md",
+    "sha256": "d5b7483a5b4c4ff1d7160711d957a30d7517694f77acfb548946fca27b5d1f2b",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/task_plan.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "tsconfig.json",
+    "sha256": "21c1ca765f2c5d9acc2b8e284e6fbaec73b6ff92b29ce53933abe5dd487de551",
+    "existing_remote_blob": "1f5098735668257886d020791dd1da9d4f89b5b9"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "db/schema.sql",
+    "sha256": "eb65a49d79db0c99f16d54e1537651f11f26bbb9a25a0746904f072980ecb6a3",
+    "existing_remote_blob": "0306a3dd91005205501c45c2ab63be8db0c033dc"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "docs/ACCEPTANCE.md",
+    "sha256": "93df529e7ed78077d54b749bcb331ae3eff9234d360384686af9542a8b126ccb",
+    "existing_remote_blob": "6810fbd585ca3579de7a067ec5c863ac6bff0dec"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "docs/API_CONTRACT.md",
+    "sha256": "4f7116fc36d929243cc2b13bbba3c008c36e99a838e05e032c4df70b8745f04b",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/docs/API_CONTRACT.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "docs/explore-concept.png",
+    "sha256": "0404cf6ece1d4afb4571c46c7822bf2e14b548ea4de90aea120fe85a36ca78db",
+    "existing_remote_blob": "bae175f6d481524bb1524146fddee4c3258380cb"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "docs/MVP_SPEC.md",
+    "sha256": "5c16f8efaf19fd6018d1739a80c975c5e5dfaf787f58c0e94ed8adf0e8a14044",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/docs/MVP_SPEC.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "docs/QA_VERIFICATION.md",
+    "sha256": "5a8324ae3325a1bd0baab739ad4901e9767d3687493eb3eae0b18ef4a34ec002",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/docs/QA_VERIFICATION.md"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "scripts/db-seed.ts",
+    "sha256": "bb5d106892a4a0436e1d8538f80509192948eb4c805474e30604ea9f26335397",
+    "existing_remote_blob": "55ada0d5830ab0d6f2495129241d65b3b4292800"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "scripts/db-setup.ts",
+    "sha256": "8e265c5fcfe45a8d54127d69ca5c29949435dfbb1ca4a334be8a80f844ec4148",
+    "existing_remote_blob": "0d0e04d786b4e8ca733f4dec46375a9ef22668a2"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/globals.css",
+    "sha256": "697441a27be20ce064efd8721351a7222745d67ea583de3c6276d36d99fb48eb",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/app/globals.css"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/layout.tsx",
+    "sha256": "9c63aecd77a9318d55f268f12d60f40158626e869c3026dfe247736a0a4f1a27",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/app/layout.tsx"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/page.tsx",
+    "sha256": "b853862fe2f0f20a355499292d4cbd4dc9f2611308f33d0b4932611a06fe4adb",
+    "existing_remote_blob": "d552cb5e0402e59728f9de66053d4542a3750c1c"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/adoptions/[id]/route.ts",
+    "sha256": "dd6b812a7243b0872b7f7b294f385f16e6e7deaed75e7c6a18972db1080c63f9",
+    "existing_remote_blob": "65621df21cc65198994eddf3eebaf742510b74b4"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/health/route.ts",
+    "sha256": "e704f02f40f557257bf262cdc2c3e79cb8dd61840d56351915448699376db20d",
+    "existing_remote_blob": "11f1fa8d9ae7eb9c2a46c4bdce78ace71d6de8ec"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/lessons/route.ts",
+    "sha256": "f1de829c447604ec2a1485e80c8e56a038a9d66a555428607be6d1b015f87840",
+    "existing_remote_blob": "b52bdf5a285c73c3d4fc334473833e32eb897dcb"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/lessons/[id]/route.ts",
+    "sha256": "a60ee5162af7eedb60c6cc69a028385038cacf25eb8700654b696b05211e8795",
+    "existing_remote_blob": "d5549a5b91c8f5277a3f03aa3c853c455de5e9fa"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/lessons/[id]/adoptions/route.ts",
+    "sha256": "d862d402a57eb4f5e6b0e8eb52f8277ed52cd97b370397f37c35c318c987b8e4",
+    "existing_remote_blob": "426977b2951bb14fbfcba268870d9498729d4802"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/lessons/[id]/comments/route.ts",
+    "sha256": "5bcb5d9dbc295305ec41a8c2f862f8d6668fae01a076813383ea0bd9ddb6087b",
+    "existing_remote_blob": "4148a10f60112c1e82a324abf7f173da9bb7ee11"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/projects/route.ts",
+    "sha256": "a47cf1f8307760f98ce1d090fc12adb202ae8c9691609ba8682abe144f177e8c",
+    "existing_remote_blob": "d18461193745c1e051b4cb7f791f540b030d787c"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/projects/[id]/route.ts",
+    "sha256": "15c079957eb2d8a8697ca498e477ae2503dbb7eb5e420e88cb91bf89734d4ee6",
+    "existing_remote_blob": "21e0e9ff9b575d2816f4c53684681092455e70c2"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/projects/[id]/lessons/route.ts",
+    "sha256": "997b8639c42b56ebaea54e5b2811caf6a25cde0757088fbc2659e991e4f385f6",
+    "existing_remote_blob": "7e916350dbe8a0f3396bb91faa272ebac229ec9c"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/referrals/route.ts",
+    "sha256": "b2dc7f119757739c051fa9f2617c9673aae62dac12f488a737a76102c9765efa",
+    "existing_remote_blob": "ad1ad4fe7bac6994da45d3d4630ff5f05c837ced"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/referrals/[id]/replies/route.ts",
+    "sha256": "e3a6dfb73c753dcfdae3215a6f1181d420d18a376063a32f273ef55b2b72d568",
+    "existing_remote_blob": "b003ffd16bd582d7e872063f741a8e1612254d2d"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/api/users/route.ts",
+    "sha256": "8e3c61ba20caf5df88383dc435598bad7f4023f3d1dc8b6a4ce840ba5683f32b",
+    "existing_remote_blob": "e3622f4d20523457951ff7d1cb4621bc10d29eb0"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/lessons/[id]/page.tsx",
+    "sha256": "ba412555f662386fc5aa3ac32ba5b048c5746b754ed407ac0e67eac8654dab87",
+    "existing_remote_blob": "ce0293ce598ddaed3fe1ccab79ec473d8caa749a"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/projects/new/page.tsx",
+    "sha256": "5a41426b64d23c3049371b6d9a6f643bd4d7829d7b281f338b67ccf9bce37e58",
+    "existing_remote_blob": "01db9193fce303e66358c95ce4e9fd55b87920a6"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/projects/[id]/page.tsx",
+    "sha256": "6047626c914d11815990171e1416a2146c2c5a84f31a45fe88efb7e71fcba3a8",
+    "existing_remote_blob": "015d585d4548eb4cfb063048e355b3eb14b56831"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/app/workspace/page.tsx",
+    "sha256": "db60cd5d28ad021b3658bb695ba28bf852ce618e33116d04ca9ad6e66daa077e",
+    "existing_remote_blob": "6f42474f6e99a97bb8fbae110200722f1a8218d9"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/adoption-panel.tsx",
+    "sha256": "cd730cce569d203834b0c36035c016844577cc6f64564a49e7b2aeccd9aca7df",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/components/adoption-panel.tsx"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/app-shell.tsx",
+    "sha256": "4f43270166b4a07a62c7763ded5d62d1c6d06097964f3daa1f2d5e86fe113623",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/components/app-shell.tsx"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/discussion.tsx",
+    "sha256": "d38c8f26bc83a8fc9af200c80ac907ee23f06c55eb29b7034af605bb0ee68aa7",
+    "existing_remote_blob": "fcd55c76820419abff107e62bef8b92bbc3c5887"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/lesson-form.tsx",
+    "sha256": "a3a0c610c1b7277839b5ab6e8b3749bcaa5f90f421c1c8057021e76b613c1048",
+    "existing_remote_blob": "afda029f31e5db7cff866f949165f1a085b6ef99"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/project-form.tsx",
+    "sha256": "88286ec184d768c69d1622c517ececef7d1161e6b8d6a75231e5806c821535e3",
+    "existing_remote_blob": "2cae318587a7c577b276763e6c64427b7345f2e6"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/components/ui.tsx",
+    "sha256": "083868b53b3fb13f148a6167e0c9644bdb60ab941f3dc22fa33e83055a81f44c",
+    "existing_remote_blob": "fb158abb0e541ba907aece020db09db43e0e65cf"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/lib/client.ts",
+    "sha256": "5c9ee357efed7f415b15a08ef68be82a02f971e5d2652f3e1626e2e8c08d62f7",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/lib/client.ts"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/server/api.ts",
+    "sha256": "782770c66033509cd2daa331753cda8b0c2dc4a6af2a2b5b3dc8401f06eb6211",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/server/api.ts"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/server/db.ts",
+    "sha256": "ca63e0b9fe8578ed714f288bad51f3b70d2fd92fcf5a5ebd40d37d8164985d94",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/server/db.ts"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/server/seed.ts",
+    "sha256": "33beaaea91ea54087c0779937f5e47677d1f5d82d48cad5eb8d0f37ae92f6fd4",
+    "existing_remote_blob": "ed58a919fb4bc0013d804a911537736d5bc2966b"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/server/validation.ts",
+    "sha256": "03a867a415dbffe3350e78380a30e517682079ab402421b7b6a2c48d55d1d82f",
+    "existing_remote_blob": "e595af425d08598a1b0b3cc6122b20866b83f657"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/shared/fixtures.ts",
+    "sha256": "78d66a1a407adb91cf7d1eb564f0d258db77e2c7da13f20bab788225a25d9568",
+    "existing_remote_blob": "a62eb97616f1e294a0508d6559966d8d47e6fc8f"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "src/shared/types.ts",
+    "sha256": "e912df1738126a530f334baf06d19902c4fb5577e825d7c0d6093a2af840b22d",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/src/shared/types.ts"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "tests/backend.test.ts",
+    "sha256": "ec5da0cbc4bdee85bf696ed59ab539636cfb4205e2e994643c1f923ca13edf26",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/tests/backend.test.ts"
+  },
+  {
+    "source": "buckeye-baton-staging-20261024",
+    "file": "tests/e2e/journey.spec.ts",
+    "sha256": "05ec688dfd5940d563e4c53b2ed6ef6d1af52b0d1b0cad04f54f3baf0bf25063",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/buckeye-baton-staging-20261024/tests/e2e/journey.spec.ts"
+  },
+  {
+    "source": "pass-it-on",
+    "file": ".gitignore",
+    "sha256": "d8bf6f286a56e6e7e5fc7b21d2e040c7761bdf4ed64431ac35c81ee91c578c4a",
+    "existing_remote_blob": "dc2f04771ce27cff5a0ad3fa4412fc04459f9be5"
+  },
+  {
+    "source": "pass-it-on",
+    "file": ".nvmrc",
+    "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+    "existing_remote_blob": "2bd5a0a98a36cc08ada88b804d3be047e6aa5b8a"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "DECISIONS.md",
+    "sha256": "4f4a2213b1641cd17ef5de3a1f594ea678c47aeb8b8b91647e5c65f44caa40cd",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/DECISIONS.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "findings.md",
+    "sha256": "66dd672e8931c2dad69b7b8f03e154f2d0bcbd8770e8f6f0460dbf1c5cd30c70",
+    "existing_remote_blob": "c028ee1b7b42ba64d3a3d9cca92dd2f1cda62f45"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "next.config.ts",
+    "sha256": "6fe0fc9769de414db2a59dca2545275b2a0ecb5f6b0c1abf54d8bafcf0684d21",
+    "existing_remote_blob": "f7fa9f3fe7863022cecbb8efef8cd8ef842fd35e"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "package-lock.json",
+    "sha256": "b1df3f4939260adfdda15c9c640fb6fbe2b6e877e46f8acdf7089529bcb39d35",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/package-lock.json"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "package.json",
+    "sha256": "4cae9a3941b940b5506bd59928fecf4f4ea4b94fd06e5beb841aeb0b00581012",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/package.json"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "playwright.config.ts",
+    "sha256": "cd0cde7c7a08150c3a2c872f62d7f09a8080d4cfe56b451fdc247c057f517cf1",
+    "existing_remote_blob": "fc50307ad95f5927fb6d32ac8e47c0e7733d7301"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "postcss.config.js",
+    "sha256": "fe0d5cf3cb8c1922f71cca2da3796f3e63366623ad6164336655766efe330e6a",
+    "existing_remote_blob": "cce4985fbec1db93c0e8e5479b3bb64e349352a3"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "progress.md",
+    "sha256": "ada0cd78d87f6dc3e97f01af9482ca0a45e581cf3b8a4073f2e4eefdebeae555",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/progress.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "README.md",
+    "sha256": "daa6ab048507f622a7b7a198830c28eb0e46ab35b6c1e2495992aa30ced4da01",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/README.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "tailwind.config.ts",
+    "sha256": "089055a9b70481f06a6ed3e2e59c938ac3b358f8c9b5544d97a8b80b466f2e74",
+    "existing_remote_blob": "d53a686b63bbfd323a1b18c03a72a6640268d5b7"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "task_plan.md",
+    "sha256": "d5b7483a5b4c4ff1d7160711d957a30d7517694f77acfb548946fca27b5d1f2b",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/task_plan.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "tsconfig.json",
+    "sha256": "21c1ca765f2c5d9acc2b8e284e6fbaec73b6ff92b29ce53933abe5dd487de551",
+    "existing_remote_blob": "1f5098735668257886d020791dd1da9d4f89b5b9"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "db/schema.sql",
+    "sha256": "eb65a49d79db0c99f16d54e1537651f11f26bbb9a25a0746904f072980ecb6a3",
+    "existing_remote_blob": "0306a3dd91005205501c45c2ab63be8db0c033dc"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "docs/ACCEPTANCE.md",
+    "sha256": "93df529e7ed78077d54b749bcb331ae3eff9234d360384686af9542a8b126ccb",
+    "existing_remote_blob": "6810fbd585ca3579de7a067ec5c863ac6bff0dec"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "docs/API_CONTRACT.md",
+    "sha256": "4f7116fc36d929243cc2b13bbba3c008c36e99a838e05e032c4df70b8745f04b",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/docs/API_CONTRACT.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "docs/explore-concept.png",
+    "sha256": "0404cf6ece1d4afb4571c46c7822bf2e14b548ea4de90aea120fe85a36ca78db",
+    "existing_remote_blob": "bae175f6d481524bb1524146fddee4c3258380cb"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "docs/MVP_SPEC.md",
+    "sha256": "5c16f8efaf19fd6018d1739a80c975c5e5dfaf787f58c0e94ed8adf0e8a14044",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/docs/MVP_SPEC.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "docs/QA_VERIFICATION.md",
+    "sha256": "5a8324ae3325a1bd0baab739ad4901e9767d3687493eb3eae0b18ef4a34ec002",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/docs/QA_VERIFICATION.md"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "scripts/db-seed.ts",
+    "sha256": "bb5d106892a4a0436e1d8538f80509192948eb4c805474e30604ea9f26335397",
+    "existing_remote_blob": "55ada0d5830ab0d6f2495129241d65b3b4292800"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "scripts/db-setup.ts",
+    "sha256": "8e265c5fcfe45a8d54127d69ca5c29949435dfbb1ca4a334be8a80f844ec4148",
+    "existing_remote_blob": "0d0e04d786b4e8ca733f4dec46375a9ef22668a2"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/globals.css",
+    "sha256": "697441a27be20ce064efd8721351a7222745d67ea583de3c6276d36d99fb48eb",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/app/globals.css"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/layout.tsx",
+    "sha256": "9c63aecd77a9318d55f268f12d60f40158626e869c3026dfe247736a0a4f1a27",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/app/layout.tsx"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/page.tsx",
+    "sha256": "b853862fe2f0f20a355499292d4cbd4dc9f2611308f33d0b4932611a06fe4adb",
+    "existing_remote_blob": "d552cb5e0402e59728f9de66053d4542a3750c1c"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/adoptions/[id]/route.ts",
+    "sha256": "dd6b812a7243b0872b7f7b294f385f16e6e7deaed75e7c6a18972db1080c63f9",
+    "existing_remote_blob": "65621df21cc65198994eddf3eebaf742510b74b4"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/health/route.ts",
+    "sha256": "e704f02f40f557257bf262cdc2c3e79cb8dd61840d56351915448699376db20d",
+    "existing_remote_blob": "11f1fa8d9ae7eb9c2a46c4bdce78ace71d6de8ec"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/lessons/route.ts",
+    "sha256": "f1de829c447604ec2a1485e80c8e56a038a9d66a555428607be6d1b015f87840",
+    "existing_remote_blob": "b52bdf5a285c73c3d4fc334473833e32eb897dcb"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/lessons/[id]/route.ts",
+    "sha256": "a60ee5162af7eedb60c6cc69a028385038cacf25eb8700654b696b05211e8795",
+    "existing_remote_blob": "d5549a5b91c8f5277a3f03aa3c853c455de5e9fa"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/lessons/[id]/adoptions/route.ts",
+    "sha256": "d862d402a57eb4f5e6b0e8eb52f8277ed52cd97b370397f37c35c318c987b8e4",
+    "existing_remote_blob": "426977b2951bb14fbfcba268870d9498729d4802"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/lessons/[id]/comments/route.ts",
+    "sha256": "5bcb5d9dbc295305ec41a8c2f862f8d6668fae01a076813383ea0bd9ddb6087b",
+    "existing_remote_blob": "4148a10f60112c1e82a324abf7f173da9bb7ee11"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/projects/route.ts",
+    "sha256": "a47cf1f8307760f98ce1d090fc12adb202ae8c9691609ba8682abe144f177e8c",
+    "existing_remote_blob": "d18461193745c1e051b4cb7f791f540b030d787c"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/projects/[id]/route.ts",
+    "sha256": "15c079957eb2d8a8697ca498e477ae2503dbb7eb5e420e88cb91bf89734d4ee6",
+    "existing_remote_blob": "21e0e9ff9b575d2816f4c53684681092455e70c2"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/projects/[id]/lessons/route.ts",
+    "sha256": "997b8639c42b56ebaea54e5b2811caf6a25cde0757088fbc2659e991e4f385f6",
+    "existing_remote_blob": "7e916350dbe8a0f3396bb91faa272ebac229ec9c"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/referrals/route.ts",
+    "sha256": "b2dc7f119757739c051fa9f2617c9673aae62dac12f488a737a76102c9765efa",
+    "existing_remote_blob": "ad1ad4fe7bac6994da45d3d4630ff5f05c837ced"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/referrals/[id]/replies/route.ts",
+    "sha256": "e3a6dfb73c753dcfdae3215a6f1181d420d18a376063a32f273ef55b2b72d568",
+    "existing_remote_blob": "b003ffd16bd582d7e872063f741a8e1612254d2d"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/api/users/route.ts",
+    "sha256": "8e3c61ba20caf5df88383dc435598bad7f4023f3d1dc8b6a4ce840ba5683f32b",
+    "existing_remote_blob": "e3622f4d20523457951ff7d1cb4621bc10d29eb0"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/lessons/[id]/page.tsx",
+    "sha256": "ba412555f662386fc5aa3ac32ba5b048c5746b754ed407ac0e67eac8654dab87",
+    "existing_remote_blob": "ce0293ce598ddaed3fe1ccab79ec473d8caa749a"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/projects/new/page.tsx",
+    "sha256": "5a41426b64d23c3049371b6d9a6f643bd4d7829d7b281f338b67ccf9bce37e58",
+    "existing_remote_blob": "01db9193fce303e66358c95ce4e9fd55b87920a6"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/projects/[id]/page.tsx",
+    "sha256": "6047626c914d11815990171e1416a2146c2c5a84f31a45fe88efb7e71fcba3a8",
+    "existing_remote_blob": "015d585d4548eb4cfb063048e355b3eb14b56831"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/app/workspace/page.tsx",
+    "sha256": "db60cd5d28ad021b3658bb695ba28bf852ce618e33116d04ca9ad6e66daa077e",
+    "existing_remote_blob": "6f42474f6e99a97bb8fbae110200722f1a8218d9"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/adoption-panel.tsx",
+    "sha256": "d5afd3ddd1f09619b4b29fba6d0780368ac695782dea4ed6f99d48fef85e00d4",
+    "existing_remote_blob": "92dafa245e95c102bdcb1b1f8b588f320e6d8ae7"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/app-shell.tsx",
+    "sha256": "4f43270166b4a07a62c7763ded5d62d1c6d06097964f3daa1f2d5e86fe113623",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/components/app-shell.tsx"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/discussion.tsx",
+    "sha256": "d38c8f26bc83a8fc9af200c80ac907ee23f06c55eb29b7034af605bb0ee68aa7",
+    "existing_remote_blob": "fcd55c76820419abff107e62bef8b92bbc3c5887"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/lesson-form.tsx",
+    "sha256": "a3a0c610c1b7277839b5ab6e8b3749bcaa5f90f421c1c8057021e76b613c1048",
+    "existing_remote_blob": "afda029f31e5db7cff866f949165f1a085b6ef99"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/project-form.tsx",
+    "sha256": "88286ec184d768c69d1622c517ececef7d1161e6b8d6a75231e5806c821535e3",
+    "existing_remote_blob": "2cae318587a7c577b276763e6c64427b7345f2e6"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/components/ui.tsx",
+    "sha256": "083868b53b3fb13f148a6167e0c9644bdb60ab941f3dc22fa33e83055a81f44c",
+    "existing_remote_blob": "fb158abb0e541ba907aece020db09db43e0e65cf"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/lib/client.ts",
+    "sha256": "7616216209879c68864b4f5e09d0ac169e82119a0204d3b6fdd3cd57d3fd8e0e",
+    "existing_remote_blob": "96655a62ca3c287eef75a78585f9ee1fbb7ccbe1"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/server/api.ts",
+    "sha256": "782770c66033509cd2daa331753cda8b0c2dc4a6af2a2b5b3dc8401f06eb6211",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/server/api.ts"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/server/db.ts",
+    "sha256": "ca63e0b9fe8578ed714f288bad51f3b70d2fd92fcf5a5ebd40d37d8164985d94",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/server/db.ts"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/server/seed.ts",
+    "sha256": "33beaaea91ea54087c0779937f5e47677d1f5d82d48cad5eb8d0f37ae92f6fd4",
+    "existing_remote_blob": "ed58a919fb4bc0013d804a911537736d5bc2966b"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/server/validation.ts",
+    "sha256": "03a867a415dbffe3350e78380a30e517682079ab402421b7b6a2c48d55d1d82f",
+    "existing_remote_blob": "e595af425d08598a1b0b3cc6122b20866b83f657"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/shared/fixtures.ts",
+    "sha256": "78d66a1a407adb91cf7d1eb564f0d258db77e2c7da13f20bab788225a25d9568",
+    "existing_remote_blob": "a62eb97616f1e294a0508d6559966d8d47e6fc8f"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "src/shared/types.ts",
+    "sha256": "e912df1738126a530f334baf06d19902c4fb5577e825d7c0d6093a2af840b22d",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/src/shared/types.ts"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "tests/backend.test.ts",
+    "sha256": "ec5da0cbc4bdee85bf696ed59ab539636cfb4205e2e994643c1f923ca13edf26",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/tests/backend.test.ts"
+  },
+  {
+    "source": "pass-it-on",
+    "file": "tests/e2e/journey.spec.ts",
+    "sha256": "05ec688dfd5940d563e4c53b2ed6ef6d1af52b0d1b0cad04f54f3baf0bf25063",
+    "existing_remote_blob": null,
+    "archive_path": "archive/local-before-cleanup-20261113/pass-it-on/tests/e2e/journey.spec.ts"
+  }
+]
